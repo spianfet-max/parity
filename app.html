@@ -136,16 +136,17 @@ td input.ed{color:var(--gold);font-weight:500}
 
 <div class="app">
   <div class="top">
-    <div class="brand"><b>Parity</b><span id="sub">Seven everyday prices, one question: what is a currency really worth?</span><span id="live" class="live"><i></i><em>Loading live feed…</em></span></div>
+    <div class="brand"><b>Parity</b><span id="sub" data-ja="身近な7つの価格から、通貨の本当の価値を測る">Seven everyday prices, one question: what is a currency really worth?</span><span id="live" class="live"><i></i><em>Loading live feed…</em></span></div>
     <div class="ctl">
-      <span class="lbl">Against</span>
+      <span class="lbl" data-ja="基準通貨">Against</span>
       <div class="seg" id="baseSeg"></div>
+      <div class="seg" id="langSeg"></div>
       <button class="icon" id="themeBtn" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></button>
     </div>
   </div>
   <div class="bar2">
-    <div class="grp"><span class="lbl">Basket</span><div class="seg" id="basketSeg"></div></div>
-    <div class="grp"><span class="lbl">Measure</span><div class="seg" id="adjSeg"></div></div>
+    <div class="grp"><span class="lbl" data-ja="バスケット">Basket</span><div class="seg" id="basketSeg"></div></div>
+    <div class="grp"><span class="lbl" data-ja="指標">Measure</span><div class="seg" id="adjSeg"></div></div>
   </div>
 
   <section class="sec hero">
@@ -155,18 +156,18 @@ td input.ed{color:var(--gold);font-weight:500}
     </div>
     <div class="right">
       <div class="head">
-        <div class="pick"><span class="lbl">Currency</span><select id="cur" aria-label="Currency"></select></div>
+        <div class="pick"><span class="lbl" data-ja="通貨">Currency</span><select id="cur" aria-label="Currency"></select></div>
         <h1 id="h1"></h1>
         <div class="f" id="h1f"></div>
       </div>
       <div class="strip">
-        <div class="sh"><span class="lbl">One currency, seven baskets</span><div class="leg" id="stripLeg"></div></div>
+        <div class="sh"><span class="lbl" data-ja="1つの通貨、7つのバスケット">One currency, seven baskets</span><div class="leg" id="stripLeg"></div></div>
         <svg id="strip" height="96"></svg>
       </div>
       <div class="rate">
         <div class="sh"><span class="lbl" id="rateLbl">Implied exchange rates</span></div>
         <svg id="rate" height="112" tabindex="0" aria-label="Drag the spot marker to test a different exchange rate"></svg>
-        <div class="hint"><span>Spot is the live rate. Drag the marker to test another level · arrow keys nudge it</span><button class="lnk" id="resetSpot" hidden>Back to market rate</button></div>
+        <div class="hint"><span data-ja="スポットは最新レート。マーカーをドラッグして別の水準を試せます · 矢印キーで微調整">Spot is the live rate. Drag the marker to test another level · arrow keys nudge it</span><button class="lnk" id="resetSpot" hidden data-ja="市場レートに戻す">Back to market rate</button></div>
       </div>
       <div class="kv" id="kv"></div>
       <div class="gap"><b id="gapV">—</b><p id="gapT"></p></div>
@@ -174,24 +175,24 @@ td input.ed{color:var(--gold);font-weight:500}
   </section>
 
   <section class="sec">
-    <div class="sh"><h2>Does it work?</h2><p id="btSub">Every Big Mac reading since 2000 against what the exchange rate did next.</p></div>
-    <div class="bar3"><div class="grp"><span class="lbl">Signal</span><div class="seg" id="bmSeg"></div></div><div class="grp"><span class="lbl">Horizon</span><div class="seg" id="hzSeg"></div></div><label class="chk"><input type="checkbox" id="exHi" checked> Exclude hyperinflation cases (Argentina, Venezuela, Lebanon, Turkey)</label></div>
+    <div class="sh"><h2 data-ja="本当に当たるのか？">Does it work?</h2><p id="btSub">Every Big Mac reading since 2000 against what the exchange rate did next.</p></div>
+    <div class="bar3"><div class="grp"><span class="lbl" data-ja="シグナル">Signal</span><div class="seg" id="bmSeg"></div></div><div class="grp"><span class="lbl" data-ja="期間">Horizon</span><div class="seg" id="hzSeg"></div></div><label class="chk"><input type="checkbox" id="exHi" checked> <span data-ja="ハイパーインフレ国を除外（アルゼンチン、ベネズエラ、レバノン、トルコ）">Exclude hyperinflation cases (Argentina, Venezuela, Lebanon, Turkey)</span></label></div>
     <div class="two">
-      <div><svg id="bt" height="290"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute);opacity:.5"></i>One currency at one survey</span><span><i style="background:var(--red)"></i><span id="btLeg">Selected</span></span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fitted line</span></div></div>
+      <div><svg id="bt" height="290"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute);opacity:.5"></i><span data-ja="各調査時点の各通貨">One currency at one survey</span></span><span><i style="background:var(--red)"></i><span id="btLeg">Selected</span></span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i><span data-ja="回帰直線">Fitted line</span></span></div></div>
       <div><div class="stat" id="btStat"></div><svg id="btb" height="170"></svg></div>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sh"><h2>Minutes of income</h2><p>How long the average person works to pay for each item: GDP per person spread over a 2,080-hour working year. The tourist sees the dollar price; the resident feels the minutes.</p></div>
+    <div class="sh"><h2 data-ja="所得で見た時間">Minutes of income</h2><p data-ja="平均的な人がそれぞれの品目を買うために働く時間。1人当たりGDPを年間2,080労働時間で割って算出。旅行者はドル価格を見て、住民は労働時間で感じます。">How long the average person works to pay for each item: GDP per person spread over a 2,080-hour working year. The tourist sees the dollar price; the resident feels the minutes.</p></div>
     <div class="two">
       <div><div class="sh"><span class="lbl" id="minTitle"></span></div><svg id="mins" height="250"></svg></div>
-      <div><div class="sh"><span class="lbl" id="dbTitle"></span></div><svg id="dumb" height="300"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute)"></i>Tourist's price index</span><span><i style="background:var(--ink)"></i>Resident's effort index</span><span>1.0 = same as the base country</span></div></div>
+      <div><div class="sh"><span class="lbl" id="dbTitle"></span></div><svg id="dumb" height="300"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute)"></i><span data-ja="旅行者の価格指数">Tourist's price index</span></span><span><i style="background:var(--ink)"></i><span data-ja="住民の労働時間指数">Resident's effort index</span></span><span data-ja="1.0 = 基準国と同じ">1.0 = same as the base country</span></div></div>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sh"><h2>Deserved or mispriced?</h2><p id="qdSub"></p></div>
+    <div class="sh"><h2 data-ja="妥当な安さか、ミスプライスか？">Deserved or mispriced?</h2><p id="qdSub"></p></div>
     <div class="two">
       <div><svg id="quad" height="320"></svg></div>
       <div class="lists"><div id="verdict" class="verdict"></div><div id="qLists"></div></div>
@@ -200,23 +201,23 @@ td input.ed{color:var(--gold);font-weight:500}
 
   <section class="sec two">
     <div>
-      <div class="sh"><h2>Burger drift since 2000</h2><p id="histSub"></p></div>
+      <div class="sh"><h2 data-ja="2000年以降のビッグマック乖離">Burger drift since 2000</h2><p id="histSub"></p></div>
       <svg id="hist" height="260"></svg>
-      <div class="leg" style="margin-top:6px"><span><i style="background:var(--ink)"></i><span id="histLeg">Selected</span></span><span><i style="background:var(--mute);opacity:.4"></i>Every other currency</span><span><i style="background:var(--red);opacity:.4"></i>Undervalued</span><span><i style="background:var(--steel);opacity:.4"></i>Overvalued</span></div>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--ink)"></i><span id="histLeg">Selected</span></span><span><i style="background:var(--mute);opacity:.4"></i><span data-ja="その他の通貨">Every other currency</span></span><span><i style="background:var(--red);opacity:.4"></i><span data-ja="割安">Undervalued</span></span><span><i style="background:var(--steel);opacity:.4"></i><span data-ja="割高">Overvalued</span></span></div>
     </div>
     <div>
-      <div class="sh"><h2>Price against income</h2><p id="scatSub"></p></div>
+      <div class="sh"><h2 data-ja="価格と所得">Price against income</h2><p id="scatSub"></p></div>
       <svg id="scat" height="260"></svg>
-      <div class="leg" style="margin-top:6px"><span><i style="background:var(--red)"></i>Cheaper than income predicts</span><span><i style="background:var(--steel)"></i>Dearer</span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fair-value line</span></div>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--red)"></i><span data-ja="所得水準から見て割安">Cheaper than income predicts</span></span><span><i style="background:var(--steel)"></i><span data-ja="割高">Dearer</span></span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i><span data-ja="適正価格ライン">Fair-value line</span></span></div>
     </div>
   </section>
 
   <section class="sec">
-    <div class="sh"><h2>Prices</h2><p>Every price except the Big Mac is editable. Change one and every chart follows. Edited cells turn gold. Tags show where each price came from.</p></div>
+    <div class="sh"><h2 data-ja="価格一覧">Prices</h2><p data-ja="ビッグマック以外の価格はすべて編集可能。変更するとすべてのチャートに反映されます。編集したセルは金色に、タグは各価格の出典を示します。">Every price except the Big Mac is editable. Change one and every chart follows. Edited cells turn gold. Tags show where each price came from.</p></div>
     <div class="tw"><table id="tbl"></table></div>
     <div class="foot">
-      <p class="note"><b>Exchange rates</b>: ECB euro reference rates (published around 16:00 CET each business day), crossed through the euro; currencies the ECB does not publish come from ExchangeRate-API daily market rates. Refreshed every morning. <b>iPhone</b>: iPhone 17 starting price on each country's apple.com store (euro area = apple.com/de). <b>Spotify</b>: Premium Individual monthly price on each country's spotify.com page (US excludes sales tax, Argentina excludes local taxes). <b>Switch 2</b>: Nintendo's list price for the base console after the September 2026 increases; Japan is the Japanese-language, Japan-only model at ¥59,980. <b>IKEA Billy</b>: white 80×28×202 cm bookcase on each IKEA country site (regular price, not member or sale prices). <b>Latte</b>: tall caffè latte; official in Japan and Taiwan, gift-voucher face value in Korea, estimates elsewhere. <b>Taxi 5 km</b>: a 5 km daytime ride with no waiting; Tokyo computed from the regulated tariff, other cities are estimates for a metered taxi or ride-hail fare. <b>Big Mac</b>: local prices from <i>The Economist</i> July 2026 survey (github.com/TheEconomist/big-mac-data), valued at today's exchange rates; the history chart uses the survey-date rates. US prices exclude sales tax; most others include VAT, which the iPhone basket largely measures. GDP-adjusted values fit each basket's dollar price against GDP per person and compare each currency with its fitted fair price.</p>
-      <button class="lnk" id="resetAll" hidden>Reset edited prices</button>
+      <p class="note" data-ja="<b>為替レート</b>：ECBユーロ参照レート（各営業日の中央ヨーロッパ時間16時頃公表）をユーロ経由でクロス換算。ECBが公表しない通貨はExchangeRate-APIの日次市場レート。毎朝更新。<b>iPhone</b>：各国apple.comのiPhone 17の最低価格（ユーロ圏＝apple.com/de）。<b>Spotify</b>：各国spotify.comのPremium Individual月額（米国は売上税別、アルゼンチンは現地税別）。<b>Switch 2</b>：2026年9月の値上げ後の本体希望小売価格。日本は日本語・国内専用モデル（59,980円）。<b>IKEA Billy</b>：白・80×28×202cmの本棚、各国IKEAサイトの通常価格（会員価格・セール価格は除く）。<b>ラテ</b>：トールのカフェラテ。日本と台湾は公式価格、韓国はギフト券額面、その他は推計。<b>タクシー5km</b>：待ち時間なし・日中5kmの乗車。東京は認可運賃から算出、他都市は推計。<b>ビッグマック</b>：<i>The Economist</i>の2026年7月調査の現地価格を今日の為替レートで評価。履歴チャートは調査時点のレートを使用。米国価格は売上税別、その他の多くは付加価値税込みで、iPhoneの差は主に税を反映。GDP調整値は各バスケットのドル価格を1人当たりGDPで回帰し、適正価格と比較したもの。"><b>Exchange rates</b>: ECB euro reference rates (published around 16:00 CET each business day), crossed through the euro; currencies the ECB does not publish come from ExchangeRate-API daily market rates. Refreshed every morning. <b>iPhone</b>: iPhone 17 starting price on each country's apple.com store (euro area = apple.com/de). <b>Spotify</b>: Premium Individual monthly price on each country's spotify.com page (US excludes sales tax, Argentina excludes local taxes). <b>Switch 2</b>: Nintendo's list price for the base console after the September 2026 increases; Japan is the Japanese-language, Japan-only model at ¥59,980. <b>IKEA Billy</b>: white 80×28×202 cm bookcase on each IKEA country site (regular price, not member or sale prices). <b>Latte</b>: tall caffè latte; official in Japan and Taiwan, gift-voucher face value in Korea, estimates elsewhere. <b>Taxi 5 km</b>: a 5 km daytime ride with no waiting; Tokyo computed from the regulated tariff, other cities are estimates for a metered taxi or ride-hail fare. <b>Big Mac</b>: local prices from <i>The Economist</i> July 2026 survey (github.com/TheEconomist/big-mac-data), valued at today's exchange rates; the history chart uses the survey-date rates. US prices exclude sales tax; most others include VAT, which the iPhone basket largely measures. GDP-adjusted values fit each basket's dollar price against GDP per person and compare each currency with its fitted fair price.</p>
+      <button class="lnk" id="resetAll" hidden data-ja="編集した価格をリセット">Reset edited prices</button>
     </div>
   </section>
 </div>
@@ -234,12 +235,31 @@ const BK={bm:{n:'Big Mac',col:'--bm',g:'mix',np:'a Big Mac'},
  ip:{n:'iPhone',col:'--ip',g:'gd',np:'an iPhone 17'},sw:{n:'Switch 2',col:'--sw',g:'gd',np:'a Nintendo Switch 2'},bi:{n:'Billy',col:'--bi',g:'gd',np:'an IKEA Billy bookcase'},
  cx:{n:'Composite',col:'--red',np:'the basket average'}};
 const KEYS=['bm','la','sf','tx','ip','sw','bi'],FEED=KEYS.slice(1);
-let S={base:'USA',basket:'bm',adj:false,sel:'JPN',spot:{}};
-try{const s=JSON.parse(localStorage.getItem('parity')||'null');if(s)Object.assign(S,{base:s.base||S.base,basket:s.basket||S.basket,adj:!!s.adj,sel:s.sel||S.sel});}catch(e){}
+const BKJA={bm:'ビッグマック',la:'ラテ',sf:'Spotify',tx:'タクシー5km',ip:'iPhone',sw:'Switch 2',bi:'Billy本棚',cx:'総合'};
+const NPJA={bm:'ビッグマック',la:'スターバックスのトールラテ',sf:'Spotify Premium 1か月',tx:'5kmのタクシー乗車',ip:'iPhone 17',sw:'Nintendo Switch 2',bi:'IKEA Billy本棚',cx:'バスケット平均'};
+const ISO2={ARE:'AE',ARG:'AR',AUS:'AU',AZE:'AZ',BHR:'BH',BRA:'BR',CAN:'CA',CHE:'CH',CHL:'CL',CHN:'CN',COL:'CO',CRI:'CR',CZE:'CZ',DNK:'DK',EGY:'EG',GBR:'GB',GTM:'GT',HKG:'HK',HND:'HN',HUN:'HU',IDN:'ID',IND:'IN',ISR:'IL',JOR:'JO',JPN:'JP',KOR:'KR',KWT:'KW',LBN:'LB',MDA:'MD',MEX:'MX',MYS:'MY',NIC:'NI',NOR:'NO',NZL:'NZ',OMN:'OM',PAK:'PK',PER:'PE',PHL:'PH',POL:'PL',QAT:'QA',ROU:'RO',SAU:'SA',SGP:'SG',SWE:'SE',THA:'TH',TUR:'TR',TWN:'TW',UKR:'UA',URY:'UY',USA:'US',VEN:'VE',VNM:'VN',ZAF:'ZA'};
+const JANAME={EUZ:'ユーロ圏',HKG:'香港',USA:'米国',GBR:'英国',KOR:'韓国',TWN:'台湾',CHN:'中国',ARE:'UAE',CZE:'チェコ',NZL:'ニュージーランド',SAU:'サウジアラビア',ZAF:'南アフリカ'};
+let JAREG=null;try{const d=new Intl.DisplayNames(['ja'],{type:'region'});JAREG=x=>d.of(x)}catch(e){}
+let JACUR=null;try{const d=new Intl.DisplayNames(['ja'],{type:'currency'});JACUR=x=>d.of(x)}catch(e){}
+let S={base:'USA',basket:'bm',adj:false,sel:'JPN',spot:{},lang:'en'};
+try{const s=JSON.parse(localStorage.getItem('parity')||'null');if(s)Object.assign(S,{base:s.base||S.base,basket:s.basket||S.basket,adj:!!s.adj,sel:s.sel||S.sel,lang:s.lang==='ja'?'ja':'en'});}catch(e){}
 if(!byI[S.sel])S.sel='JPN';
-const save=()=>{try{localStorage.setItem('parity',JSON.stringify({base:S.base,basket:S.basket,adj:S.adj,sel:S.sel}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('parity',JSON.stringify({base:S.base,basket:S.basket,adj:S.adj,sel:S.sel,lang:S.lang}))}catch(e){}};
 let curName;try{const dn=new Intl.DisplayNames(['en'],{type:'currency'});curName=c=>dn.of(c)}catch(e){curName=c=>c}
-const cname=c=>c.i==='EUZ'?'euro':(curName(c.c)||c.c).replace(/^(US|British|Japanese|Chinese|Swiss)\s/,m=>m);
+const JA=()=>S.lang==='ja',T=(en,ja)=>JA()?ja:en;
+const cname=c=>JA()?(c.i==='EUZ'?'ユーロ':(JACUR&&JACUR(c.c))||c.c):(c.i==='EUZ'?'euro':(curName(c.c)||c.c));
+const cn=c=>JA()?(JANAME[c.i]||(JAREG&&ISO2[c.i]&&JAREG(ISO2[c.i]))||c.n):c.n;
+const bn=k=>JA()?BKJA[k]:BK[k].n;
+const np=k=>JA()?NPJA[k]:BK[k].np;
+const dloc=(d,o)=>d.toLocaleString(JA()?'ja-JP':'en-GB',o);
+function applyStatic(){document.querySelectorAll('[data-ja]').forEach(e=>{if(e.dataset.en==null)e.dataset.en=e.innerHTML;e.innerHTML=JA()?e.dataset.ja:e.dataset.en});document.documentElement.lang=S.lang;
+  document.title=T('Parity','パリティ');$('#stripLeg').innerHTML=KEYS.map(k=>`<span><i style="background:var(${BK[k].col})"></i>${bn(k)}</span>`).join('')+`<span><i class="d" style="background:var(--red)"></i>${bn('cx')}</span>`;
+  $('#cur').innerHTML=[...C].sort((a,b)=>cn(a).localeCompare(cn(b),S.lang)).map(c=>`<option value="${c.i}">${cn(c)} · ${c.c}</option>`).join('');$('#cur').value=S.sel;
+  $('#basketSeg').querySelectorAll('button').forEach(b=>{const k=b.dataset.k;b.innerHTML=`<i style="background:var(${BK[k].col})"></i>${bn(k)}`});
+  $('#adjSeg').querySelectorAll('button').forEach(b=>b.textContent=b.dataset.k==='true'?T('GDP-adjusted','GDP調整'):T('Raw','未調整'));
+  $('#hzSeg').querySelectorAll('button').forEach(b=>b.textContent=T(`${b.dataset.k} year${b.dataset.k>1?'s':''}`,`${b.dataset.k}年`));
+  $('#bmSeg').querySelectorAll('button').forEach(b=>b.textContent={raw:T('Raw gap','単純乖離'),own:T('Gap vs own average','自国平均比の乖離'),rt:T('Vs average to date','その時点までの平均比')}[b.dataset.k]);
+  liveStatus(LIVEDB)}
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const pct=(v,d=0)=>v==null||!isFinite(v)?'—':(v>0?'+':v<0?'−':'')+Math.abs(v*100).toFixed(d)+'%';
 const fmt=(v)=>{if(v==null)return'—';const a=Math.abs(v);const d=a>=1000?0:a>=100?1:a>=10?2:a>=1?3:4;return v.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:(a>=1000||Number.isInteger(v))?0:Math.min(d,2)})};
@@ -247,11 +267,12 @@ let LIVE=SNAP0;const EDIT={};
 const lx=c=>LIVE.fx[c.c]??c.ex;
 const ex=c=>(c.i===S.sel&&S.spot[S.base+'|'+c.i]!=null)?S.spot[S.base+'|'+c.i]*lx(byI[S.base]):lx(c);
 function applySnap(s){LIVE=s;C.forEach(c=>{FEED.forEach(b=>{const r=s[b]&&s[b][c.i];ORIG[c.i][b]=r?r.p:null;if(!EDIT[c.i+b])c[b]=ORIG[c.i][b]})})}
-const srcTag=(c,b)=>{const r=LIVE[b]&&LIVE[b][c.i];if(!r||EDIT[c.i+b])return'';const off=r.s!=='est';const lab=r.s==='est'?'est':r.s==='voucher'?'voucher':r.s==='tariff'?'tariff':r.s==='msrp'?'MSRP':'official';return `<span class="src ${off?'off':''}" title="${r.s==='est'?'Estimate — no official price feed':r.s==='voucher'?'Face value of Starbucks gift voucher':r.s==='tariff'?'Computed from the regulated taxi tariff':r.s==='msrp'?'Nintendo announced price (Sept 2026)':'From '+r.s}">${lab}</span>`};
-function liveStatus(fromDb){const s=LIVE;const u=new Date(s.updated);const age=(Date.now()-u)/36e5;const el=$('#live');el.className='live '+(age<36?'on':'stale');
+const srcTag=(c,b)=>{const r=LIVE[b]&&LIVE[b][c.i];if(!r||EDIT[c.i+b])return'';const off=r.s!=='est';const lab=r.s==='est'?T('est','推計'):r.s==='voucher'?T('voucher','ギフト券'):r.s==='tariff'?T('tariff','認可運賃'):r.s==='msrp'?'MSRP':T('official','公式');return `<span class="src ${off?'off':''}" title="${r.s==='est'?'Estimate — no official price feed':r.s==='voucher'?'Face value of Starbucks gift voucher':r.s==='tariff'?'Computed from the regulated taxi tariff':r.s==='msrp'?'Nintendo announced price (Sept 2026)':'From '+r.s}">${lab}</span>`};
+let LIVEDB=false;
+function liveStatus(fromDb){LIVEDB=fromDb;const s=LIVE;const u=new Date(s.updated);const age=(Date.now()-u)/36e5;const el=$('#live');el.className='live '+(age<36?'on':'stale');
   const nE=Object.values(s.fxSrc).filter(v=>v==='ECB').length,nM=Object.values(s.fxSrc).length-nE;
-  el.querySelector('em').textContent=`FX ${nE} ECB (${s.fxAsof.ECB}) + ${nM} market · prices checked ${s.ipAsof} · updated ${u.toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${fromDb?'':' · offline copy'}`;
-  el.title=fromDb?'Live feed from the page database, refreshed daily':'Showing the copy built into the page; the live feed is not reachable in this view'}
+  el.querySelector('em').textContent=T(`FX ${nE} ECB (${s.fxAsof.ECB}) + ${nM} market · prices checked ${s.ipAsof} · updated ${dloc(u,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${fromDb?'':' · offline copy'}`,`為替 ECB ${nE}通貨（${s.fxAsof.ECB}）＋市場 ${nM}通貨 · 価格確認 ${s.ipAsof} · 更新 ${dloc(u,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}${fromDb?'':' · オフライン版'}`);
+  el.title=fromDb?T('Live feed from the page database, refreshed daily','ページのデータベースから取得、毎日更新'):T('Showing the copy built into the page; the live feed is not reachable in this view','ページ内蔵のデータを表示中（ライブフィードに接続できません）')}
 const dp=(c,b)=>c[b]==null?null:c[b]/ex(c);
 
 /* GDP fit per basket: dollar price = a + b·GDP per person (OLS over countries with both) */
@@ -267,8 +288,9 @@ const fits=()=>Object.fromEntries(KEYS.map(k=>[k,fit(k)]));
 function seg(el,items,get,set){el.innerHTML='';items.forEach(([k,lab,sw])=>{const b=document.createElement('button');b.innerHTML=(sw?`<i style="background:var(${sw})"></i>`:'')+lab;b.onclick=()=>{set(k);render()};b.dataset.k=k;el.appendChild(b)});const up=()=>el.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==String(get())));el._up=up}
 seg($('#baseSeg'),BASES.map(([i,c])=>[i,c]),()=>S.base,k=>{S.base=k;if(S.sel===k)S.sel=k==='USA'?'JPN':'USA'});
 seg($('#basketSeg'),Object.entries(BK).map(([k,v])=>[k,v.n,v.col]),()=>S.basket,k=>S.basket=k);
+seg($('#langSeg'),[['en','EN'],['ja','日本語']],()=>S.lang,k=>{S.lang=k;applyStatic()});
 seg($('#adjSeg'),[['false','Raw'],['true','GDP-adjusted']],()=>S.adj,k=>S.adj=k==='true');
-$('#cur').innerHTML=C.map(c=>`<option value="${c.i}">${c.n} · ${c.c}</option>`).join('');
+
 $('#cur').onchange=e=>{S.sel=e.target.value;render()};
 {let t='light';try{t=localStorage.getItem('parity-theme')||'light'}catch(e){}document.documentElement.dataset.theme=t}
 $('#themeBtn').onclick=()=>{const r=document.documentElement;const t=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=t;try{localStorage.setItem('parity-theme',t)}catch(e){}render(true)};
@@ -299,8 +321,8 @@ function drawLadder(F,instant){
     if(!r){const g=el('g',{class:'row'},svg._rows);const bg=el('rect',{class:'rbg',x:0,width:W,height:RH},g);const bar=el('rect',{height:RH-5,y:2.5},g);const nm=el('text',{class:'nm',x:lw,y:RH-4,'text-anchor':'end'},g);const vt=el('text',{class:'vt',y:RH-4},g);
       r=LAD.rows[id]={g,bg,bar,nm,vt,y:top+i*RH,v:0};
       g.onclick=()=>{S.sel=id;render()};
-      g.onmousemove=e=>{const c=byI[id],vv=r.tv;showTip(e,`<h4>${c.n} · ${c.c}</h4>${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation <b class="${vv<0?'u':'o'}">${pct(vv)}</b><br>vs ${byI[S.base].c}${S.basket!=='cx'?`<br>Local price ${fmt(c[S.basket])} ${c.c} = $${fmt(dp(c,S.basket))}`:''}`)};g.onmouseleave=hideTip}
-    r.g.style.display='';r.bg.setAttribute('width',W);r.nm.textContent=d.c.n;r.ty=top+i*RH;r.tv=d.v;r.g.classList.toggle('on',id===S.sel);r.g.classList.toggle('base',id===S.base);
+      g.onmousemove=e=>{const c=byI[id],vv=r.tv;showTip(e,`<h4>${cn(c)} · ${c.c}</h4>${bn(S.basket)} ${S.adj?T('GDP-adjusted ','GDP調整'):''}${T('valuation','評価')} <b class="${vv<0?'u':'o'}">${pct(vv)}</b><br>${T('vs','対')} ${byI[S.base].c}${S.basket!=='cx'?`<br>${T('Local price','現地価格')} ${fmt(c[S.basket])} ${c.c} = $${fmt(dp(c,S.basket))}`:''}`)};g.onmouseleave=hideTip}
+    r.g.style.display='';r.bg.setAttribute('width',W);r.nm.textContent=cn(d.c);r.ty=top+i*RH;r.tv=d.v;r.g.classList.toggle('on',id===S.sel);r.g.classList.toggle('base',id===S.base);
     if(r.fresh===undefined){r.y=r.ty;r.fresh=false}});
   for(const id in LAD.rows)if(!seen.has(id)){LAD.rows[id].g.style.display='none';LAD.rows[id].v=0}
   const from={};for(const id in LAD.rows)from[id]={y:LAD.rows[id].y,v:LAD.rows[id].v};
@@ -309,15 +331,15 @@ function drawLadder(F,instant){
     for(const id of seen){const r=LAD.rows[id],f=from[id];r.y=f.y+(r.ty-f.y)*k;r.v=f.v+(r.tv-f.v)*k;
       r.g.setAttribute('transform',`translate(0,${r.y})`);const xa=X(0),xb=X(Math.max(-mx,Math.min(mx,r.v)));
       r.bar.setAttribute('x',Math.min(xa,xb));r.bar.setAttribute('width',Math.max(id===S.base?0:1,Math.abs(xb-xa)));r.bar.setAttribute('class',r.tv<0?'under':'over');
-      r.vt.setAttribute('x',W);r.vt.setAttribute('text-anchor','end');r.vt.textContent=id===S.base?'base':pct(r.v)}
+      r.vt.setAttribute('x',W);r.vt.setAttribute('text-anchor','end');r.vt.textContent=id===S.base?T('base','基準'):pct(r.v)}
     if(k<1)LAD.anim=requestAnimationFrame(step)};
   LAD.anim=requestAnimationFrame(step);
-  $('#ladTitle').textContent=`${BK[S.basket].n} valuation against the ${byI[S.base].c}`;
-  $('#ladSub').textContent=`${list.length} currencies, cheapest first · ${S.adj?'adjusted for GDP per person':'raw local-price comparison'} · click a row`;
+  $('#ladTitle').textContent=T(`${bn(S.basket)} valuation against the ${byI[S.base].c}`,`${bn(S.basket)}で見た対${byI[S.base].c}評価`);
+  $('#ladSub').textContent=T(`${list.length} currencies, cheapest first · ${S.adj?'adjusted for GDP per person':'raw local-price comparison'} · click a row`,`${list.length}通貨・割安順 · ${S.adj?'1人当たりGDPで調整':'現地価格の単純比較'} · 行をクリックで選択`);
 }
 
 /* ===== Strip: one currency, every basket ===== */
-$('#stripLeg').innerHTML=KEYS.map(k=>`<span><i style="background:var(${BK[k].col})"></i>${BK[k].n}</span>`).join('')+'<span><i class="d" style="background:var(--red)"></i>Composite</span>';
+
 const STRIP={pos:{}};
 function drawStrip(F){
   const svg=$('#strip'),W=svg.clientWidth||460,H=96;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
@@ -326,8 +348,8 @@ function drawStrip(F){
   const p=14,X=v=>p+(W-2*p)*(v+m)/(2*m),y=46;
   svg.innerHTML='';
   el('rect',{x:p,y:y-3,width:X(0)-p,height:6,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:y-3,width:W-p-X(0),height:6,fill:'var(--steeltint)'},svg);
-  [-m,-m/2,0,m/2,m].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:y-9,y2:y+9,stroke:t?'var(--line)':'var(--ink)'},svg);const tx=el('text',{x:X(t),y:y+26,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?pct(t):'fair'});
-  const ul=el('text',{x:p,y:y+42,class:'t'},svg);ul.textContent='← cheap';const ol=el('text',{x:W-p,y:y+42,class:'t','text-anchor':'end'},svg);ol.textContent='dear →';
+  [-m,-m/2,0,m/2,m].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:y-9,y2:y+9,stroke:t?'var(--line)':'var(--ink)'},svg);const tx=el('text',{x:X(t),y:y+26,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?pct(t):T('fair','適正')});
+  const ul=el('text',{x:p,y:y+42,class:'t'},svg);ul.textContent=T('← cheap','← 割安');const ol=el('text',{x:W-p,y:y+42,class:'t','text-anchor':'end'},svg);ol.textContent=T('dear →','割高 →');
   const placed=[];
   vals.forEach(([b,v],i)=>{if(v==null)return;const x=X(v);let ly=b==='cx'?y-16:y-16-((i)%3)*0;
     const prev=STRIP.pos[b]??x;const g=el('g',{class:'mk'},svg);
@@ -336,7 +358,7 @@ function drawStrip(F){
     // label stacking
     let row=0;while(placed.some(q=>q.row===row&&Math.abs(q.x-x)<62))row++;placed.push({x,row});
     const lx=Math.max(p+20,Math.min(W-p-20,x));
-    const tx=el('text',{x:lx-x,y:-14-row*13,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},g);tx.textContent=`${b==='cx'?'Mix':BK[b].n} ${pct(v)}`;
+    const tx=el('text',{x:lx-x,y:-14-row*13,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},g);tx.textContent=`${b==='cx'?T('Mix','総合'):bn(b)} ${pct(v)}`;
     if(row)el('line',{x1:0,x2:lx-x,y1:-8,y2:-11-row*13+4,stroke:`var(${BK[b].col})`,'stroke-width':.8,opacity:.6},g);
     g.setAttribute('transform',`translate(${prev},${y})`);STRIP.pos[b]=x;
     const t0=performance.now();const go=now=>{const k=ease(Math.min(1,(now-t0)/550));g.setAttribute('transform',`translate(${prev+(x-prev)*k},${y})`);if(k<1)requestAnimationFrame(go)};requestAnimationFrame(go)});
@@ -347,9 +369,9 @@ function drawStrip(F){
 function drawRate(F){
   const svg=$('#rate'),W=svg.clientWidth||460,H=112;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
   const c=byI[S.sel],base=byI[S.base];const key=S.base+'|'+S.sel;
-  const mkt=c.ex/base.ex,spot=ex(c)/base.ex;const inv=mkt<1;const q=v=>inv?1/v:v;
+  const mkt=lx(c)/lx(base),spot=ex(c)/lx(base);const inv=mkt<1;const q=v=>inv?1/v:v;
   const pair=inv?`${c.c}/${base.c}`:`${base.c}/${c.c}`;
-  $('#rateLbl').textContent=`Implied ${pair} — ${inv?`${base.c} per 1 ${c.c}`:`${c.c} per 1 ${base.c}`}`;
+  $('#rateLbl').textContent=T(`Implied ${pair} — ${inv?`${base.c} per 1 ${c.c}`:`${c.c} per 1 ${base.c}`}`,`理論${pair}レート — ${inv?`1 ${c.c}あたり${base.c}`:`1 ${base.c}あたり${c.c}`}`);
   const imp=KEYS.map(b=>[b,c[b]!=null&&base[b]!=null?c[b]/base[b]:null]).filter(x=>x[1]!=null);
   const all=[...imp.map(x=>q(x[1])),q(mkt),q(spot)];let lo=Math.min(...all)/1.18,hi=Math.max(...all)*1.18;
   if(!svg._dom||svg._key!==key+S.basket)svg._dom=[lo,hi];else{lo=Math.min(lo,svg._dom[0]);hi=Math.max(hi,svg._dom[1]);svg._dom=[lo,hi]}svg._key=key+S.basket;
@@ -365,13 +387,13 @@ function drawRate(F){
   // implied markers above
   const pl=[];imp.forEach(([b,v])=>{const x=X(q(v));let row=0;while(pl.some(z=>z.r===row&&Math.abs(z.x-x)<70))row++;pl.push({x,r:row});
     el('line',{x1:x,x2:x,y1:y-4,y2:y-14-row*14,stroke:`var(${BK[b].col})`,'stroke-width':1},svg);el('circle',{cx:x,cy:y,r:5,fill:`var(${BK[b].col})`,stroke:'var(--card)','stroke-width':1.5},svg);
-    const t=el('text',{x:Math.max(p+24,Math.min(W-p-24,x)),y:y-18-row*14,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},svg);t.textContent=`${BK[b].n} ${fmt(q(v))}`});
+    const t=el('text',{x:Math.max(p+24,Math.min(W-p-24,x)),y:y-18-row*14,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},svg);t.textContent=`${bn(b)} ${fmt(q(v))}`});
   {const top=Math.max(0,...pl.map(z=>z.r));const ex2=Math.max(0,top-1)*14;svg.setAttribute('height',112+ex2);svg.setAttribute('viewBox',`0 ${-ex2} ${W} ${112+ex2}`)}
   // spot handle
   const sx=X(q(spot));const g=el('g',{style:'cursor:ew-resize'},svg);
   el('rect',{x:sx-1,y:y-12,width:2,height:28,fill:'var(--red)'},g);
   const pw=78;el('rect',{x:Math.max(0,Math.min(W-pw,sx-pw/2)),y:y+28,width:pw,height:20,fill:'var(--red)'},g);
-  const st=el('text',{x:Math.max(pw/2,Math.min(W-pw/2,sx)),y:y+42,'text-anchor':'middle',style:'fill:#fff;font-size:11px;font-weight:500',class:'tn'},g);st.textContent=`Spot ${fmt(q(spot))}`;
+  const st=el('text',{x:Math.max(pw/2,Math.min(W-pw/2,sx)),y:y+42,'text-anchor':'middle',style:'fill:#fff;font-size:11px;font-weight:500',class:'tn'},g);st.textContent=`${T('Spot','スポット')} ${fmt(q(spot))}`;
   // drag
   const setFromX=cx=>{const r=svg.getBoundingClientRect();const x=(cx-r.left)*W/r.width;let v=Xi(Math.max(p,Math.min(W-p,x)));const rr=inv?1/v:v;S.spot[key]=rr;render(false,true)};
   svg.onpointerdown=e=>{svg.setPointerCapture(e.pointerId);setFromX(e.clientX);svg.onpointermove=ev=>setFromX(ev.clientX)};
@@ -384,21 +406,22 @@ function drawRate(F){
 function drawHead(F){
   const c=byI[S.sel],base=byI[S.base];const v=val(c,S.basket,F);
   $('#cur').value=S.sel;
-  const nm=cname(c),bn=cname(base);const moved=S.spot[S.base+'|'+S.sel]!=null;
-  if(c.i===S.base){$('#h1').innerHTML=`The ${nm} is the base currency`;$('#h1f').textContent='Pick another currency or change the base.';}
-  else if(v==null){$('#h1').innerHTML=`No ${BK[S.basket].n.toLowerCase()} price for the ${nm}`;$('#h1f').textContent=S.adj?'GDP per person is missing for this country, so it cannot be adjusted.':'Add a local price in the table below.';}
-  else{$('#h1').innerHTML=`The ${nm} is <b class="${v<0?'u':'o'}">${Math.abs(v*100).toFixed(0)}% ${v<0?'undervalued':'overvalued'}</b> against the ${bn}`;
+  const nm=cname(c),bnm=cname(base);const moved=S.spot[S.base+'|'+S.sel]!=null;
+  if(c.i===S.base){$('#h1').innerHTML=T(`The ${nm} is the base currency`,`${nm}は基準通貨です`);$('#h1f').textContent=T('Pick another currency or change the base.','別の通貨を選ぶか、基準通貨を変えてください。');}
+  else if(v==null){$('#h1').innerHTML=T(`No ${bn(S.basket).toLowerCase()} price for the ${nm}`,`${nm}の${bn(S.basket)}価格がありません`);$('#h1f').textContent=S.adj?T('GDP per person is missing for this country, so it cannot be adjusted.','この国は1人当たりGDPのデータがないため調整できません。'):T('Add a local price in the table below.','下の表に現地価格を入力してください。');}
+  else{$('#h1').innerHTML=T(`The ${nm} is <b class="${v<0?'u':'o'}">${Math.abs(v*100).toFixed(0)}% ${v<0?'undervalued':'overvalued'}</b> against the ${bnm}`,`${nm}は${bnm}に対して<b class="${v<0?'u':'o'}">${Math.abs(v*100).toFixed(0)}%${v<0?'割安':'割高'}</b>`);
     const b=S.basket==='cx'?'bm':S.basket;
-    $('#h1f').innerHTML=S.basket==='cx'?`Average of the ${KEYS.filter(k=>val(c,k,F)!=null).length} baskets priced here${S.adj?', each adjusted for GDP per person':''}${moved?' · at your test rate':''}.`:
-      (c[b]!=null?`${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)} costs ${fmt(c[b])} ${c.c} in ${c.n} and ${fmt(base[b])} ${base.c} in ${base.n}. ${S.adj?'Compared with what GDP per person predicts for each.':`That implies ${fmt(c[b]/base[b])} ${c.c} per ${base.c}, against ${moved?'your test rate of':'a market rate of'} ${fmt(ex(c)/base.ex)}.`}`:'');}
+    const nb=KEYS.filter(k=>val(c,k,F)!=null).length;
+    $('#h1f').innerHTML=S.basket==='cx'?T(`Average of the ${nb} baskets priced here${S.adj?', each adjusted for GDP per person':''}${moved?' · at your test rate':''}.`,`価格のある${nb}バスケットの平均${S.adj?'（それぞれGDP調整）':''}${moved?' · 試算レート':''}。`):
+      (c[b]!=null?T(`${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)} costs ${fmt(c[b])} ${c.c} in ${cn(c)} and ${fmt(base[b])} ${base.c} in ${cn(base)}. ${S.adj?'Compared with what GDP per person predicts for each.':`That implies ${fmt(c[b]/base[b])} ${c.c} per ${base.c}, against ${moved?'your test rate of':'a market rate of'} ${fmt(ex(c)/lx(base))}.`}`,`${np(b)}は${cn(c)}で${fmt(c[b])} ${c.c}、${cn(base)}で${fmt(base[b])} ${base.c}。${S.adj?'それぞれ1人当たりGDPから予想される価格と比較。':`理論レートは1 ${base.c}=${fmt(c[b]/base[b])} ${c.c}、${moved?'試算レート':'市場レート'}は${fmt(ex(c)/lx(base))}。`}`):'');}
   const items=[...KEYS,'cx'].map(b=>[b,val(c,b,F)]);
-  $('#kv').innerHTML=items.map(([b,v])=>`<div><span><i style="background:var(${BK[b].col})${b==='cx'?';transform:rotate(45deg) scale(.85)':''}"></i>${BK[b].n}</span><b class="${v==null?'':v<0?'u':'o'}">${pct(v)}</b><span>${b==='cx'?'mean of baskets':c[b]!=null?fmt(c[b])+' '+c.c:'no price'}</span></div>`).join('');
+  $('#kv').innerHTML=items.map(([b,v])=>`<div><span><i style="background:var(${BK[b].col})${b==='cx'?';transform:rotate(45deg) scale(.85)':''}"></i>${bn(b)}</span><b class="${v==null?'':v<0?'u':'o'}">${pct(v)}</b><span>${b==='cx'?T('mean of baskets','バスケット平均'):c[b]!=null?fmt(c[b])+' '+c.c:T('no price','価格なし')}</span></div>`).join('');
   // tradables gap: services vs traded goods
   const grp=g=>{const ks=KEYS.filter(k=>BK[k].g===g);const vs=ks.map(k=>[k,val(c,k,F)]).filter(x=>x[1]!=null);return {ks:vs.map(x=>x[0]),v:vs.length?vs.reduce((a,x)=>a+x[1],0)/vs.length:null}};
-  const sv=grp('svc'),gd=grp('gd');const nmz=a=>a.map(k=>BK[k].n).join(', ');
+  const sv=grp('svc'),gd=grp('gd');const nmz=a=>a.map(k=>bn(k)).join(T(', ','、'));
   if(sv.v!=null&&gd.v!=null&&c.i!==S.base){const g=sv.v-gd.v;$('#gapV').textContent=pct(g);
-    $('#gapT').innerHTML=`<strong>Tradables gap.</strong> Local services (${nmz(sv.ks)}) read <b class="${sv.v<0?'u':'o'}">${pct(sv.v)}</b>; traded goods (${nmz(gd.ks)}) read <b class="${gd.v<0?'u':'o'}">${pct(gd.v)}</b>. ${g<0?`The ${nm}'s cheapness sits in wages and rent rather than in goods priced off global lists — the Balassa–Samuelson pattern, which says it is not a real mispricing that trade would close.`:`Local services carry a premium that traded goods do not, typical of rich high-wage economies; the goods side is the better guide to the tradable exchange rate.`}`}
-  else{$('#gapV').textContent='—';$('#gapT').innerHTML='<strong>Tradables gap.</strong> Needs at least one service price (latte, Spotify, taxi) and one traded-good price (iPhone, Switch 2, Billy) for this currency and the base.'}
+    $('#gapT').innerHTML=JA()?`<strong>貿易財ギャップ。</strong> 国内サービス（${nmz(sv.ks)}）は<b class="${sv.v<0?'u':'o'}">${pct(sv.v)}</b>、貿易財（${nmz(gd.ks)}）は<b class="${gd.v<0?'u':'o'}">${pct(gd.v)}</b>。${g<0?`${nm}の割安さは、世界共通の価格表で売られる商品ではなく賃金や家賃に表れています。バラッサ＝サミュエルソン効果のパターンで、貿易によって解消される本当のミスプライスではありません。`:`国内サービスに貿易財にはないプレミアムがあり、高賃金の先進国に典型的です。貿易可能な為替レートの目安としては財の側が適しています。`}`:`<strong>Tradables gap.</strong> Local services (${nmz(sv.ks)}) read <b class="${sv.v<0?'u':'o'}">${pct(sv.v)}</b>; traded goods (${nmz(gd.ks)}) read <b class="${gd.v<0?'u':'o'}">${pct(gd.v)}</b>. ${g<0?`The ${nm}'s cheapness sits in wages and rent rather than in goods priced off global lists — the Balassa–Samuelson pattern, which says it is not a real mispricing that trade would close.`:`Local services carry a premium that traded goods do not, typical of rich high-wage economies; the goods side is the better guide to the tradable exchange rate.`}`}
+  else{$('#gapV').textContent='—';$('#gapT').innerHTML=T('<strong>Tradables gap.</strong> Needs at least one service price (latte, Spotify, taxi) and one traded-good price (iPhone, Switch 2, Billy) for this currency and the base.','<strong>貿易財ギャップ。</strong> この通貨と基準通貨の両方に、サービス価格（ラテ、Spotify、タクシー）と貿易財価格（iPhone、Switch 2、Billy）が少なくとも1つずつ必要です。')}
 }
 
 /* ===== History (Big Mac only, raw) ===== */
@@ -425,10 +448,10 @@ function drawHist(){
   hit.onpointermove=e=>{const r=svg.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(D.length-1,Math.round((x-pl)/(W-pl-pr)*(D.length-1))));const v=sv[i];
     cross.setAttribute('opacity',1);cl.setAttribute('x1',X(i));cl.setAttribute('x2',X(i));if(v!=null){cd.setAttribute('cx',X(i));cd.setAttribute('cy',Y(v));cd.style.display=''}else cd.style.display='none';
     const vals=Object.entries(ser).map(([k,a])=>[k,a[i]]).filter(x=>x[1]!=null).sort((a,b)=>a[1]-b[1]);const rk=vals.findIndex(x=>x[0]===S.sel);
-    const c=byI[S.sel];showTip(e,`<h4>${D[i]==null?'':new Date(D[i]+'-01').toLocaleString('en-GB',{month:'short',year:'numeric'})}</h4>${c.n}: <b class="${v<0?'u':'o'}">${pct(v)}</b> vs ${byI[S.base].c}${rk>=0?`<br>${rk+1} of ${vals.length} from cheapest`:''}${DATA.hist[S.sel][i]!=null?`<br>Big Mac $${fmt(DATA.hist[S.sel][i])}`:''}`)};
+    const c=byI[S.sel];showTip(e,`<h4>${D[i]==null?'':dloc(new Date(D[i]+'-01'),{month:'short',year:'numeric'})}</h4>${cn(c)}: <b class="${v<0?'u':'o'}">${pct(v)}</b> ${T('vs','対')} ${byI[S.base].c}${rk>=0?T(`<br>${rk+1} of ${vals.length} from cheapest`,`<br>${vals.length}通貨中、割安から${rk+1}位`):''}${DATA.hist[S.sel][i]!=null?`<br>${bn('bm')} $${fmt(DATA.hist[S.sel][i])}`:''}`)};
   hit.onpointerleave=()=>{cross.setAttribute('opacity',0);hideTip()};
-  $('#histSub').textContent=`Raw Big Mac valuation of the ${cname(byI[S.sel])} against the ${byI[S.base].c}, ${D[0].slice(0,4)}–2026. Hover to read any survey.`;
-  $('#histLeg').textContent=byI[S.sel].n;
+  $('#histSub').textContent=T(`Raw Big Mac valuation of the ${cname(byI[S.sel])} against the ${byI[S.base].c}, ${D[0].slice(0,4)}–2026. Hover to read any survey.`,`${cname(byI[S.sel])}の対${byI[S.base].c}ビッグマック評価（未調整）、${D[0].slice(0,4)}〜2026年。ホバーで各調査時点を表示。`);
+  $('#histLeg').textContent=cn(byI[S.sel]);
 }
 
 /* ===== Scatter: dollar price vs GDP per person ===== */
@@ -445,22 +468,22 @@ function drawScat(F){
   if(f){const a=Math.max(0,(y0-f.a)/f.k/1000);el('line',{x1:X(a),y1:Y(f.f(a*1000)),x2:X(xm),y2:Y(f.f(xm*1000)),class:'fit'},svg)}
   pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const fair=f?f.f(p.c.gdp):p.y;const cheap=p.y<fair;const on=p.c.i===S.sel,isb=p.c.i===S.base;
     const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:isb?'var(--mute)':cheap?'var(--red)':'var(--steel)',opacity:on||isb?1:.75},svg);
-    if(on){el('line',{x1:X(p.x),x2:X(p.x),y1:Y(p.y),y2:Y(fair),stroke:'var(--ink)','stroke-dasharray':'2 2'},svg);const t=el('text',{x:X(p.x)+(X(p.x)>W-90?-10:10),y:Y(p.y)+4,'text-anchor':X(p.x)>W-90?'end':'start',style:'font-size:12px;font-weight:500;fill:var(--ink)'},svg);t.textContent=p.c.n;svg.appendChild(ci)}
-    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[b].n} $${fmt(p.y)}<br>GDP per person $${fmt(p.c.gdp)}<br>Fair price on the line $${fmt(fair)}<br><b class="${cheap?'u':'o'}">${pct(p.y/fair-1)}</b> vs income-implied`);ci.onmouseleave=hideTip});
+    if(on){el('line',{x1:X(p.x),x2:X(p.x),y1:Y(p.y),y2:Y(fair),stroke:'var(--ink)','stroke-dasharray':'2 2'},svg);const t=el('text',{x:X(p.x)+(X(p.x)>W-90?-10:10),y:Y(p.y)+4,'text-anchor':X(p.x)>W-90?'end':'start',style:'font-size:12px;font-weight:500;fill:var(--ink)'},svg);t.textContent=cn(p.c);svg.appendChild(ci)}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${cn(p.c)}</h4>${bn(b)} $${fmt(p.y)}<br>${T('GDP per person','1人当たりGDP')} $${fmt(p.c.gdp)}<br>${T('Fair price on the line','ライン上の適正価格')} $${fmt(fair)}<br><b class="${cheap?'u':'o'}">${pct(p.y/fair-1)}</b> ${T('vs income-implied','所得から見た水準比')}`);ci.onmouseleave=hideTip});
   el('text',{x:pl,y:pt-2,class:'t'},svg).textContent='';
-  $('#scatSub').textContent=`${BK[b].n} price in US dollars against GDP per person. Richer places pay more; distance from the line is the GDP-adjusted reading.${S.basket==='cx'?' (Composite shows the burger.)':''}`;
+  $('#scatSub').textContent=T(`${bn(b)} price in US dollars against GDP per person. Richer places pay more; distance from the line is the GDP-adjusted reading.${S.basket==='cx'?' (Composite shows the burger.)':''}`,`${bn(b)}のドル建て価格と1人当たりGDP。豊かな国ほど高く払い、ラインからの距離がGDP調整後の評価です。${S.basket==='cx'?'（総合ではビッグマックを表示）':''}`);
 }
 
 /* ===== Table ===== */
 let SORT={k:'v',d:1};
 function drawTable(F){
   const base=byI[S.base];
-  const rows=C.map(c=>{const r={c,cx:val(c,'cx',F),spot:ex(c)/base.ex};KEYS.forEach(k=>r[k]=val(c,k,F));return r});
-  const key=SORT.k==='v'?S.basket:SORT.k;rows.sort((a,b)=>key==='n'?a.c.n.localeCompare(b.c.n)*SORT.d:((a[key]??99)-(b[key]??99))*SORT.d);
+  const rows=C.map(c=>{const r={c,cx:val(c,'cx',F),spot:ex(c)/lx(base)};KEYS.forEach(k=>r[k]=val(c,k,F));return r});
+  const key=SORT.k==='v'?S.basket:SORT.k;rows.sort((a,b)=>key==='n'?a.cn(c).localeCompare(b.cn(c))*SORT.d:((a[key]??99)-(b[key]??99))*SORT.d);
   const vc=v=>`<td class="vc ${v==null?'':v<0?'u':'o'}">${pct(v)}</td>`;
-  const inp=(c,b)=>`<input data-i="${c.i}" data-b="${b}" inputmode="decimal" aria-label="${BK[b].n} price in ${c.n}" value="${c[b]??''}" placeholder="—" class="${EDIT[c.i+b]?'ed':''}">`;
-  $('#tbl').innerHTML=`<thead><tr><th></th><th></th><th></th><th colspan="${KEYS.length}" style="text-align:center;border-bottom:1px solid var(--line)">Local price</th><th colspan="${KEYS.length+1}" style="text-align:center;border-bottom:1px solid var(--line)">Valuation vs ${base.c}</th></tr><tr><th data-s="n">Country</th><th>Ccy</th><th data-s="spot">Spot per ${base.c}</th>${KEYS.map(k=>`<th>${BK[k].n}</th>`).join('')}${KEYS.map(k=>`<th data-s="${k}">${BK[k].n}</th>`).join('')}<th data-s="cx">Composite</th></tr></thead><tbody>${
-    rows.map(r=>`<tr class="${r.c.i===S.sel?'on':''}" data-i="${r.c.i}"><td>${r.c.n}</td><td>${r.c.c}</td><td title="${LIVE.fxSrc[r.c.c]||'Economist July survey'}">${fmt(r.spot)}${LIVE.fxSrc[r.c.c]?'':'<span class="src">Jul</span>'}</td><td>${fmt(r.c.bm)}</td>${FEED.map(k=>`<td>${inp(r.c,k)}${srcTag(r.c,k)}</td>`).join('')}${KEYS.map(k=>vc(r[k])).join('')}${vc(r.cx)}</tr>`).join('')}</tbody>`;
+  const inp=(c,b)=>`<input data-i="${c.i}" data-b="${b}" inputmode="decimal" aria-label="${bn(b)} price in ${cn(c)}" value="${c[b]??''}" placeholder="—" class="${EDIT[c.i+b]?'ed':''}">`;
+  $('#tbl').innerHTML=`<thead><tr><th></th><th></th><th></th><th colspan="${KEYS.length}" style="text-align:center;border-bottom:1px solid var(--line)">${T('Local price','現地価格')}</th><th colspan="${KEYS.length+1}" style="text-align:center;border-bottom:1px solid var(--line)">${T(`Valuation vs ${base.c}`,`対${base.c}評価`)}</th></tr><tr><th data-s="n">${T('Country','国・地域')}</th><th>${T('Ccy','通貨')}</th><th data-s="spot">${T(`Spot per ${base.c}`,`1 ${base.c}あたり`)}</th>${KEYS.map(k=>`<th>${bn(k)}</th>`).join('')}${KEYS.map(k=>`<th data-s="${k}">${bn(k)}</th>`).join('')}<th data-s="cx">${bn('cx')}</th></tr></thead><tbody>${
+    rows.map(r=>`<tr class="${r.c.i===S.sel?'on':''}" data-i="${r.c.i}"><td>${cn(r.c)}</td><td>${r.c.c}</td><td title="${LIVE.fxSrc[r.c.c]||T('Economist July survey','エコノミスト7月調査')}">${fmt(r.spot)}${LIVE.fxSrc[r.c.c]?'':`<span class="src">${T('Jul','7月')}</span>`}</td><td>${fmt(r.c.bm)}</td>${FEED.map(k=>`<td>${inp(r.c,k)}${srcTag(r.c,k)}</td>`).join('')}${KEYS.map(k=>vc(r[k])).join('')}${vc(r.cx)}</tr>`).join('')}</tbody>`;
   $('#tbl').querySelectorAll('th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;SORT={k,d:SORT.k===k?-SORT.d:1};drawTable(F)});
   $('#tbl').querySelectorAll('tbody tr').forEach(tr=>tr.onclick=e=>{if(e.target.tagName==='INPUT')return;S.sel=tr.dataset.i;render()});
   $('#tbl').querySelectorAll('input').forEach(inp=>inp.onchange=()=>{const c=byI[inp.dataset.i];const v=parseFloat(inp.value.replace(/,/g,''));c[inp.dataset.b]=isFinite(v)&&v>0?v:null;EDIT[c.i+inp.dataset.b]=c[inp.dataset.b]!==ORIG[c.i][inp.dataset.b];render()});
@@ -485,52 +508,54 @@ function drawBT(F){const R=backtest();const svg=$('#bt'),W=svg.clientWidth||520,
   const pl=44,pr=10,pt=10,pb=30;const xv=[-.8,.8],yv=[-.6,1];const X=v=>pl+(W-pl-pr)*(Math.max(xv[0],Math.min(xv[1],v))-xv[0])/(xv[1]-xv[0]),Y=v=>pt+(H-pt-pb)*(1-(Math.max(yv[0],Math.min(yv[1],v))-yv[0])/(yv[1]-yv[0]));
   [-.4,0,.4,.8].forEach(t=>{el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=t?pct(t):'0'});
   [-.8,-.4,0,.4,.8].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=t?pct(t):'0'});
-  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent=BM==='raw'?'Big Mac valuation at the time →':'Big Mac gap vs the currency\'s own average →';
-  el('text',{x:pl+4,y:pt+10,class:'t'},svg).textContent=`↑ currency's move over the next ${HZ} year${HZ>1?'s':''}`;
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent=BM==='raw'?T('Big Mac valuation at the time →','当時のビッグマック評価 →'):T('Big Mac gap vs the currency\'s own average →','自国平均からのビッグマック乖離 →');
+  el('text',{x:pl+4,y:pt+10,class:'t'},svg).textContent=T(`↑ currency's move over the next ${HZ} year${HZ>1?'s':''}`,`↑ その後${HZ}年間の通貨の変化`);
   el('rect',{x:pl,y:pt,width:X(0)-pl,height:Y(0)-pt,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--steeltint)'},svg);
-  el('text',{x:pl+6,y:Y(0)-6,class:'qlab'},svg).textContent='cheap, then rose';el('text',{x:W-pr-6,y:Y(0)+14,'text-anchor':'end',class:'qlab'},svg).textContent='dear, then fell';
+  el('text',{x:pl+6,y:Y(0)-6,class:'qlab'},svg).textContent=T('cheap, then rose','割安→上昇');el('text',{x:W-pr-6,y:Y(0)+14,'text-anchor':'end',class:'qlab'},svg).textContent=T('dear, then fell','割高→下落');
   const g=el('g',{},svg);R.pts.filter(p=>p.k!==S.sel).forEach(p=>el('circle',{cx:X(p.v),cy:Y(p.y),r:2.2,fill:'var(--mute)',opacity:.35},g));
   if(R.n>=5){el('line',{x1:X(xv[0]),y1:Y(R.a+R.k*xv[0]),x2:X(xv[1]),y2:Y(R.a+R.k*xv[1]),class:'fit','stroke-width':2},svg)}
   const sp=R.pts.filter(p=>p.k===S.sel);sp.forEach(p=>{const c=el('circle',{cx:X(p.v),cy:Y(p.y),r:4.5,fill:'var(--red)',stroke:'var(--card)','stroke-width':1.5,style:'cursor:pointer'},svg);
-    c.onmousemove=e=>showTip(e,`<h4>${byI[p.k].n} · ${DATA.dates[p.i]}</h4>Signal <b class="${p.v<0?'u':'o'}">${pct(p.v)}</b><br>Next ${HZ}y vs ${byI[S.base].c}: <b>${pct(p.y)}</b>`);c.onmouseleave=hideTip});
-  $('#btLeg').textContent=byI[S.sel].n;
+    c.onmousemove=e=>showTip(e,`<h4>${cn(byI[p.k])} · ${DATA.dates[p.i]}</h4>${T('Signal','シグナル')} <b class="${p.v<0?'u':'o'}">${pct(p.v)}</b><br>${T(`Next ${HZ}y vs ${byI[S.base].c}`,`その後${HZ}年（対${byI[S.base].c}）`)}: <b>${pct(p.y)}</b>`);c.onmouseleave=hideTip});
+  $('#btLeg').textContent=cn(byI[S.sel]);
   // stats
   const c=byI[S.sel];const raw=val(c,'bm',F);let now=raw,avgS=null;{const hs=DATA.hist[c.i],hb=DATA.hist[S.base];if(hs&&BM!=='raw'){const a=hs.map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null).filter(v=>v!=null);if(a.length){avgS=a.reduce((s,v)=>s+v,0)/a.length;now=raw==null?null:raw-avgS}}}const imp=R.n>=5&&now!=null?R.a+R.k*now:null;const spotNow=ex(c)/ex(byI[S.base]);
+  if(JA()){const f=R.n>=5&&now!=null?spotNow/(1+imp):null;$('#btStat').innerHTML=R.n<5?'<p>この基準通貨では履歴が不足しています。</p>':`<div><span>${HZ}年で縮小した乖離</span><b>${Math.round(-R.k*100)}%</b><span>回帰直線の傾き</span></div><div><span>方向の的中率</span><b>${Math.round(R.hit*100)}%</b><span>10%超の乖離${R.pts.filter(p=>Math.abs(p.v)>.1).length}件中</span></div><div><span>相関 (r)</span><b>${R.r.toFixed(2)}</b><span>${R.n}件</span></div>
+    <p>${c.i===S.base?'基準通貨以外を選んでください。':now==null?'この通貨にはビッグマック価格がありません。':`${BM==='raw'?`現在<b class="${now<0?'u':'o'}">${pct(now)}</b>`:`現在の${pct(raw)}は長期平均${pct(avgS)}と比べ、${cname(c)}は自国の平常水準より<b class="${now<0?'u':'o'}">${Math.abs(now*100).toFixed(0)}%${now<0?'低い':'高い'}</b>`}。過去の傾向からは、${HZ}年で対${byI[S.base].c}<b class="${imp>0?'o':'u'}">${pct(imp)}</b>の変化が示唆され、スポットは<b>${fmt(spotNow>=1?f:1/f)}</b>（${spotNow>=1?'1 '+byI[S.base].c+'あたり'+c.c:'1 '+c.c+'あたり'+byI[S.base].c}、現在${fmt(spotNow>=1?spotNow:1/spotNow)}）前後。予測ではなく傾向で、説明力は${Math.round(R.r*R.r*100)}%です。`} <span style="color:var(--mute)">${BM==='raw'?'単純な乖離にはほとんど予測力がありません。所得の低い国は何十年も割安のままなので、割安であること自体はシグナルになりません。':BM==='own'?'各通貨の自国平均と比べると、乖離は縮小します。平均は全期間のデータを使うため結果はやや良く見えます。当時の投資家が知り得た情報で見るには「その時点までの平均比」に切り替えてください。':'各時点で入手できた履歴だけを使うと、シグナルは弱くなります。これがリアルタイムの投資家が持てた情報です。'}</span></p>`}else{
   $('#btStat').innerHTML=R.n<5?'<p>Not enough history for this base.</p>':`<div><span>Gap closed per ${HZ}y</span><b>${Math.round(-R.k*100)}%</b><span>slope of the line</span></div><div><span>Right direction</span><b>${Math.round(R.hit*100)}%</b><span>of ${R.pts.filter(p=>Math.abs(p.v)>.1).length} gaps over 10%</span></div><div><span>Fit (r)</span><b>${R.r.toFixed(2)}</b><span>${R.n} readings</span></div>
-    <p>${c.i===S.base?'Pick a currency other than the base.':now==null?'No Big Mac price for this currency.':`${BM==='raw'?`At <b class="${now<0?'u':'o'}">${pct(now)}</b> today`:`Today's ${pct(raw)} against a long-run average of ${pct(avgS)} leaves the ${cname(c)} <b class="${now<0?'u':'o'}">${Math.abs(now*100).toFixed(0)}% ${now<0?'below':'above'}</b> its own norm`}, and history points to a <b class="${imp>0?'o':'u'}">${pct(imp)}</b> move in the ${cname(c)} against the ${byI[S.base].c} over ${HZ} year${HZ>1?'s':''} — ${(()=>{const f=spotNow/(1+imp);return `a spot near <b>${fmt(spotNow>=1?f:1/f)}</b> ${spotNow>=1?c.c+' per '+byI[S.base].c:byI[S.base].c+' per '+c.c} (now ${fmt(spotNow>=1?spotNow:1/spotNow)})`})()}. A tendency, not a forecast: the fit explains ${Math.round(R.r*R.r*100)}% of the variation.`} <span style="color:var(--mute)">${BM==='raw'?'The raw gap barely predicts anything: poorer countries stay cheap for decades, so being cheap is not a signal on its own.':BM==='own'?'Measured against each currency\'s own average, gaps do close. The average uses the full history, so this flatters the result slightly; switch to "Vs average to date" for what an investor could have known at the time.':'Using only the history available at each date, the signal is weaker: what a real-time investor would have had.'}</span></p>`;
+    <p>${c.i===S.base?'Pick a currency other than the base.':now==null?'No Big Mac price for this currency.':`${BM==='raw'?`At <b class="${now<0?'u':'o'}">${pct(now)}</b> today`:`Today's ${pct(raw)} against a long-run average of ${pct(avgS)} leaves the ${cname(c)} <b class="${now<0?'u':'o'}">${Math.abs(now*100).toFixed(0)}% ${now<0?'below':'above'}</b> its own norm`}, and history points to a <b class="${imp>0?'o':'u'}">${pct(imp)}</b> move in the ${cname(c)} against the ${byI[S.base].c} over ${HZ} year${HZ>1?'s':''} — ${(()=>{const f=spotNow/(1+imp);return `a spot near <b>${fmt(spotNow>=1?f:1/f)}</b> ${spotNow>=1?c.c+' per '+byI[S.base].c:byI[S.base].c+' per '+c.c} (now ${fmt(spotNow>=1?spotNow:1/spotNow)})`})()}. A tendency, not a forecast: the fit explains ${Math.round(R.r*R.r*100)}% of the variation.`} <span style="color:var(--mute)">${BM==='raw'?'The raw gap barely predicts anything: poorer countries stay cheap for decades, so being cheap is not a signal on its own.':BM==='own'?'Measured against each currency\'s own average, gaps do close. The average uses the full history, so this flatters the result slightly; switch to "Vs average to date" for what an investor could have known at the time.':'Using only the history available at each date, the signal is weaker: what a real-time investor would have had.'}</span></p>`;}
   // buckets
-  const B=[[-9,-.4,'below −40%'],[-.4,-.2,'−40 to −20%'],[-.2,0,'−20 to 0%'],[0,.2,'0 to +20%'],[.2,9,'above +20%']].map(([lo,hi,l])=>{const s=R.pts.filter(p=>p.v>=lo&&p.v<hi);const ys=s.map(p=>p.y).sort((a,b)=>a-b);return{l,n:s.length,m:ys.length?ys[Math.floor(ys.length/2)]:null,on:now!=null&&now>=lo&&now<hi}});
+  const B=[[-9,-.4,T('below −40%','−40%未満')],[-.4,-.2,T('−40 to −20%','−40〜−20%')],[-.2,0,T('−20 to 0%','−20〜0%')],[0,.2,T('0 to +20%','0〜+20%')],[.2,9,T('above +20%','+20%超')]].map(([lo,hi,l])=>{const s=R.pts.filter(p=>p.v>=lo&&p.v<hi);const ys=s.map(p=>p.y).sort((a,b)=>a-b);return{l,n:s.length,m:ys.length?ys[Math.floor(ys.length/2)]:null,on:now!=null&&now>=lo&&now<hi}});
   const s2=$('#btb'),W2=s2.clientWidth||460,H2=170;s2.setAttribute('viewBox',`0 0 ${W2} ${H2}`);s2.innerHTML='';const lw=92,mm=Math.max(.2,...B.map(b=>Math.abs(b.m||0)))*1.15;const X2=v=>lw+ (W2-lw-50)*(v+mm)/(2*mm);
-  el('text',{x:0,y:10,class:'t'},s2).textContent=`Median move over the next ${HZ}y, by starting ${BM==='raw'?'valuation':'gap vs own average'}`;
+  el('text',{x:0,y:10,class:'t'},s2).textContent=T(`Median move over the next ${HZ}y, by starting ${BM==='raw'?'valuation':'gap vs own average'}`,`開始時の${BM==='raw'?'評価':'自国平均比の乖離'}別、その後${HZ}年の変化（中央値）`);
   B.forEach((b,i)=>{const y=22+i*29;if(b.on)el('rect',{x:0,y:y-2,width:W2,height:26,fill:'var(--sel)'},s2);el('text',{x:0,y:y+15,class:'nm',style:b.on?'font-weight:500':''},s2).textContent=b.l;
     el('line',{x1:X2(0),x2:X2(0),y1:y-2,y2:y+24,stroke:'var(--ink)'},s2);if(b.m!=null){const x0=X2(0),x1=X2(b.m);el('rect',{x:Math.min(x0,x1),y:y+4,width:Math.max(1,Math.abs(x1-x0)),height:14,fill:b.m>0?'var(--steel)':'var(--red)'},s2);
     el('text',{x:Math.max(x0,x1)+5,y:y+15,class:'vt'},s2).textContent=`${pct(b.m)} · n=${b.n}`}});
-  $('#btSub').textContent=`Every Big Mac reading since 2000 against what the exchange rate did over the following ${HZ} year${HZ>1?'s':''}, all against the ${byI[S.base].c}. Survey-date prices and rates.`;
+  $('#btSub').textContent=T(`Every Big Mac reading since 2000 against what the exchange rate did over the following ${HZ} year${HZ>1?'s':''}, all against the ${byI[S.base].c}. Survey-date prices and rates.`,`2000年以降のすべてのビッグマック評価と、その後${HZ}年間の為替の動き（対${byI[S.base].c}）。調査時点の価格とレートを使用。`);
 }
 
 /* ===== Minutes of income ===== */
 const minutes=(c,b)=>{const d=dp(c,b);return d==null||!c.gdp?null:d/(c.gdp/124800)};
-const hm=m=>m==null?'—':m>=120?`${(m/60).toFixed(m>=600?0:1)} h`:`${Math.round(m)} min`;
+const hm=m=>m==null?'—':m>=120?`${(m/60).toFixed(m>=600?0:1)}${T(' h','時間')}`:`${Math.round(m)}${T(' min','分')}`;
 function drawMins(){const c=byI[S.sel],base=byI[S.base];const svg=$('#mins'),W=svg.clientWidth||460;svg.innerHTML='';
-  $('#minTitle').textContent=`${c.n} vs ${base.n}: time worked to buy each item`;
+  $('#minTitle').textContent=T(`${cn(c)} vs ${cn(base)}: time worked to buy each item`,`${cn(c)}と${cn(base)}：各品目を買うための労働時間`);
   const rows=KEYS.map(k=>({k,a:minutes(c,k),b:minutes(base,k)})).filter(r=>r.a!=null||r.b!=null);const RH=32,H=rows.length*RH+18;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  if(!c.gdp){el('text',{x:0,y:20,class:'t'},svg).textContent='No GDP per person for this country.';return}
+  if(!c.gdp){el('text',{x:0,y:20,class:'t'},svg).textContent=T('No GDP per person for this country.','この国の1人当たりGDPがありません。');return}
   const lw=74;rows.forEach((r,i)=>{const y=8+i*RH;const mx=Math.max(r.a||0,r.b||0)||1;const L=v=>(W-lw-70)*v/mx;
-    el('text',{x:0,y:y+15,class:'nm'},svg).textContent=BK[r.k].n;
-    if(r.a!=null){el('rect',{x:lw,y:y+3,width:Math.max(1,L(r.a)),height:10,fill:`var(${BK[r.k].col})`},svg);el('text',{x:lw+L(r.a)+5,y:y+12,class:'vt',style:'fill:var(--ink)'},svg).textContent=`${hm(r.a)} ${c.c===base.c?'':'· '+c.n}`}
-    if(r.b!=null&&c.i!==base.i){el('rect',{x:lw,y:y+15,width:Math.max(1,L(r.b)),height:6,fill:'var(--mute)',opacity:.45},svg);el('text',{x:lw+L(r.b)+5,y:y+22,class:'vt'},svg).textContent=`${hm(r.b)} · ${base.n}`}});
+    el('text',{x:0,y:y+15,class:'nm'},svg).textContent=bn(r.k);
+    if(r.a!=null){el('rect',{x:lw,y:y+3,width:Math.max(1,L(r.a)),height:10,fill:`var(${BK[r.k].col})`},svg);el('text',{x:lw+L(r.a)+5,y:y+12,class:'vt',style:'fill:var(--ink)'},svg).textContent=`${hm(r.a)} ${c.c===base.c?'':'· '+cn(c)}`}
+    if(r.b!=null&&c.i!==base.i){el('rect',{x:lw,y:y+15,width:Math.max(1,L(r.b)),height:6,fill:'var(--mute)',opacity:.45},svg);el('text',{x:lw+L(r.b)+5,y:y+22,class:'vt'},svg).textContent=`${hm(r.b)} · ${cn(base)}`}});
 }
 function drawDumb(){const b=S.basket==='cx'?'bm':S.basket,base=byI[S.base];const svg=$('#dumb'),W=svg.clientWidth||460;svg.innerHTML='';
-  $('#dbTitle').textContent=`${BK[b].n}: tourist's view vs resident's view, relative to ${base.n}`;
-  const mb=minutes(base,b),pb=dp(base,b);if(mb==null){svg.setAttribute('height',30);el('text',{x:0,y:20,class:'t'},svg).textContent='No price or GDP for the base.';return}
+  $('#dbTitle').textContent=T(`${bn(b)}: tourist's view vs resident's view, relative to ${cn(base)}`,`${bn(b)}：旅行者の視点と住民の視点（${cn(base)}比）`);
+  const mb=minutes(base,b),pb=dp(base,b);if(mb==null){svg.setAttribute('height',30);el('text',{x:0,y:20,class:'t'},svg).textContent=T('No price or GDP for the base.','基準国の価格またはGDPがありません。');return}
   const rows=C.filter(c=>c.i!==base.i&&minutes(c,b)!=null).map(c=>({c,p:dp(c,b)/pb,e:minutes(c,b)/mb})).sort((a,b)=>b.e-a.e);
   const RH=15,top=22,H=top+rows.length*RH+6;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   const lw=104,lo=Math.log(.2),hi=Math.log(Math.max(5,...rows.map(r=>r.e))*1.1);const X=v=>lw+(W-lw-8)*(Math.log(v)-lo)/(hi-lo);
   [.25,.5,1,2,4,8].filter(t=>Math.log(t)<=hi).forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:top-4,y2:H-4,stroke:t===1?'var(--ink)':'var(--line)'},svg);el('text',{x:X(t),y:12,'text-anchor':'middle',class:'t tn'},svg).textContent=t+'×'});
   rows.forEach((r,i)=>{const y=top+i*RH+RH/2;const on=r.c.i===S.sel;const g=el('g',{class:'row'+(on?' on':''),style:'cursor:pointer'},svg);
-    el('rect',{class:'rbg',x:0,y:y-RH/2,width:W,height:RH},g);el('text',{class:'nm',x:lw-8,y:y+4,'text-anchor':'end',style:'font-size:11px'},g).textContent=r.c.n;
+    el('rect',{class:'rbg',x:0,y:y-RH/2,width:W,height:RH},g);el('text',{class:'nm',x:lw-8,y:y+4,'text-anchor':'end',style:'font-size:11px'},g).textContent=cn(r.c);
     el('line',{x1:X(r.p),x2:X(r.e),y1:y,y2:y,stroke:'var(--mute)','stroke-width':1.5,opacity:.6},g);el('circle',{cx:X(r.p),cy:y,r:3.2,fill:'var(--card)',stroke:'var(--mute)','stroke-width':1.5},g);el('circle',{cx:X(r.e),cy:y,r:3.6,fill:on?'var(--red)':'var(--ink)'},g);
-    g.onclick=()=>{S.sel=r.c.i;render()};g.onmousemove=e=>showTip(e,`<h4>${r.c.n}</h4>${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)}<br>Tourist pays ${r.p.toFixed(2)}× the ${base.n} price<br>Resident works ${r.e.toFixed(2)}× as long (${hm(minutes(r.c,b))} vs ${hm(mb)})`);g.onmouseleave=hideTip});
+    g.onclick=()=>{S.sel=r.c.i;render()};g.onmousemove=e=>showTip(e,`<h4>${cn(r.c)}</h4>${T(BK[b].np[0].toUpperCase()+BK[b].np.slice(1),np(b))}<br>${T(`Tourist pays ${r.p.toFixed(2)}× the ${cn(base)} price`,`旅行者は${cn(base)}価格の${r.p.toFixed(2)}倍を支払う`)}<br>${T(`Resident works ${r.e.toFixed(2)}× as long (${hm(minutes(r.c,b))} vs ${hm(mb)})`,`住民は${r.e.toFixed(2)}倍の時間働く（${hm(minutes(r.c,b))}対${hm(mb)}）`)}`);g.onmouseleave=hideTip});
 }
 
 /* ===== Deserved or mispriced: valuation vs current account ===== */
@@ -541,28 +566,30 @@ function drawQuad(F){const svg=$('#quad'),W=svg.clientWidth||520,H=320;svg.setAt
   el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--redtint)'},svg);
   [-10,-5,0,5,10,15].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=(t>0?'+':'')+t+'%'});
   for(let t=-ym;t<=ym+1e-9;t+=ym>1?.4:.2){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:Math.abs(t)<1e-9?'var(--ink)':'var(--line)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=Math.abs(t)<1e-9?'0':pct(t)}
-  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent='current-account balance, % of GDP →';
-  const ql=[[X(xm[0])+6,Y(ym)+14,'start','Dear with a deficit: vulnerable'],[W-pr-6,Y(ym)+14,'end','Dear but earned'],[X(xm[0])+6,H-pb-8,'start','Cheap for a reason'],[W-pr-6,H-pb-8,'end','Cheap with a surplus: mispriced']];
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent=T('current-account balance, % of GDP →','経常収支（GDP比）→');
+  const ql=[[X(xm[0])+6,Y(ym)+14,'start',T('Dear with a deficit: vulnerable','赤字で割高：脆弱')],[W-pr-6,Y(ym)+14,'end',T('Dear but earned','割高だが妥当')],[X(xm[0])+6,H-pb-8,'start',T('Cheap for a reason','割安には理由あり')],[W-pr-6,H-pb-8,'end',T('Cheap with a surplus: mispriced','黒字で割安：ミスプライス')]];
   ql.forEach(([x,y,a,t],i)=>el('text',{x,y,'text-anchor':a,class:'qlab',style:i===3?'fill:var(--red)':''},svg).textContent=t);
   pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const on=p.c.i===S.sel;const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:on?'var(--red)':p.y<0?'var(--red)':'var(--steel)',opacity:on?1:.55,stroke:on?'var(--ink)':'var(--card)'},svg);
-    if(on||Math.abs(p.y)>.45||Math.abs(p.x)>12){el('text',{x:X(p.x)+7,y:Y(p.y)-6,class:'t',style:on?'fill:var(--ink);font-weight:500;font-size:12px':''},svg).textContent=p.c.n}
-    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[S.basket].n} valuation <b class="${p.y<0?'u':'o'}">${pct(p.y)}</b><br>Current account ${p.x>0?'+':''}${p.x}% of GDP${DATA.caEst.includes(p.c.i)?' (estimate)':''}`);ci.onmouseleave=hideTip});
-  $('#qdSub').textContent=`${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation against the ${base.c} (vertical) and the external balance (horizontal). A cheap currency that also earns a surplus has flows on its side; a cheap one with a deficit is cheap for a reason. Current accounts: World Bank, latest year (mostly 2025).`;
+    if(on||Math.abs(p.y)>.45||Math.abs(p.x)>12){el('text',{x:X(p.x)+7,y:Y(p.y)-6,class:'t',style:on?'fill:var(--ink);font-weight:500;font-size:12px':''},svg).textContent=cn(p.c)}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${cn(p.c)}</h4>${bn(S.basket)} ${T('valuation','評価')} <b class="${p.y<0?'u':'o'}">${pct(p.y)}</b><br>${T('Current account','経常収支')} ${p.x>0?'+':''}${p.x}% ${T('of GDP','（GDP比）')}${DATA.caEst.includes(p.c.i)?T(' (estimate)','（推計）'):''}`);ci.onmouseleave=hideTip});
+  if(JA()){$('#qdSub').textContent=`縦軸は${bn(S.basket)}${S.adj?'（GDP調整）':''}の対${base.c}評価、横軸は対外収支。黒字を稼ぐ割安通貨には資金流入の裏付けがあり、赤字の割安通貨は安いなりの理由があります。経常収支：世界銀行、最新年（主に2025年）。`}else{  $('#qdSub').textContent=`${bn(S.basket)} ${S.adj?'GDP-adjusted ':''}valuation against the ${base.c} (vertical) and the external balance (horizontal). A cheap currency that also earns a surplus has flows on its side; a cheap one with a deficit is cheap for a reason. Current accounts: World Bank, latest year (mostly 2025).`;}
   // verdict + lists
   const c=byI[S.sel],v=val(c,S.basket,F),ca=DATA.ca[c.i];let vt='',vp='';
-  if(c.i===base.i){vt='Base currency';vp='Pick another currency.'}else if(v==null||ca==null){vt='Not enough data';vp='This currency needs a price for the basket and a current-account figure.'}
+  if(c.i===base.i){vt=T('Base currency','基準通貨');vp=T('Pick another currency.','別の通貨を選んでください。')}else if(v==null||ca==null){vt=T('Not enough data','データ不足');vp=T('This currency needs a price for the basket and a current-account figure.','このバスケットの価格と経常収支のデータが必要です。')}
   else{const cheap=v<-.1,dear=v>.1,surp=ca>0;
+    if(JA()){vt=cheap&&surp?'黒字で割安 — 本当のミスプライスの可能性':cheap?'割安だが赤字 — 安いなりの理由あり':dear&&surp?'割高だが黒字に裏付けられている':dear?'赤字で割高 — 脆弱':'ほぼ適正水準';
+    vp=`${cname(c)}は${bn(S.basket)}バスケットで${pct(v)}、経常収支はGDP比${ca>0?'+':''}${ca}%。${cheap&&surp?'輸出収入が継続的に流入しており、適正水準へ戻る力に実体があります。':cheap?'毎年海外資金を必要としており、それが通貨を弱くしています。割安さは資金調達の代償です。':dear&&surp?'安定した資金流入がプレミアムを支えており、持続し得ます。':dear?'海外借入に支えられたプレミアムは、資本が逃げると崩れやすい状態です。':'どちらにも強いシグナルはありません。'}`}else{
     vt=cheap&&surp?'Cheap with a surplus — looks genuinely mispriced':cheap?'Cheap, but with a deficit — cheap for a reason':dear&&surp?'Dear, but earned by a surplus':dear?'Dear with a deficit — vulnerable':'Close to fair value';
-    vp=`The ${cname(c)} reads ${pct(v)} on the ${BK[S.basket].n} basket and the country runs a current account of ${ca>0?'+':''}${ca}% of GDP. ${cheap&&surp?'Export earnings keep bringing money in, so the pull back toward fair value has a real source.':cheap?'The country needs foreign capital each year, which keeps the currency soft; cheapness is the price of that funding.':dear&&surp?'Steady inflows support the premium; it can persist.':dear?'A premium financed by foreign borrowing is exposed if capital turns away.':'No strong signal either way.'}`}
+    vp=`The ${cname(c)} reads ${pct(v)} on the ${bn(S.basket)} basket and the country runs a current account of ${ca>0?'+':''}${ca}% of GDP. ${cheap&&surp?'Export earnings keep bringing money in, so the pull back toward fair value has a real source.':cheap?'The country needs foreign capital each year, which keeps the currency soft; cheapness is the price of that funding.':dear&&surp?'Steady inflows support the premium; it can persist.':dear?'A premium financed by foreign borrowing is exposed if capital turns away.':'No strong signal either way.'}`}}
   $('#verdict').innerHTML=`<b>${vt}</b><p>${vp}</p>`;
-  const li=a=>a.map(p=>`<li data-i="${p.c.i}"><b style="font-weight:400">${p.c.n}</b><span>${pct(p.y)} · CA ${p.x>0?'+':'−'}${Math.abs(p.x)}%</span></li>`).join('');
+  const li=a=>a.map(p=>`<li data-i="${p.c.i}"><b style="font-weight:400">${cn(p.c)}</b><span>${pct(p.y)} · ${T('CA','経常')} ${p.x>0?'+':'−'}${Math.abs(p.x)}%</span></li>`).join('');
   const mis=pts.filter(p=>p.y<-.1&&p.x>0).sort((a,b)=>(a.y*a.x)-(b.y*b.x)).slice(0,6),rea=pts.filter(p=>p.y<-.1&&p.x<0).sort((a,b)=>a.y-b.y).slice(0,6);
-  $('#qLists').innerHTML=`<h4>Most mispriced: cheap and in surplus</h4><ul>${li(mis)||'<li>None</li>'}</ul><h4>Cheap for a reason: deficit</h4><ul>${li(rea)||'<li>None</li>'}</ul>`;
+  $('#qLists').innerHTML=`<h4>${T('Most mispriced: cheap and in surplus','最もミスプライス：割安かつ黒字')}</h4><ul>${li(mis)||`<li>${T('None','なし')}</li>`}</ul><h4>${T('Cheap for a reason: deficit','割安には理由あり：赤字')}</h4><ul>${li(rea)||`<li>${T('None','なし')}</li>`}</ul>`;
   $('#qLists').querySelectorAll('li[data-i]').forEach(l=>l.onclick=()=>{S.sel=l.dataset.i;render()});
 }
 
 function render(instant,fromDrag){
-  ['#baseSeg','#basketSeg','#adjSeg','#hzSeg','#bmSeg'].forEach(s=>$(s)._up());
+  ['#baseSeg','#langSeg','#basketSeg','#adjSeg','#hzSeg','#bmSeg'].forEach(s=>$(s)._up());
   const F=fits();
   drawLadder(F,instant||fromDrag);drawHead(F);drawRate(F);
   if(!fromDrag){drawStrip(F);drawHist();drawScat(F);drawTable(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}else{drawStrip(F);drawScat(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}
@@ -570,6 +597,6 @@ function render(instant,fromDrag){
 }
 let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),120)});
 matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>render(true));
-applySnap(SNAP0);liveStatus(false);render(true);
+applySnap(SNAP0);applyStatic();render(true);
 (async()=>{try{const db=await claude.use('db');if(!db)return;db.doc('feed/latest').onSnapshot(s=>{if(!s.exists)return;applySnap(s.data());liveStatus(true);render(true)},()=>{})}catch(e){}})();
 </script>
