@@ -1,0 +1,575 @@
+<title>Parity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400&display=swap">
+<style>
+/* Layout: report page on white, black hairline rules between sections. Left, the valuation ladder; right, one currency read three ways. Red marks cheap, steel marks dear; gold is the latte, steel-blue the phone, ink the burger. */
+:root{
+  --bg:#FFFFFF; --card:#FFFFFF; --ink:#000000; --mute:#707070; --line:#D8D8D8; --track:#ECECEC; --rule:#000000;
+  --red:#E60000; --redtint:rgba(230,0,0,.07); --steel:#3E5C76; --steeltint:rgba(62,92,118,.10);
+  --bm:#000000; --la:#8A7015; --sf:#B4532A; --tx:#77772A; --ip:#2F6E9E; --sw:#5B4FA0; --bi:#2E8A86; --gold:#8A7015; --goldtint:rgba(199,160,17,.14); --sel:rgba(0,0,0,.045); --pos:#1E7B45;
+  --font:'Frutiger','Frutiger LT Std','Source Sans 3','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101112; --card:#19191B; --ink:#EEEEEC; --mute:#8B8E93; --line:#2C2D30; --track:#2A2B2E; --rule:#EEEEEC;
+  --red:#F03838; --redtint:rgba(240,56,56,.13); --steel:#7FA3C2; --steeltint:rgba(127,163,194,.14);
+  --bm:#EEEEEC; --la:#D9B53A; --sf:#E8875A; --tx:#C3C35A; --ip:#6FA8D8; --sw:#9F94E6; --bi:#5CC4BE; --gold:#D9B53A; --goldtint:rgba(217,181,58,.15); --sel:rgba(255,255,255,.06); --pos:#4CC27E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101112; --card:#19191B; --ink:#EEEEEC; --mute:#8B8E93; --line:#2C2D30; --track:#2A2B2E; --rule:#EEEEEC;
+  --red:#F03838; --redtint:rgba(240,56,56,.13); --steel:#7FA3C2; --steeltint:rgba(127,163,194,.14);
+  --bm:#EEEEEC; --la:#D9B53A; --sf:#E8875A; --tx:#C3C35A; --ip:#6FA8D8; --sw:#9F94E6; --bi:#5CC4BE; --gold:#D9B53A; --goldtint:rgba(217,181,58,.15); --sel:rgba(255,255,255,.06); --pos:#4CC27E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;font-weight:300;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.app{max-width:1140px;margin:0 auto;padding-inline:20px;padding-block:24px 48px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px}
+.brand{padding-left:12px;border-left:2px solid var(--red);display:flex;flex-direction:column;gap:3px}
+.brand b{font-size:22px;font-weight:300}
+.brand span{color:var(--mute);font-size:12px}
+.live{display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums}.live i{width:7px;height:7px;border-radius:50%;background:var(--mute);flex:none}.live.on i{background:var(--pos);box-shadow:0 0 0 0 var(--pos);animation:pulse 2.4s ease-out infinite}.live.stale i{background:var(--gold)}.live em{font-style:normal}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--pos) 55%,transparent)}100%{box-shadow:0 0 0 7px transparent}}
+.src{display:inline-block;font-size:10px;letter-spacing:.03em;padding:1px 5px;margin-left:4px;vertical-align:1px;background:var(--track);color:var(--mute)}.src.off{background:var(--steeltint);color:var(--steel)}
+.srcrow{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin:0 0 10px}.srcrow b{font-weight:500;color:var(--ink)}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lbl{font-size:12px;color:var(--mute);letter-spacing:.02em}
+.seg{display:flex;flex-wrap:wrap;background:var(--track);padding:2px;gap:2px}
+.seg button{border:0;background:transparent;min-height:34px;padding:0 13px;color:var(--mute);font-weight:400;transition:background .2s,color .2s;white-space:nowrap}
+.seg button.on{background:var(--card);color:var(--ink)}
+.seg button i{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:1px}
+.icon{width:38px;height:38px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--mute)}
+.icon svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.bar2{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--rule);padding:12px 0}
+.bar2 .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec{border-top:1px solid var(--rule);padding:16px 0 28px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.sh h2{margin:0;font-size:17px;font-weight:400}
+.sh p{margin:0;color:var(--mute);font-size:12px;max-width:62ch}
+.hero{display:grid;gap:0;grid-template-columns:minmax(0,1fr)}
+@media(min-width:920px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}.hero>.right{border-left:1px solid var(--line);padding-left:28px}.hero>.left{padding-right:28px}}
+.left,.right{min-width:0}
+.right{display:flex;flex-direction:column;gap:22px}
+@media(max-width:919px){.right{border-top:1px solid var(--line);padding-top:18px;margin-top:8px}}
+svg text{font-family:var(--font)}
+.t{font-size:11px;fill:var(--mute)}
+.tn{font-variant-numeric:tabular-nums}
+#ladder{display:block;width:100%;user-select:none}
+.row{cursor:pointer}
+.row:hover .rbg{fill:var(--sel)}
+.rbg{fill:transparent}
+.row.on .rbg{fill:var(--sel)}
+.row.on .nm{fill:var(--ink);font-weight:500}
+.nm{font-size:12px;fill:var(--ink)}
+.vt{font-size:11px;fill:var(--mute);font-variant-numeric:tabular-nums}
+.row.on .vt{fill:var(--ink)}
+.under{fill:var(--red)} .over{fill:var(--steel)}
+.zero{stroke:var(--ink);stroke-width:1}
+.grd{stroke:var(--line);stroke-width:1}
+.base .nm{fill:var(--mute);font-style:italic}
+/* headline */
+.head{display:flex;flex-direction:column;gap:6px}
+.head h1{margin:0;font-size:30px;font-weight:300;line-height:1.18;text-wrap:balance;letter-spacing:-.005em}
+.head h1 b{font-weight:400}
+.head h1 .u{color:var(--red)} .head h1 .o{color:var(--steel)}
+.head .f{color:var(--mute);font-size:13px;line-height:1.5}
+.pick{display:flex;gap:8px;align-items:center}
+.pick select{height:36px;border:1px solid var(--line);background:var(--card);padding:0 10px;min-width:0;max-width:100%}
+/* strip */
+.strip svg,.rate svg,.hist svg,.scat svg{display:block;width:100%;user-select:none}
+.mk{transition:none}
+.leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--mute)}
+.leg i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:0}
+.leg i.d{transform:rotate(45deg) scale(.85)}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:0 1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kv>div{padding:9px 10px 9px 10px;display:flex;flex-direction:column;gap:2px;min-width:0;background:var(--bg)}
+.kv>div i{display:inline-block;width:8px;height:8px;margin-right:5px;vertical-align:0}
+.kv b{font-size:20px;font-weight:300;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kv span{font-size:11px;color:var(--mute)}
+@media(max-width:520px){.head h1{font-size:25px}}
+.u{color:var(--red)} .o{color:var(--steel)}
+.rate{cursor:ew-resize}
+.rate .hint{font-size:12px;color:var(--mute);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.lnk{border:0;background:none;color:var(--ink);text-decoration:underline;text-underline-offset:3px;padding:0;font-size:12px}
+.gap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;border-top:1px solid var(--line);padding-top:12px}
+.gap b{font-size:34px;font-weight:300;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gap p{margin:0;font-size:12px;color:var(--mute);line-height:1.5}
+.gap p strong{color:var(--ink);font-weight:500}
+/* two-up */
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+@media(min-width:920px){.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.two>:first-child{padding-right:28px}.two>:last-child{padding-left:28px;border-left:1px solid var(--line)}}
+.two>*{min-width:0}
+@media(max-width:919px){.two>:last-child{border-top:1px solid var(--line);padding-top:16px;margin-top:8px}}
+.ghost{fill:none;stroke:var(--mute);stroke-width:.8;opacity:.18}
+.hl{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.area-u{fill:var(--redtint)} .area-o{fill:var(--steeltint)}
+.dot{stroke:var(--card);stroke-width:1.5;cursor:pointer}
+.fit{stroke:var(--gold);stroke-width:1.2;stroke-dasharray:4 3;fill:none}
+#tip{position:fixed;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:9px 12px;font-size:12px;line-height:1.5;z-index:20;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(0,0,0,.12);max-width:260px;font-variant-numeric:tabular-nums}
+#tip.on{opacity:1}
+#tip h4{margin:0 0 3px;font-size:12px;font-weight:500}
+/* table */
+.tw{overflow-x:auto;border-top:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:400;color:var(--mute);font-size:12px;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left}
+tr.on td{background:var(--sel)}
+td input{width:96px;text-align:right;border:1px solid transparent;background:transparent;padding:3px 5px;font-variant-numeric:tabular-nums}
+td input:hover{border-color:var(--line)}
+td input:focus{border-color:var(--ink);outline:none;background:var(--card)}
+td input.ed{color:var(--gold);font-weight:500}
+.vc{font-weight:400}
+.note{color:var(--mute);font-size:12px;line-height:1.55;max-width:80ch}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+.bar3{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.bar3 .grp{display:flex;gap:8px;align-items:center}
+.chk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mute);cursor:pointer}.chk input{accent-color:var(--red)}
+.stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}
+.stat>div{background:var(--bg);padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}.stat b{font-size:22px;font-weight:300;font-variant-numeric:tabular-nums}.stat span{font-size:11px;color:var(--mute)}
+.stat p{grid-column:1/-1;margin:0;background:var(--bg);padding:10px 0 2px;font-size:13px;line-height:1.5}
+.verdict{border-left:2px solid var(--red);padding:2px 0 2px 12px;margin-bottom:16px}.verdict b{display:block;font-size:20px;font-weight:300;margin-bottom:4px}.verdict p{margin:0;font-size:13px;color:var(--mute);line-height:1.5}
+.lists h4{margin:0 0 6px;font-size:12px;font-weight:400;color:var(--mute)}.lists ul{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid var(--line)}
+.lists li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer;font-variant-numeric:tabular-nums}.lists li:hover{background:var(--sel)}.lists li span{color:var(--mute)}
+.qlab{font-size:11px;fill:var(--mute);font-weight:500}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <div class="top">
+    <div class="brand"><b>Parity</b><span id="sub">Seven everyday prices, one question: what is a currency really worth?</span><span id="live" class="live"><i></i><em>Loading live feed…</em></span></div>
+    <div class="ctl">
+      <span class="lbl">Against</span>
+      <div class="seg" id="baseSeg"></div>
+      <button class="icon" id="themeBtn" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></button>
+    </div>
+  </div>
+  <div class="bar2">
+    <div class="grp"><span class="lbl">Basket</span><div class="seg" id="basketSeg"></div></div>
+    <div class="grp"><span class="lbl">Measure</span><div class="seg" id="adjSeg"></div></div>
+  </div>
+
+  <section class="sec hero">
+    <div class="left">
+      <div class="sh"><h2 id="ladTitle">Valuation ladder</h2><p id="ladSub"></p></div>
+      <div id="ladWrap"><svg id="ladder"></svg></div>
+    </div>
+    <div class="right">
+      <div class="head">
+        <div class="pick"><span class="lbl">Currency</span><select id="cur" aria-label="Currency"></select></div>
+        <h1 id="h1"></h1>
+        <div class="f" id="h1f"></div>
+      </div>
+      <div class="strip">
+        <div class="sh"><span class="lbl">One currency, seven baskets</span><div class="leg" id="stripLeg"></div></div>
+        <svg id="strip" height="96"></svg>
+      </div>
+      <div class="rate">
+        <div class="sh"><span class="lbl" id="rateLbl">Implied exchange rates</span></div>
+        <svg id="rate" height="112" tabindex="0" aria-label="Drag the spot marker to test a different exchange rate"></svg>
+        <div class="hint"><span>Spot is the live rate. Drag the marker to test another level · arrow keys nudge it</span><button class="lnk" id="resetSpot" hidden>Back to market rate</button></div>
+      </div>
+      <div class="kv" id="kv"></div>
+      <div class="gap"><b id="gapV">—</b><p id="gapT"></p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Does it work?</h2><p id="btSub">Every Big Mac reading since 2000 against what the exchange rate did next.</p></div>
+    <div class="bar3"><div class="grp"><span class="lbl">Signal</span><div class="seg" id="bmSeg"></div></div><div class="grp"><span class="lbl">Horizon</span><div class="seg" id="hzSeg"></div></div><label class="chk"><input type="checkbox" id="exHi" checked> Exclude hyperinflation cases (Argentina, Venezuela, Lebanon, Turkey)</label></div>
+    <div class="two">
+      <div><svg id="bt" height="290"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute);opacity:.5"></i>One currency at one survey</span><span><i style="background:var(--red)"></i><span id="btLeg">Selected</span></span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fitted line</span></div></div>
+      <div><div class="stat" id="btStat"></div><svg id="btb" height="170"></svg></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Minutes of income</h2><p>How long the average person works to pay for each item: GDP per person spread over a 2,080-hour working year. The tourist sees the dollar price; the resident feels the minutes.</p></div>
+    <div class="two">
+      <div><div class="sh"><span class="lbl" id="minTitle"></span></div><svg id="mins" height="250"></svg></div>
+      <div><div class="sh"><span class="lbl" id="dbTitle"></span></div><svg id="dumb" height="300"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute)"></i>Tourist's price index</span><span><i style="background:var(--ink)"></i>Resident's effort index</span><span>1.0 = same as the base country</span></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Deserved or mispriced?</h2><p id="qdSub"></p></div>
+    <div class="two">
+      <div><svg id="quad" height="320"></svg></div>
+      <div class="lists"><div id="verdict" class="verdict"></div><div id="qLists"></div></div>
+    </div>
+  </section>
+
+  <section class="sec two">
+    <div>
+      <div class="sh"><h2>Burger drift since 2000</h2><p id="histSub"></p></div>
+      <svg id="hist" height="260"></svg>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--ink)"></i><span id="histLeg">Selected</span></span><span><i style="background:var(--mute);opacity:.4"></i>Every other currency</span><span><i style="background:var(--red);opacity:.4"></i>Undervalued</span><span><i style="background:var(--steel);opacity:.4"></i>Overvalued</span></div>
+    </div>
+    <div>
+      <div class="sh"><h2>Price against income</h2><p id="scatSub"></p></div>
+      <svg id="scat" height="260"></svg>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--red)"></i>Cheaper than income predicts</span><span><i style="background:var(--steel)"></i>Dearer</span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fair-value line</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Prices</h2><p>Every price except the Big Mac is editable. Change one and every chart follows. Edited cells turn gold. Tags show where each price came from.</p></div>
+    <div class="tw"><table id="tbl"></table></div>
+    <div class="foot">
+      <p class="note"><b>Exchange rates</b>: ECB euro reference rates (published around 16:00 CET each business day), crossed through the euro; currencies the ECB does not publish come from ExchangeRate-API daily market rates. Refreshed every morning. <b>iPhone</b>: iPhone 17 starting price on each country's apple.com store (euro area = apple.com/de). <b>Spotify</b>: Premium Individual monthly price on each country's spotify.com page (US excludes sales tax, Argentina excludes local taxes). <b>Switch 2</b>: Nintendo's list price for the base console after the September 2026 increases; Japan is the Japanese-language, Japan-only model at ¥59,980. <b>IKEA Billy</b>: white 80×28×202 cm bookcase on each IKEA country site (regular price, not member or sale prices). <b>Latte</b>: tall caffè latte; official in Japan and Taiwan, gift-voucher face value in Korea, estimates elsewhere. <b>Taxi 5 km</b>: a 5 km daytime ride with no waiting; Tokyo computed from the regulated tariff, other cities are estimates for a metered taxi or ride-hail fare. <b>Big Mac</b>: local prices from <i>The Economist</i> July 2026 survey (github.com/TheEconomist/big-mac-data), valued at today's exchange rates; the history chart uses the survey-date rates. US prices exclude sales tax; most others include VAT, which the iPhone basket largely measures. GDP-adjusted values fit each basket's dollar price against GDP per person and compare each currency with its fitted fair price.</p>
+      <button class="lnk" id="resetAll" hidden>Reset edited prices</button>
+    </div>
+  </section>
+</div>
+<div id="tip"></div>
+
+<script src="data.js"></script>
+<script src="snap.js"></script>
+<script>
+const $=s=>document.querySelector(s), NS='http://www.w3.org/2000/svg';
+const C=DATA.countries, byI=Object.fromEntries(C.map(c=>[c.i,c]));
+const ORIG=Object.fromEntries(C.map(c=>[c.i,{}]));
+const BASES=[['USA','USD'],['EUZ','EUR'],['GBR','GBP'],['JPN','JPY'],['CHN','CNY'],['CHE','CHF']];
+const BK={bm:{n:'Big Mac',col:'--bm',g:'mix',np:'a Big Mac'},
+ la:{n:'Latte',col:'--la',g:'svc',np:'a tall Starbucks latte'},sf:{n:'Spotify',col:'--sf',g:'svc',np:'a month of Spotify Premium'},tx:{n:'Taxi 5 km',col:'--tx',g:'svc',np:'a 5 km taxi ride'},
+ ip:{n:'iPhone',col:'--ip',g:'gd',np:'an iPhone 17'},sw:{n:'Switch 2',col:'--sw',g:'gd',np:'a Nintendo Switch 2'},bi:{n:'Billy',col:'--bi',g:'gd',np:'an IKEA Billy bookcase'},
+ cx:{n:'Composite',col:'--red',np:'the basket average'}};
+const KEYS=['bm','la','sf','tx','ip','sw','bi'],FEED=KEYS.slice(1);
+let S={base:'USA',basket:'bm',adj:false,sel:'JPN',spot:{}};
+try{const s=JSON.parse(localStorage.getItem('parity')||'null');if(s)Object.assign(S,{base:s.base||S.base,basket:s.basket||S.basket,adj:!!s.adj,sel:s.sel||S.sel});}catch(e){}
+if(!byI[S.sel])S.sel='JPN';
+const save=()=>{try{localStorage.setItem('parity',JSON.stringify({base:S.base,basket:S.basket,adj:S.adj,sel:S.sel}))}catch(e){}};
+let curName;try{const dn=new Intl.DisplayNames(['en'],{type:'currency'});curName=c=>dn.of(c)}catch(e){curName=c=>c}
+const cname=c=>c.i==='EUZ'?'euro':(curName(c.c)||c.c).replace(/^(US|British|Japanese|Chinese|Swiss)\s/,m=>m);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const pct=(v,d=0)=>v==null||!isFinite(v)?'—':(v>0?'+':v<0?'−':'')+Math.abs(v*100).toFixed(d)+'%';
+const fmt=(v)=>{if(v==null)return'—';const a=Math.abs(v);const d=a>=1000?0:a>=100?1:a>=10?2:a>=1?3:4;return v.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:(a>=1000||Number.isInteger(v))?0:Math.min(d,2)})};
+let LIVE=SNAP0;const EDIT={};
+const lx=c=>LIVE.fx[c.c]??c.ex;
+const ex=c=>(c.i===S.sel&&S.spot[S.base+'|'+c.i]!=null)?S.spot[S.base+'|'+c.i]*lx(byI[S.base]):lx(c);
+function applySnap(s){LIVE=s;C.forEach(c=>{FEED.forEach(b=>{const r=s[b]&&s[b][c.i];ORIG[c.i][b]=r?r.p:null;if(!EDIT[c.i+b])c[b]=ORIG[c.i][b]})})}
+const srcTag=(c,b)=>{const r=LIVE[b]&&LIVE[b][c.i];if(!r||EDIT[c.i+b])return'';const off=r.s!=='est';const lab=r.s==='est'?'est':r.s==='voucher'?'voucher':r.s==='tariff'?'tariff':r.s==='msrp'?'MSRP':'official';return `<span class="src ${off?'off':''}" title="${r.s==='est'?'Estimate — no official price feed':r.s==='voucher'?'Face value of Starbucks gift voucher':r.s==='tariff'?'Computed from the regulated taxi tariff':r.s==='msrp'?'Nintendo announced price (Sept 2026)':'From '+r.s}">${lab}</span>`};
+function liveStatus(fromDb){const s=LIVE;const u=new Date(s.updated);const age=(Date.now()-u)/36e5;const el=$('#live');el.className='live '+(age<36?'on':'stale');
+  const nE=Object.values(s.fxSrc).filter(v=>v==='ECB').length,nM=Object.values(s.fxSrc).length-nE;
+  el.querySelector('em').textContent=`FX ${nE} ECB (${s.fxAsof.ECB}) + ${nM} market · prices checked ${s.ipAsof} · updated ${u.toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${fromDb?'':' · offline copy'}`;
+  el.title=fromDb?'Live feed from the page database, refreshed daily':'Showing the copy built into the page; the live feed is not reachable in this view'}
+const dp=(c,b)=>c[b]==null?null:c[b]/ex(c);
+
+/* GDP fit per basket: dollar price = a + b·GDP per person (OLS over countries with both) */
+function fit(b){const pts=C.filter(c=>c.gdp&&c[b]!=null).map(c=>[c.gdp,dp(c,b)]);const n=pts.length;if(n<4)return null;
+  const mx=pts.reduce((s,p)=>s+p[0],0)/n,my=pts.reduce((s,p)=>s+p[1],0)/n;let sxy=0,sxx=0;pts.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2});
+  const k=sxy/sxx,a=my-k*mx;return {a,k,f:g=>a+k*g}}
+function val(c,b,F){const base=byI[S.base];if(b==='cx'){const vs=KEYS.map(x=>val(c,x,F)).filter(v=>v!=null);return vs.length?vs.reduce((a,v)=>a+v,0)/vs.length:null}
+  const p=dp(c,b),pb=dp(base,b);if(p==null||pb==null)return null;
+  if(!S.adj)return p/pb-1;const f=F[b];if(!f||!c.gdp||!base.gdp)return null;return (p/f.f(c.gdp))/(pb/f.f(base.gdp))-1}
+const fits=()=>Object.fromEntries(KEYS.map(k=>[k,fit(k)]));
+
+/* controls */
+function seg(el,items,get,set){el.innerHTML='';items.forEach(([k,lab,sw])=>{const b=document.createElement('button');b.innerHTML=(sw?`<i style="background:var(${sw})"></i>`:'')+lab;b.onclick=()=>{set(k);render()};b.dataset.k=k;el.appendChild(b)});const up=()=>el.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==String(get())));el._up=up}
+seg($('#baseSeg'),BASES.map(([i,c])=>[i,c]),()=>S.base,k=>{S.base=k;if(S.sel===k)S.sel=k==='USA'?'JPN':'USA'});
+seg($('#basketSeg'),Object.entries(BK).map(([k,v])=>[k,v.n,v.col]),()=>S.basket,k=>S.basket=k);
+seg($('#adjSeg'),[['false','Raw'],['true','GDP-adjusted']],()=>S.adj,k=>S.adj=k==='true');
+$('#cur').innerHTML=C.map(c=>`<option value="${c.i}">${c.n} · ${c.c}</option>`).join('');
+$('#cur').onchange=e=>{S.sel=e.target.value;render()};
+{let t='light';try{t=localStorage.getItem('parity-theme')||'light'}catch(e){}document.documentElement.dataset.theme=t}
+$('#themeBtn').onclick=()=>{const r=document.documentElement;const t=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=t;try{localStorage.setItem('parity-theme',t)}catch(e){}render(true)};
+$('#resetSpot').onclick=()=>{delete S.spot[S.base+'|'+S.sel];render()};
+$('#resetAll').onclick=()=>{C.forEach(c=>FEED.forEach(b=>c[b]=ORIG[c.i][b]));for(const k in EDIT)delete EDIT[k];render()};
+
+/* tooltip */
+const tip=$('#tip');
+function showTip(e,html){tip.innerHTML=html;tip.classList.add('on');const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px'}
+const hideTip=()=>tip.classList.remove('on');
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+const ease=t=>1-Math.pow(1-t,3);
+
+/* ===== Ladder (animated diverging bars) ===== */
+const LAD={rows:{},anim:null};
+function niceMax(m){return Math.max(.4,Math.ceil(m/.2)*.2)}
+function drawLadder(F,instant){
+  const svg=$('#ladder'),W=svg.clientWidth||520,RH=15,top=22;
+  const list=C.map(c=>({c,v:c.i===S.base?0:val(c,S.basket,F)})).filter(d=>d.v!=null).sort((a,b)=>a.v-b.v);
+  const H=top+list.length*RH+8;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const lw=Math.min(118,W*.3),vw=46,x0=lw+8,x1=W-vw;const mx=niceMax(Math.max(...list.map(d=>Math.abs(d.v))));
+  const X=v=>x0+(x1-x0)*(v+mx)/(2*mx);
+  if(!svg._axis){svg._axis=el('g',{},svg);svg._rows=el('g',{},svg)}
+  const ax=svg._axis;ax.innerHTML='';
+  for(let t=-mx;t<=mx+1e-9;t+=mx>1?.4:.2){const x=X(t);el('line',{x1:x,x2:x,y1:top-6,y2:H-4,class:Math.abs(t)<1e-9?'zero':'grd'},ax);const tx=el('text',{x,y:12,'text-anchor':'middle',class:'t tn'},ax);tx.textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  const seen=new Set();
+  list.forEach((d,i)=>{const id=d.c.i;seen.add(id);let r=LAD.rows[id];
+    if(!r){const g=el('g',{class:'row'},svg._rows);const bg=el('rect',{class:'rbg',x:0,width:W,height:RH},g);const bar=el('rect',{height:RH-5,y:2.5},g);const nm=el('text',{class:'nm',x:lw,y:RH-4,'text-anchor':'end'},g);const vt=el('text',{class:'vt',y:RH-4},g);
+      r=LAD.rows[id]={g,bg,bar,nm,vt,y:top+i*RH,v:0};
+      g.onclick=()=>{S.sel=id;render()};
+      g.onmousemove=e=>{const c=byI[id],vv=r.tv;showTip(e,`<h4>${c.n} · ${c.c}</h4>${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation <b class="${vv<0?'u':'o'}">${pct(vv)}</b><br>vs ${byI[S.base].c}${S.basket!=='cx'?`<br>Local price ${fmt(c[S.basket])} ${c.c} = $${fmt(dp(c,S.basket))}`:''}`)};g.onmouseleave=hideTip}
+    r.g.style.display='';r.bg.setAttribute('width',W);r.nm.textContent=d.c.n;r.ty=top+i*RH;r.tv=d.v;r.g.classList.toggle('on',id===S.sel);r.g.classList.toggle('base',id===S.base);
+    if(r.fresh===undefined){r.y=r.ty;r.fresh=false}});
+  for(const id in LAD.rows)if(!seen.has(id)){LAD.rows[id].g.style.display='none';LAD.rows[id].v=0}
+  const from={};for(const id in LAD.rows)from[id]={y:LAD.rows[id].y,v:LAD.rows[id].v};
+  cancelAnimationFrame(LAD.anim);const t0=performance.now(),dur=instant||matchMedia('(prefers-reduced-motion:reduce)').matches?0:650;
+  const step=now=>{const k=dur?ease(Math.min(1,(now-t0)/dur)):1;
+    for(const id of seen){const r=LAD.rows[id],f=from[id];r.y=f.y+(r.ty-f.y)*k;r.v=f.v+(r.tv-f.v)*k;
+      r.g.setAttribute('transform',`translate(0,${r.y})`);const xa=X(0),xb=X(Math.max(-mx,Math.min(mx,r.v)));
+      r.bar.setAttribute('x',Math.min(xa,xb));r.bar.setAttribute('width',Math.max(id===S.base?0:1,Math.abs(xb-xa)));r.bar.setAttribute('class',r.tv<0?'under':'over');
+      r.vt.setAttribute('x',W);r.vt.setAttribute('text-anchor','end');r.vt.textContent=id===S.base?'base':pct(r.v)}
+    if(k<1)LAD.anim=requestAnimationFrame(step)};
+  LAD.anim=requestAnimationFrame(step);
+  $('#ladTitle').textContent=`${BK[S.basket].n} valuation against the ${byI[S.base].c}`;
+  $('#ladSub').textContent=`${list.length} currencies, cheapest first · ${S.adj?'adjusted for GDP per person':'raw local-price comparison'} · click a row`;
+}
+
+/* ===== Strip: one currency, every basket ===== */
+$('#stripLeg').innerHTML=KEYS.map(k=>`<span><i style="background:var(${BK[k].col})"></i>${BK[k].n}</span>`).join('')+'<span><i class="d" style="background:var(--red)"></i>Composite</span>';
+const STRIP={pos:{}};
+function drawStrip(F){
+  const svg=$('#strip'),W=svg.clientWidth||460,H=96;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const c=byI[S.sel];const vals=[...KEYS,'cx'].map(b=>[b,val(c,b,F)]);
+  const m=niceMax(Math.max(.4,...vals.filter(v=>v[1]!=null).map(v=>Math.abs(v[1]))));
+  const p=14,X=v=>p+(W-2*p)*(v+m)/(2*m),y=46;
+  svg.innerHTML='';
+  el('rect',{x:p,y:y-3,width:X(0)-p,height:6,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:y-3,width:W-p-X(0),height:6,fill:'var(--steeltint)'},svg);
+  [-m,-m/2,0,m/2,m].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:y-9,y2:y+9,stroke:t?'var(--line)':'var(--ink)'},svg);const tx=el('text',{x:X(t),y:y+26,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?pct(t):'fair'});
+  const ul=el('text',{x:p,y:y+42,class:'t'},svg);ul.textContent='← cheap';const ol=el('text',{x:W-p,y:y+42,class:'t','text-anchor':'end'},svg);ol.textContent='dear →';
+  const placed=[];
+  vals.forEach(([b,v],i)=>{if(v==null)return;const x=X(v);let ly=b==='cx'?y-16:y-16-((i)%3)*0;
+    const prev=STRIP.pos[b]??x;const g=el('g',{class:'mk'},svg);
+    if(b==='cx')el('rect',{x:-6,y:-6,width:12,height:12,transform:'rotate(45)',fill:'var(--red)',stroke:'var(--card)','stroke-width':2},g);
+    else el('circle',{r:7,fill:`var(${BK[b].col})`,stroke:'var(--card)','stroke-width':2},g);
+    // label stacking
+    let row=0;while(placed.some(q=>q.row===row&&Math.abs(q.x-x)<62))row++;placed.push({x,row});
+    const lx=Math.max(p+20,Math.min(W-p-20,x));
+    const tx=el('text',{x:lx-x,y:-14-row*13,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},g);tx.textContent=`${b==='cx'?'Mix':BK[b].n} ${pct(v)}`;
+    if(row)el('line',{x1:0,x2:lx-x,y1:-8,y2:-11-row*13+4,stroke:`var(${BK[b].col})`,'stroke-width':.8,opacity:.6},g);
+    g.setAttribute('transform',`translate(${prev},${y})`);STRIP.pos[b]=x;
+    const t0=performance.now();const go=now=>{const k=ease(Math.min(1,(now-t0)/550));g.setAttribute('transform',`translate(${prev+(x-prev)*k},${y})`);if(k<1)requestAnimationFrame(go)};requestAnimationFrame(go)});
+  const top=Math.max(0,...placed.map(q=>q.row));svg.setAttribute('height',H+top*13);svg.setAttribute('viewBox',`0 ${-top*13} ${W} ${H+top*13}`);
+}
+
+/* ===== Rate axis: implied rates per basket, draggable spot ===== */
+function drawRate(F){
+  const svg=$('#rate'),W=svg.clientWidth||460,H=112;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const c=byI[S.sel],base=byI[S.base];const key=S.base+'|'+S.sel;
+  const mkt=c.ex/base.ex,spot=ex(c)/base.ex;const inv=mkt<1;const q=v=>inv?1/v:v;
+  const pair=inv?`${c.c}/${base.c}`:`${base.c}/${c.c}`;
+  $('#rateLbl').textContent=`Implied ${pair} — ${inv?`${base.c} per 1 ${c.c}`:`${c.c} per 1 ${base.c}`}`;
+  const imp=KEYS.map(b=>[b,c[b]!=null&&base[b]!=null?c[b]/base[b]:null]).filter(x=>x[1]!=null);
+  const all=[...imp.map(x=>q(x[1])),q(mkt),q(spot)];let lo=Math.min(...all)/1.18,hi=Math.max(...all)*1.18;
+  if(!svg._dom||svg._key!==key+S.basket)svg._dom=[lo,hi];else{lo=Math.min(lo,svg._dom[0]);hi=Math.max(hi,svg._dom[1]);svg._dom=[lo,hi]}svg._key=key+S.basket;
+  const p=16,L=Math.log,X=v=>p+(W-2*p)*(L(v)-L(lo))/(L(hi)-L(lo)),Xi=x=>Math.exp(L(lo)+(x-p)/(W-2*p)*(L(hi)-L(lo)));
+  const y=62;
+  el('line',{x1:p,x2:W-p,y1:y,y2:y,stroke:'var(--line)','stroke-width':6,'stroke-linecap':'butt'},svg);
+  // ticks
+  const span=L(hi)-L(lo);const tk=[];const m10=Math.pow(10,Math.floor(Math.log10(lo)));[1,1.5,2,2.5,3,4,5,6,7,8,10].forEach(s=>{for(let e=m10;e<=hi*10;e*=10){const v=s*e;if(v>=lo&&v<=hi)tk.push(v)}});
+  const tks=[...new Set(tk)].sort((a,b)=>a-b);let last=-99;tks.forEach(v=>{const x=X(v);if(x-last<44)return;last=x;el('line',{x1:x,x2:x,y1:y+5,y2:y+9,stroke:'var(--mute)'},svg);const t=el('text',{x,y:y+22,'text-anchor':'middle',class:'t tn'},svg);t.textContent=fmt(v)});
+  // spot shading between market and spot
+  if(Math.abs(spot/mkt-1)>1e-6){el('rect',{x:Math.min(X(q(mkt)),X(q(spot))),y:y-3,width:Math.abs(X(q(mkt))-X(q(spot))),height:6,fill:'var(--gold)',opacity:.5},svg);
+    el('line',{x1:X(q(mkt)),x2:X(q(mkt)),y1:y-12,y2:y+12,stroke:'var(--mute)','stroke-dasharray':'2 2'},svg)}
+  // implied markers above
+  const pl=[];imp.forEach(([b,v])=>{const x=X(q(v));let row=0;while(pl.some(z=>z.r===row&&Math.abs(z.x-x)<70))row++;pl.push({x,r:row});
+    el('line',{x1:x,x2:x,y1:y-4,y2:y-14-row*14,stroke:`var(${BK[b].col})`,'stroke-width':1},svg);el('circle',{cx:x,cy:y,r:5,fill:`var(${BK[b].col})`,stroke:'var(--card)','stroke-width':1.5},svg);
+    const t=el('text',{x:Math.max(p+24,Math.min(W-p-24,x)),y:y-18-row*14,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},svg);t.textContent=`${BK[b].n} ${fmt(q(v))}`});
+  {const top=Math.max(0,...pl.map(z=>z.r));const ex2=Math.max(0,top-1)*14;svg.setAttribute('height',112+ex2);svg.setAttribute('viewBox',`0 ${-ex2} ${W} ${112+ex2}`)}
+  // spot handle
+  const sx=X(q(spot));const g=el('g',{style:'cursor:ew-resize'},svg);
+  el('rect',{x:sx-1,y:y-12,width:2,height:28,fill:'var(--red)'},g);
+  const pw=78;el('rect',{x:Math.max(0,Math.min(W-pw,sx-pw/2)),y:y+28,width:pw,height:20,fill:'var(--red)'},g);
+  const st=el('text',{x:Math.max(pw/2,Math.min(W-pw/2,sx)),y:y+42,'text-anchor':'middle',style:'fill:#fff;font-size:11px;font-weight:500',class:'tn'},g);st.textContent=`Spot ${fmt(q(spot))}`;
+  // drag
+  const setFromX=cx=>{const r=svg.getBoundingClientRect();const x=(cx-r.left)*W/r.width;let v=Xi(Math.max(p,Math.min(W-p,x)));const rr=inv?1/v:v;S.spot[key]=rr;render(false,true)};
+  svg.onpointerdown=e=>{svg.setPointerCapture(e.pointerId);setFromX(e.clientX);svg.onpointermove=ev=>setFromX(ev.clientX)};
+  svg.onpointerup=svg.onpointercancel=()=>{svg.onpointermove=null};
+  svg.onkeydown=e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();const f=(e.key==='ArrowRight')!==inv?1.01:1/1.01;S.spot[key]=spot*f;render(false,true)};
+  $('#resetSpot').hidden=S.spot[key]==null;
+}
+
+/* ===== Headline + key numbers ===== */
+function drawHead(F){
+  const c=byI[S.sel],base=byI[S.base];const v=val(c,S.basket,F);
+  $('#cur').value=S.sel;
+  const nm=cname(c),bn=cname(base);const moved=S.spot[S.base+'|'+S.sel]!=null;
+  if(c.i===S.base){$('#h1').innerHTML=`The ${nm} is the base currency`;$('#h1f').textContent='Pick another currency or change the base.';}
+  else if(v==null){$('#h1').innerHTML=`No ${BK[S.basket].n.toLowerCase()} price for the ${nm}`;$('#h1f').textContent=S.adj?'GDP per person is missing for this country, so it cannot be adjusted.':'Add a local price in the table below.';}
+  else{$('#h1').innerHTML=`The ${nm} is <b class="${v<0?'u':'o'}">${Math.abs(v*100).toFixed(0)}% ${v<0?'undervalued':'overvalued'}</b> against the ${bn}`;
+    const b=S.basket==='cx'?'bm':S.basket;
+    $('#h1f').innerHTML=S.basket==='cx'?`Average of the ${KEYS.filter(k=>val(c,k,F)!=null).length} baskets priced here${S.adj?', each adjusted for GDP per person':''}${moved?' · at your test rate':''}.`:
+      (c[b]!=null?`${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)} costs ${fmt(c[b])} ${c.c} in ${c.n} and ${fmt(base[b])} ${base.c} in ${base.n}. ${S.adj?'Compared with what GDP per person predicts for each.':`That implies ${fmt(c[b]/base[b])} ${c.c} per ${base.c}, against ${moved?'your test rate of':'a market rate of'} ${fmt(ex(c)/base.ex)}.`}`:'');}
+  const items=[...KEYS,'cx'].map(b=>[b,val(c,b,F)]);
+  $('#kv').innerHTML=items.map(([b,v])=>`<div><span><i style="background:var(${BK[b].col})${b==='cx'?';transform:rotate(45deg) scale(.85)':''}"></i>${BK[b].n}</span><b class="${v==null?'':v<0?'u':'o'}">${pct(v)}</b><span>${b==='cx'?'mean of baskets':c[b]!=null?fmt(c[b])+' '+c.c:'no price'}</span></div>`).join('');
+  // tradables gap: services vs traded goods
+  const grp=g=>{const ks=KEYS.filter(k=>BK[k].g===g);const vs=ks.map(k=>[k,val(c,k,F)]).filter(x=>x[1]!=null);return {ks:vs.map(x=>x[0]),v:vs.length?vs.reduce((a,x)=>a+x[1],0)/vs.length:null}};
+  const sv=grp('svc'),gd=grp('gd');const nmz=a=>a.map(k=>BK[k].n).join(', ');
+  if(sv.v!=null&&gd.v!=null&&c.i!==S.base){const g=sv.v-gd.v;$('#gapV').textContent=pct(g);
+    $('#gapT').innerHTML=`<strong>Tradables gap.</strong> Local services (${nmz(sv.ks)}) read <b class="${sv.v<0?'u':'o'}">${pct(sv.v)}</b>; traded goods (${nmz(gd.ks)}) read <b class="${gd.v<0?'u':'o'}">${pct(gd.v)}</b>. ${g<0?`The ${nm}'s cheapness sits in wages and rent rather than in goods priced off global lists — the Balassa–Samuelson pattern, which says it is not a real mispricing that trade would close.`:`Local services carry a premium that traded goods do not, typical of rich high-wage economies; the goods side is the better guide to the tradable exchange rate.`}`}
+  else{$('#gapV').textContent='—';$('#gapT').innerHTML='<strong>Tradables gap.</strong> Needs at least one service price (latte, Spotify, taxi) and one traded-good price (iPhone, Switch 2, Billy) for this currency and the base.'}
+}
+
+/* ===== History (Big Mac only, raw) ===== */
+function drawHist(){
+  const svg=$('#hist'),W=svg.clientWidth||520,H=260;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const D=DATA.dates,hb=DATA.hist[S.base];const ser={};for(const k in DATA.hist){if(k===S.base)continue;ser[k]=DATA.hist[k].map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null)}
+  const pl=34,pr=10,pt=10,pb=24;const X=i=>pl+(W-pl-pr)*i/(D.length-1);
+  const sv=ser[S.sel]||[];const mx=Math.max(.6,...sv.filter(v=>v!=null).map(Math.abs));const m=niceMax(mx);
+  const Y=v=>pt+(H-pt-pb)*(m-Math.max(-m,Math.min(m,v)))/(2*m);
+  for(let t=-m;t<=m+1e-9;t+=m>1?.4:.2){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:Math.abs(t)<1e-9?'var(--ink)':'var(--line)'},svg);const tx=el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg);tx.textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  D.forEach((d,i)=>{if(d.endsWith('-07')&&(+d.slice(0,4))%5===0||i===0){const t=el('text',{x:X(i),y:H-6,'text-anchor':'middle',class:'t tn'},svg);t.textContent=d.slice(0,4)}});
+  const path=a=>{let s='',pen=false;a.forEach((v,i)=>{if(v==null){pen=false;return}s+=(pen?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1);pen=true});return s};
+  for(const k in ser)if(k!==S.sel)el('path',{d:path(ser[k]),class:'ghost'},svg);
+  if(S.sel!==S.base){
+    // shaded area split at zero
+    const clip=(sign)=>{let s='';let seg=[];const flush=()=>{if(seg.length>1){s+='M'+X(seg[0][0])+','+Y(0);seg.forEach(([i,v])=>s+='L'+X(i)+','+Y(sign<0?Math.min(0,v):Math.max(0,v)));s+='L'+X(seg[seg.length-1][0])+','+Y(0)+'Z'}seg=[]};sv.forEach((v,i)=>{if(v==null)flush();else seg.push([i,v])});flush();return s};
+    el('path',{d:clip(-1),class:'area-u'},svg);el('path',{d:clip(1),class:'area-o'},svg);
+    const hp=el('path',{d:path(sv),class:'hl'},svg);
+    const len=hp.getTotalLength?hp.getTotalLength():0;if(len&&!matchMedia('(prefers-reduced-motion:reduce)').matches){hp.style.strokeDasharray=len;hp.style.strokeDashoffset=len;hp.getBoundingClientRect();hp.style.transition='stroke-dashoffset 900ms cubic-bezier(.2,.7,.2,1)';hp.style.strokeDashoffset=0}
+    let li=sv.length-1;while(li>0&&sv[li]==null)li--;if(sv[li]!=null){el('circle',{cx:X(li),cy:Y(sv[li]),r:4,fill:'var(--ink)',stroke:'var(--card)','stroke-width':2},svg)}
+  }
+  const cross=el('g',{style:'pointer-events:none',opacity:0},svg);const cl=el('line',{y1:pt,y2:H-pb,stroke:'var(--ink)','stroke-dasharray':'2 3',opacity:.5},cross);const cd=el('circle',{r:4,fill:'var(--red)',stroke:'var(--card)','stroke-width':2},cross);
+  const hit=el('rect',{x:pl,y:pt,width:W-pl-pr,height:H-pt-pb,fill:'transparent',style:'cursor:crosshair'},svg);
+  hit.onpointermove=e=>{const r=svg.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(D.length-1,Math.round((x-pl)/(W-pl-pr)*(D.length-1))));const v=sv[i];
+    cross.setAttribute('opacity',1);cl.setAttribute('x1',X(i));cl.setAttribute('x2',X(i));if(v!=null){cd.setAttribute('cx',X(i));cd.setAttribute('cy',Y(v));cd.style.display=''}else cd.style.display='none';
+    const vals=Object.entries(ser).map(([k,a])=>[k,a[i]]).filter(x=>x[1]!=null).sort((a,b)=>a[1]-b[1]);const rk=vals.findIndex(x=>x[0]===S.sel);
+    const c=byI[S.sel];showTip(e,`<h4>${D[i]==null?'':new Date(D[i]+'-01').toLocaleString('en-GB',{month:'short',year:'numeric'})}</h4>${c.n}: <b class="${v<0?'u':'o'}">${pct(v)}</b> vs ${byI[S.base].c}${rk>=0?`<br>${rk+1} of ${vals.length} from cheapest`:''}${DATA.hist[S.sel][i]!=null?`<br>Big Mac $${fmt(DATA.hist[S.sel][i])}`:''}`)};
+  hit.onpointerleave=()=>{cross.setAttribute('opacity',0);hideTip()};
+  $('#histSub').textContent=`Raw Big Mac valuation of the ${cname(byI[S.sel])} against the ${byI[S.base].c}, ${D[0].slice(0,4)}–2026. Hover to read any survey.`;
+  $('#histLeg').textContent=byI[S.sel].n;
+}
+
+/* ===== Scatter: dollar price vs GDP per person ===== */
+function drawScat(F){
+  const svg=$('#scat'),W=svg.clientWidth||520,H=260;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const b=S.basket==='cx'?'bm':S.basket;const f=F[b];const base=byI[S.base];
+  const pts=C.filter(c=>c.gdp&&c[b]!=null).map(c=>({c,x:c.gdp/1000,y:dp(c,b)/dp(base,b)*dp(base,b)}));
+  const pl=44,pr=10,pt=12,pb=28;const xm=Math.max(...pts.map(p=>p.x))*1.05,ys=pts.map(p=>p.y);let y0=Math.min(...ys)*.85,y1=Math.max(...ys)*1.08;
+  const X=v=>pl+(W-pl-pr)*v/xm,Y=v=>pt+(H-pt-pb)*(1-(v-y0)/(y1-y0));
+  const ystep=(y1-y0)>400?200:(y1-y0)>200?100:(y1-y0)>40?20:(y1-y0)>10?2:1;
+  for(let t=Math.ceil(y0/ystep)*ystep;t<=y1;t+=ystep){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:'var(--line)'},svg);const tx=el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg);tx.textContent='$'+fmt(t)}
+  for(let t=0;t<=xm;t+=20){const tx=el('text',{x:X(t),y:H-10,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?'$'+t+'k':'0'}
+  const ax=el('text',{x:W-pr,y:H-10+0,'text-anchor':'end',class:'t'},svg);
+  if(f){const a=Math.max(0,(y0-f.a)/f.k/1000);el('line',{x1:X(a),y1:Y(f.f(a*1000)),x2:X(xm),y2:Y(f.f(xm*1000)),class:'fit'},svg)}
+  pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const fair=f?f.f(p.c.gdp):p.y;const cheap=p.y<fair;const on=p.c.i===S.sel,isb=p.c.i===S.base;
+    const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:isb?'var(--mute)':cheap?'var(--red)':'var(--steel)',opacity:on||isb?1:.75},svg);
+    if(on){el('line',{x1:X(p.x),x2:X(p.x),y1:Y(p.y),y2:Y(fair),stroke:'var(--ink)','stroke-dasharray':'2 2'},svg);const t=el('text',{x:X(p.x)+(X(p.x)>W-90?-10:10),y:Y(p.y)+4,'text-anchor':X(p.x)>W-90?'end':'start',style:'font-size:12px;font-weight:500;fill:var(--ink)'},svg);t.textContent=p.c.n;svg.appendChild(ci)}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[b].n} $${fmt(p.y)}<br>GDP per person $${fmt(p.c.gdp)}<br>Fair price on the line $${fmt(fair)}<br><b class="${cheap?'u':'o'}">${pct(p.y/fair-1)}</b> vs income-implied`);ci.onmouseleave=hideTip});
+  el('text',{x:pl,y:pt-2,class:'t'},svg).textContent='';
+  $('#scatSub').textContent=`${BK[b].n} price in US dollars against GDP per person. Richer places pay more; distance from the line is the GDP-adjusted reading.${S.basket==='cx'?' (Composite shows the burger.)':''}`;
+}
+
+/* ===== Table ===== */
+let SORT={k:'v',d:1};
+function drawTable(F){
+  const base=byI[S.base];
+  const rows=C.map(c=>{const r={c,cx:val(c,'cx',F),spot:ex(c)/base.ex};KEYS.forEach(k=>r[k]=val(c,k,F));return r});
+  const key=SORT.k==='v'?S.basket:SORT.k;rows.sort((a,b)=>key==='n'?a.c.n.localeCompare(b.c.n)*SORT.d:((a[key]??99)-(b[key]??99))*SORT.d);
+  const vc=v=>`<td class="vc ${v==null?'':v<0?'u':'o'}">${pct(v)}</td>`;
+  const inp=(c,b)=>`<input data-i="${c.i}" data-b="${b}" inputmode="decimal" aria-label="${BK[b].n} price in ${c.n}" value="${c[b]??''}" placeholder="—" class="${EDIT[c.i+b]?'ed':''}">`;
+  $('#tbl').innerHTML=`<thead><tr><th></th><th></th><th></th><th colspan="${KEYS.length}" style="text-align:center;border-bottom:1px solid var(--line)">Local price</th><th colspan="${KEYS.length+1}" style="text-align:center;border-bottom:1px solid var(--line)">Valuation vs ${base.c}</th></tr><tr><th data-s="n">Country</th><th>Ccy</th><th data-s="spot">Spot per ${base.c}</th>${KEYS.map(k=>`<th>${BK[k].n}</th>`).join('')}${KEYS.map(k=>`<th data-s="${k}">${BK[k].n}</th>`).join('')}<th data-s="cx">Composite</th></tr></thead><tbody>${
+    rows.map(r=>`<tr class="${r.c.i===S.sel?'on':''}" data-i="${r.c.i}"><td>${r.c.n}</td><td>${r.c.c}</td><td title="${LIVE.fxSrc[r.c.c]||'Economist July survey'}">${fmt(r.spot)}${LIVE.fxSrc[r.c.c]?'':'<span class="src">Jul</span>'}</td><td>${fmt(r.c.bm)}</td>${FEED.map(k=>`<td>${inp(r.c,k)}${srcTag(r.c,k)}</td>`).join('')}${KEYS.map(k=>vc(r[k])).join('')}${vc(r.cx)}</tr>`).join('')}</tbody>`;
+  $('#tbl').querySelectorAll('th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;SORT={k,d:SORT.k===k?-SORT.d:1};drawTable(F)});
+  $('#tbl').querySelectorAll('tbody tr').forEach(tr=>tr.onclick=e=>{if(e.target.tagName==='INPUT')return;S.sel=tr.dataset.i;render()});
+  $('#tbl').querySelectorAll('input').forEach(inp=>inp.onchange=()=>{const c=byI[inp.dataset.i];const v=parseFloat(inp.value.replace(/,/g,''));c[inp.dataset.b]=isFinite(v)&&v>0?v:null;EDIT[c.i+inp.dataset.b]=c[inp.dataset.b]!==ORIG[c.i][inp.dataset.b];render()});
+  $('#resetAll').hidden=!Object.values(EDIT).some(Boolean);
+}
+
+
+/* ===== Back-test: Big Mac gap vs subsequent FX move ===== */
+let HZ=5,BM='own';const HYPER=['ARG','VEN','LBN','TUR'];
+seg($('#bmSeg'),[['raw','Raw gap'],['own','Gap vs own average'],['rt','Vs average to date']],()=>BM,k=>BM=k);
+seg($('#hzSeg'),[[1,'1 year'],[3,'3 years'],[5,'5 years']],()=>HZ,k=>HZ=+k);
+$('#exHi').onchange=()=>render();
+const mIdx=d=>+d.slice(0,4)*12+(+d.slice(5,7));
+function backtest(){const D=DATA.dates,M=D.map(mIdx),b=S.base,hb=DATA.hist[b],eb=DATA.histEx[b];const pts=[];const ex=$('#exHi').checked;
+  for(const k in DATA.hist){if(k===b||(ex&&HYPER.includes(k)))continue;const hp=DATA.hist[k],he=DATA.histEx[k];const vs=hp.map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null);const all=vs.filter(v=>v!=null);const avg=all.reduce((a,v)=>a+v,0)/all.length;
+    for(let i=0;i<D.length;i++){if(vs[i]==null)continue;let adj=0;if(BM==='own')adj=avg;if(BM==='rt'){const past=vs.slice(0,i+1).filter(v=>v!=null);if(past.length<6)continue;adj=past.reduce((a,v)=>a+v,0)/past.length}let j=-1,bd=99;for(let q=i+1;q<D.length;q++){const dd=Math.abs(M[q]-M[i]-12*HZ);if(dd<bd){bd=dd;j=q}}
+      if(j<0||bd>4||he[j]==null||eb[j]==null)continue;const v=vs[i]-adj;const y=(he[i]/he[j])*(eb[j]/eb[i])-1;if(!isFinite(y))continue;pts.push({k,i,v,y})}}
+  const n=pts.length;if(n<5)return{pts,n};const mx=pts.reduce((s,p)=>s+p.v,0)/n,my=pts.reduce((s,p)=>s+p.y,0)/n;let sxy=0,sxx=0,syy=0;pts.forEach(p=>{sxy+=(p.v-mx)*(p.y-my);sxx+=(p.v-mx)**2;syy+=(p.y-my)**2});
+  const k=sxy/sxx,a=my-k*mx,r=sxy/Math.sqrt(sxx*syy);const hit=pts.filter(p=>Math.abs(p.v)>.1).reduce((s,p)=>s+(p.v*p.y<0?1:0),0)/Math.max(1,pts.filter(p=>Math.abs(p.v)>.1).length);
+  return{pts,n,a,k,r,hit}}
+function drawBT(F){const R=backtest();const svg=$('#bt'),W=svg.clientWidth||520,H=290;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const pl=44,pr=10,pt=10,pb=30;const xv=[-.8,.8],yv=[-.6,1];const X=v=>pl+(W-pl-pr)*(Math.max(xv[0],Math.min(xv[1],v))-xv[0])/(xv[1]-xv[0]),Y=v=>pt+(H-pt-pb)*(1-(Math.max(yv[0],Math.min(yv[1],v))-yv[0])/(yv[1]-yv[0]));
+  [-.4,0,.4,.8].forEach(t=>{el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=t?pct(t):'0'});
+  [-.8,-.4,0,.4,.8].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=t?pct(t):'0'});
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent=BM==='raw'?'Big Mac valuation at the time →':'Big Mac gap vs the currency\'s own average →';
+  el('text',{x:pl+4,y:pt+10,class:'t'},svg).textContent=`↑ currency's move over the next ${HZ} year${HZ>1?'s':''}`;
+  el('rect',{x:pl,y:pt,width:X(0)-pl,height:Y(0)-pt,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--steeltint)'},svg);
+  el('text',{x:pl+6,y:Y(0)-6,class:'qlab'},svg).textContent='cheap, then rose';el('text',{x:W-pr-6,y:Y(0)+14,'text-anchor':'end',class:'qlab'},svg).textContent='dear, then fell';
+  const g=el('g',{},svg);R.pts.filter(p=>p.k!==S.sel).forEach(p=>el('circle',{cx:X(p.v),cy:Y(p.y),r:2.2,fill:'var(--mute)',opacity:.35},g));
+  if(R.n>=5){el('line',{x1:X(xv[0]),y1:Y(R.a+R.k*xv[0]),x2:X(xv[1]),y2:Y(R.a+R.k*xv[1]),class:'fit','stroke-width':2},svg)}
+  const sp=R.pts.filter(p=>p.k===S.sel);sp.forEach(p=>{const c=el('circle',{cx:X(p.v),cy:Y(p.y),r:4.5,fill:'var(--red)',stroke:'var(--card)','stroke-width':1.5,style:'cursor:pointer'},svg);
+    c.onmousemove=e=>showTip(e,`<h4>${byI[p.k].n} · ${DATA.dates[p.i]}</h4>Signal <b class="${p.v<0?'u':'o'}">${pct(p.v)}</b><br>Next ${HZ}y vs ${byI[S.base].c}: <b>${pct(p.y)}</b>`);c.onmouseleave=hideTip});
+  $('#btLeg').textContent=byI[S.sel].n;
+  // stats
+  const c=byI[S.sel];const raw=val(c,'bm',F);let now=raw,avgS=null;{const hs=DATA.hist[c.i],hb=DATA.hist[S.base];if(hs&&BM!=='raw'){const a=hs.map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null).filter(v=>v!=null);if(a.length){avgS=a.reduce((s,v)=>s+v,0)/a.length;now=raw==null?null:raw-avgS}}}const imp=R.n>=5&&now!=null?R.a+R.k*now:null;const spotNow=ex(c)/ex(byI[S.base]);
+  $('#btStat').innerHTML=R.n<5?'<p>Not enough history for this base.</p>':`<div><span>Gap closed per ${HZ}y</span><b>${Math.round(-R.k*100)}%</b><span>slope of the line</span></div><div><span>Right direction</span><b>${Math.round(R.hit*100)}%</b><span>of ${R.pts.filter(p=>Math.abs(p.v)>.1).length} gaps over 10%</span></div><div><span>Fit (r)</span><b>${R.r.toFixed(2)}</b><span>${R.n} readings</span></div>
+    <p>${c.i===S.base?'Pick a currency other than the base.':now==null?'No Big Mac price for this currency.':`${BM==='raw'?`At <b class="${now<0?'u':'o'}">${pct(now)}</b> today`:`Today's ${pct(raw)} against a long-run average of ${pct(avgS)} leaves the ${cname(c)} <b class="${now<0?'u':'o'}">${Math.abs(now*100).toFixed(0)}% ${now<0?'below':'above'}</b> its own norm`}, and history points to a <b class="${imp>0?'o':'u'}">${pct(imp)}</b> move in the ${cname(c)} against the ${byI[S.base].c} over ${HZ} year${HZ>1?'s':''} — ${(()=>{const f=spotNow/(1+imp);return `a spot near <b>${fmt(spotNow>=1?f:1/f)}</b> ${spotNow>=1?c.c+' per '+byI[S.base].c:byI[S.base].c+' per '+c.c} (now ${fmt(spotNow>=1?spotNow:1/spotNow)})`})()}. A tendency, not a forecast: the fit explains ${Math.round(R.r*R.r*100)}% of the variation.`} <span style="color:var(--mute)">${BM==='raw'?'The raw gap barely predicts anything: poorer countries stay cheap for decades, so being cheap is not a signal on its own.':BM==='own'?'Measured against each currency\'s own average, gaps do close. The average uses the full history, so this flatters the result slightly; switch to "Vs average to date" for what an investor could have known at the time.':'Using only the history available at each date, the signal is weaker: what a real-time investor would have had.'}</span></p>`;
+  // buckets
+  const B=[[-9,-.4,'below −40%'],[-.4,-.2,'−40 to −20%'],[-.2,0,'−20 to 0%'],[0,.2,'0 to +20%'],[.2,9,'above +20%']].map(([lo,hi,l])=>{const s=R.pts.filter(p=>p.v>=lo&&p.v<hi);const ys=s.map(p=>p.y).sort((a,b)=>a-b);return{l,n:s.length,m:ys.length?ys[Math.floor(ys.length/2)]:null,on:now!=null&&now>=lo&&now<hi}});
+  const s2=$('#btb'),W2=s2.clientWidth||460,H2=170;s2.setAttribute('viewBox',`0 0 ${W2} ${H2}`);s2.innerHTML='';const lw=92,mm=Math.max(.2,...B.map(b=>Math.abs(b.m||0)))*1.15;const X2=v=>lw+ (W2-lw-50)*(v+mm)/(2*mm);
+  el('text',{x:0,y:10,class:'t'},s2).textContent=`Median move over the next ${HZ}y, by starting ${BM==='raw'?'valuation':'gap vs own average'}`;
+  B.forEach((b,i)=>{const y=22+i*29;if(b.on)el('rect',{x:0,y:y-2,width:W2,height:26,fill:'var(--sel)'},s2);el('text',{x:0,y:y+15,class:'nm',style:b.on?'font-weight:500':''},s2).textContent=b.l;
+    el('line',{x1:X2(0),x2:X2(0),y1:y-2,y2:y+24,stroke:'var(--ink)'},s2);if(b.m!=null){const x0=X2(0),x1=X2(b.m);el('rect',{x:Math.min(x0,x1),y:y+4,width:Math.max(1,Math.abs(x1-x0)),height:14,fill:b.m>0?'var(--steel)':'var(--red)'},s2);
+    el('text',{x:Math.max(x0,x1)+5,y:y+15,class:'vt'},s2).textContent=`${pct(b.m)} · n=${b.n}`}});
+  $('#btSub').textContent=`Every Big Mac reading since 2000 against what the exchange rate did over the following ${HZ} year${HZ>1?'s':''}, all against the ${byI[S.base].c}. Survey-date prices and rates.`;
+}
+
+/* ===== Minutes of income ===== */
+const minutes=(c,b)=>{const d=dp(c,b);return d==null||!c.gdp?null:d/(c.gdp/124800)};
+const hm=m=>m==null?'—':m>=120?`${(m/60).toFixed(m>=600?0:1)} h`:`${Math.round(m)} min`;
+function drawMins(){const c=byI[S.sel],base=byI[S.base];const svg=$('#mins'),W=svg.clientWidth||460;svg.innerHTML='';
+  $('#minTitle').textContent=`${c.n} vs ${base.n}: time worked to buy each item`;
+  const rows=KEYS.map(k=>({k,a:minutes(c,k),b:minutes(base,k)})).filter(r=>r.a!=null||r.b!=null);const RH=32,H=rows.length*RH+18;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  if(!c.gdp){el('text',{x:0,y:20,class:'t'},svg).textContent='No GDP per person for this country.';return}
+  const lw=74;rows.forEach((r,i)=>{const y=8+i*RH;const mx=Math.max(r.a||0,r.b||0)||1;const L=v=>(W-lw-70)*v/mx;
+    el('text',{x:0,y:y+15,class:'nm'},svg).textContent=BK[r.k].n;
+    if(r.a!=null){el('rect',{x:lw,y:y+3,width:Math.max(1,L(r.a)),height:10,fill:`var(${BK[r.k].col})`},svg);el('text',{x:lw+L(r.a)+5,y:y+12,class:'vt',style:'fill:var(--ink)'},svg).textContent=`${hm(r.a)} ${c.c===base.c?'':'· '+c.n}`}
+    if(r.b!=null&&c.i!==base.i){el('rect',{x:lw,y:y+15,width:Math.max(1,L(r.b)),height:6,fill:'var(--mute)',opacity:.45},svg);el('text',{x:lw+L(r.b)+5,y:y+22,class:'vt'},svg).textContent=`${hm(r.b)} · ${base.n}`}});
+}
+function drawDumb(){const b=S.basket==='cx'?'bm':S.basket,base=byI[S.base];const svg=$('#dumb'),W=svg.clientWidth||460;svg.innerHTML='';
+  $('#dbTitle').textContent=`${BK[b].n}: tourist's view vs resident's view, relative to ${base.n}`;
+  const mb=minutes(base,b),pb=dp(base,b);if(mb==null){svg.setAttribute('height',30);el('text',{x:0,y:20,class:'t'},svg).textContent='No price or GDP for the base.';return}
+  const rows=C.filter(c=>c.i!==base.i&&minutes(c,b)!=null).map(c=>({c,p:dp(c,b)/pb,e:minutes(c,b)/mb})).sort((a,b)=>b.e-a.e);
+  const RH=15,top=22,H=top+rows.length*RH+6;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const lw=104,lo=Math.log(.2),hi=Math.log(Math.max(5,...rows.map(r=>r.e))*1.1);const X=v=>lw+(W-lw-8)*(Math.log(v)-lo)/(hi-lo);
+  [.25,.5,1,2,4,8].filter(t=>Math.log(t)<=hi).forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:top-4,y2:H-4,stroke:t===1?'var(--ink)':'var(--line)'},svg);el('text',{x:X(t),y:12,'text-anchor':'middle',class:'t tn'},svg).textContent=t+'×'});
+  rows.forEach((r,i)=>{const y=top+i*RH+RH/2;const on=r.c.i===S.sel;const g=el('g',{class:'row'+(on?' on':''),style:'cursor:pointer'},svg);
+    el('rect',{class:'rbg',x:0,y:y-RH/2,width:W,height:RH},g);el('text',{class:'nm',x:lw-8,y:y+4,'text-anchor':'end',style:'font-size:11px'},g).textContent=r.c.n;
+    el('line',{x1:X(r.p),x2:X(r.e),y1:y,y2:y,stroke:'var(--mute)','stroke-width':1.5,opacity:.6},g);el('circle',{cx:X(r.p),cy:y,r:3.2,fill:'var(--card)',stroke:'var(--mute)','stroke-width':1.5},g);el('circle',{cx:X(r.e),cy:y,r:3.6,fill:on?'var(--red)':'var(--ink)'},g);
+    g.onclick=()=>{S.sel=r.c.i;render()};g.onmousemove=e=>showTip(e,`<h4>${r.c.n}</h4>${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)}<br>Tourist pays ${r.p.toFixed(2)}× the ${base.n} price<br>Resident works ${r.e.toFixed(2)}× as long (${hm(minutes(r.c,b))} vs ${hm(mb)})`);g.onmouseleave=hideTip});
+}
+
+/* ===== Deserved or mispriced: valuation vs current account ===== */
+function drawQuad(F){const svg=$('#quad'),W=svg.clientWidth||520,H=320;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';const base=byI[S.base];
+  const pts=C.filter(c=>c.i!==base.i&&DATA.ca[c.i]!=null).map(c=>({c,x:DATA.ca[c.i],y:val(c,S.basket,F)})).filter(p=>p.y!=null);
+  const pl=40,pr=10,pt=10,pb=30;const xm=[-10,18],ym=Math.max(.6,niceMax(Math.max(...pts.map(p=>Math.abs(p.y)))));
+  const X=v=>pl+(W-pl-pr)*(Math.max(xm[0],Math.min(xm[1],v))-xm[0])/(xm[1]-xm[0]),Y=v=>pt+(H-pt-pb)*(ym-Math.max(-ym,Math.min(ym,v)))/(2*ym);
+  el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--redtint)'},svg);
+  [-10,-5,0,5,10,15].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=(t>0?'+':'')+t+'%'});
+  for(let t=-ym;t<=ym+1e-9;t+=ym>1?.4:.2){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:Math.abs(t)<1e-9?'var(--ink)':'var(--line)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent='current-account balance, % of GDP →';
+  const ql=[[X(xm[0])+6,Y(ym)+14,'start','Dear with a deficit: vulnerable'],[W-pr-6,Y(ym)+14,'end','Dear but earned'],[X(xm[0])+6,H-pb-8,'start','Cheap for a reason'],[W-pr-6,H-pb-8,'end','Cheap with a surplus: mispriced']];
+  ql.forEach(([x,y,a,t],i)=>el('text',{x,y,'text-anchor':a,class:'qlab',style:i===3?'fill:var(--red)':''},svg).textContent=t);
+  pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const on=p.c.i===S.sel;const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:on?'var(--red)':p.y<0?'var(--red)':'var(--steel)',opacity:on?1:.55,stroke:on?'var(--ink)':'var(--card)'},svg);
+    if(on||Math.abs(p.y)>.45||Math.abs(p.x)>12){el('text',{x:X(p.x)+7,y:Y(p.y)-6,class:'t',style:on?'fill:var(--ink);font-weight:500;font-size:12px':''},svg).textContent=p.c.n}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[S.basket].n} valuation <b class="${p.y<0?'u':'o'}">${pct(p.y)}</b><br>Current account ${p.x>0?'+':''}${p.x}% of GDP${DATA.caEst.includes(p.c.i)?' (estimate)':''}`);ci.onmouseleave=hideTip});
+  $('#qdSub').textContent=`${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation against the ${base.c} (vertical) and the external balance (horizontal). A cheap currency that also earns a surplus has flows on its side; a cheap one with a deficit is cheap for a reason. Current accounts: World Bank, latest year (mostly 2025).`;
+  // verdict + lists
+  const c=byI[S.sel],v=val(c,S.basket,F),ca=DATA.ca[c.i];let vt='',vp='';
+  if(c.i===base.i){vt='Base currency';vp='Pick another currency.'}else if(v==null||ca==null){vt='Not enough data';vp='This currency needs a price for the basket and a current-account figure.'}
+  else{const cheap=v<-.1,dear=v>.1,surp=ca>0;
+    vt=cheap&&surp?'Cheap with a surplus — looks genuinely mispriced':cheap?'Cheap, but with a deficit — cheap for a reason':dear&&surp?'Dear, but earned by a surplus':dear?'Dear with a deficit — vulnerable':'Close to fair value';
+    vp=`The ${cname(c)} reads ${pct(v)} on the ${BK[S.basket].n} basket and the country runs a current account of ${ca>0?'+':''}${ca}% of GDP. ${cheap&&surp?'Export earnings keep bringing money in, so the pull back toward fair value has a real source.':cheap?'The country needs foreign capital each year, which keeps the currency soft; cheapness is the price of that funding.':dear&&surp?'Steady inflows support the premium; it can persist.':dear?'A premium financed by foreign borrowing is exposed if capital turns away.':'No strong signal either way.'}`}
+  $('#verdict').innerHTML=`<b>${vt}</b><p>${vp}</p>`;
+  const li=a=>a.map(p=>`<li data-i="${p.c.i}"><b style="font-weight:400">${p.c.n}</b><span>${pct(p.y)} · CA ${p.x>0?'+':'−'}${Math.abs(p.x)}%</span></li>`).join('');
+  const mis=pts.filter(p=>p.y<-.1&&p.x>0).sort((a,b)=>(a.y*a.x)-(b.y*b.x)).slice(0,6),rea=pts.filter(p=>p.y<-.1&&p.x<0).sort((a,b)=>a.y-b.y).slice(0,6);
+  $('#qLists').innerHTML=`<h4>Most mispriced: cheap and in surplus</h4><ul>${li(mis)||'<li>None</li>'}</ul><h4>Cheap for a reason: deficit</h4><ul>${li(rea)||'<li>None</li>'}</ul>`;
+  $('#qLists').querySelectorAll('li[data-i]').forEach(l=>l.onclick=()=>{S.sel=l.dataset.i;render()});
+}
+
+function render(instant,fromDrag){
+  ['#baseSeg','#basketSeg','#adjSeg','#hzSeg','#bmSeg'].forEach(s=>$(s)._up());
+  const F=fits();
+  drawLadder(F,instant||fromDrag);drawHead(F);drawRate(F);
+  if(!fromDrag){drawStrip(F);drawHist();drawScat(F);drawTable(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}else{drawStrip(F);drawScat(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}
+  save();
+}
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),120)});
+matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>render(true));
+applySnap(SNAP0);liveStatus(false);render(true);
+(async()=>{try{const db=await claude.use('db');if(!db)return;db.doc('feed/latest').onSnapshot(s=>{if(!s.exists)return;applySnap(s.data());liveStatus(true);render(true)},()=>{})}catch(e){}})();
+</script>

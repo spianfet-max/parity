@@ -1,0 +1,576 @@
+<title>Parity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400&display=swap">
+<style>
+/* Layout: report page on white, black hairline rules between sections. Left, the valuation ladder; right, one currency read three ways. Red marks cheap, steel marks dear; gold is the latte, steel-blue the phone, ink the burger. */
+:root{
+  --bg:#FFFFFF; --card:#FFFFFF; --ink:#000000; --mute:#707070; --line:#D8D8D8; --track:#ECECEC; --rule:#000000;
+  --red:#E60000; --redtint:rgba(230,0,0,.07); --steel:#3E5C76; --steeltint:rgba(62,92,118,.10);
+  --bm:#000000; --la:#8A7015; --sf:#B4532A; --tx:#77772A; --ip:#2F6E9E; --sw:#5B4FA0; --bi:#2E8A86; --gold:#8A7015; --goldtint:rgba(199,160,17,.14); --sel:rgba(0,0,0,.045); --pos:#1E7B45;
+  --font:'Frutiger','Frutiger LT Std','Source Sans 3','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101112; --card:#19191B; --ink:#EEEEEC; --mute:#8B8E93; --line:#2C2D30; --track:#2A2B2E; --rule:#EEEEEC;
+  --red:#F03838; --redtint:rgba(240,56,56,.13); --steel:#7FA3C2; --steeltint:rgba(127,163,194,.14);
+  --bm:#EEEEEC; --la:#D9B53A; --sf:#E8875A; --tx:#C3C35A; --ip:#6FA8D8; --sw:#9F94E6; --bi:#5CC4BE; --gold:#D9B53A; --goldtint:rgba(217,181,58,.15); --sel:rgba(255,255,255,.06); --pos:#4CC27E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101112; --card:#19191B; --ink:#EEEEEC; --mute:#8B8E93; --line:#2C2D30; --track:#2A2B2E; --rule:#EEEEEC;
+  --red:#F03838; --redtint:rgba(240,56,56,.13); --steel:#7FA3C2; --steeltint:rgba(127,163,194,.14);
+  --bm:#EEEEEC; --la:#D9B53A; --sf:#E8875A; --tx:#C3C35A; --ip:#6FA8D8; --sw:#9F94E6; --bi:#5CC4BE; --gold:#D9B53A; --goldtint:rgba(217,181,58,.15); --sel:rgba(255,255,255,.06); --pos:#4CC27E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;font-weight:300;-webkit-font-smoothing:antialiased}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.app{max-width:1140px;margin:0 auto;padding-inline:20px;padding-block:24px 48px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px}
+.brand{padding-left:12px;border-left:2px solid var(--red);display:flex;flex-direction:column;gap:3px}
+.brand b{font-size:22px;font-weight:300}
+.brand span{color:var(--mute);font-size:12px}
+.live{display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums}.live i{width:7px;height:7px;border-radius:50%;background:var(--mute);flex:none}.live.on i{background:var(--pos);box-shadow:0 0 0 0 var(--pos);animation:pulse 2.4s ease-out infinite}.live.stale i{background:var(--gold)}.live em{font-style:normal}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--pos) 55%,transparent)}100%{box-shadow:0 0 0 7px transparent}}
+.src{display:inline-block;font-size:10px;letter-spacing:.03em;padding:1px 5px;margin-left:4px;vertical-align:1px;background:var(--track);color:var(--mute)}.src.off{background:var(--steeltint);color:var(--steel)}
+.srcrow{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin:0 0 10px}.srcrow b{font-weight:500;color:var(--ink)}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lbl{font-size:12px;color:var(--mute);letter-spacing:.02em}
+.seg{display:flex;flex-wrap:wrap;background:var(--track);padding:2px;gap:2px}
+.seg button{border:0;background:transparent;min-height:34px;padding:0 13px;color:var(--mute);font-weight:400;transition:background .2s,color .2s;white-space:nowrap}
+.seg button.on{background:var(--card);color:var(--ink)}
+.seg button i{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:1px}
+.icon{width:38px;height:38px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--mute)}
+.icon svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.bar2{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--rule);padding:12px 0}
+.bar2 .grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec{border-top:1px solid var(--rule);padding:16px 0 28px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.sh h2{margin:0;font-size:17px;font-weight:400}
+.sh p{margin:0;color:var(--mute);font-size:12px;max-width:62ch}
+.hero{display:grid;gap:0;grid-template-columns:minmax(0,1fr)}
+@media(min-width:920px){.hero{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}.hero>.right{border-left:1px solid var(--line);padding-left:28px}.hero>.left{padding-right:28px}}
+.left,.right{min-width:0}
+.right{display:flex;flex-direction:column;gap:22px}
+@media(max-width:919px){.right{border-top:1px solid var(--line);padding-top:18px;margin-top:8px}}
+svg text{font-family:var(--font)}
+.t{font-size:11px;fill:var(--mute)}
+.tn{font-variant-numeric:tabular-nums}
+#ladder{display:block;width:100%;user-select:none}
+.row{cursor:pointer}
+.row:hover .rbg{fill:var(--sel)}
+.rbg{fill:transparent}
+.row.on .rbg{fill:var(--sel)}
+.row.on .nm{fill:var(--ink);font-weight:500}
+.nm{font-size:12px;fill:var(--ink)}
+.vt{font-size:11px;fill:var(--mute);font-variant-numeric:tabular-nums}
+.row.on .vt{fill:var(--ink)}
+.under{fill:var(--red)} .over{fill:var(--steel)}
+.zero{stroke:var(--ink);stroke-width:1}
+.grd{stroke:var(--line);stroke-width:1}
+.base .nm{fill:var(--mute);font-style:italic}
+/* headline */
+.head{display:flex;flex-direction:column;gap:6px}
+.head h1{margin:0;font-size:30px;font-weight:300;line-height:1.18;text-wrap:balance;letter-spacing:-.005em}
+.head h1 b{font-weight:400}
+.head h1 .u{color:var(--red)} .head h1 .o{color:var(--steel)}
+.head .f{color:var(--mute);font-size:13px;line-height:1.5}
+.pick{display:flex;gap:8px;align-items:center}
+.pick select{height:36px;border:1px solid var(--line);background:var(--card);padding:0 10px;min-width:0;max-width:100%}
+/* strip */
+.strip svg,.rate svg,.hist svg,.scat svg{display:block;width:100%;user-select:none}
+.mk{transition:none}
+.leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--mute)}
+.leg i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:0}
+.leg i.d{transform:rotate(45deg) scale(.85)}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:0 1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kv>div{padding:9px 10px 9px 10px;display:flex;flex-direction:column;gap:2px;min-width:0;background:var(--bg)}
+.kv>div i{display:inline-block;width:8px;height:8px;margin-right:5px;vertical-align:0}
+.kv b{font-size:20px;font-weight:300;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kv span{font-size:11px;color:var(--mute)}
+@media(max-width:520px){.head h1{font-size:25px}}
+.u{color:var(--red)} .o{color:var(--steel)}
+.rate{cursor:ew-resize}
+.rate .hint{font-size:12px;color:var(--mute);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.lnk{border:0;background:none;color:var(--ink);text-decoration:underline;text-underline-offset:3px;padding:0;font-size:12px}
+.gap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;border-top:1px solid var(--line);padding-top:12px}
+.gap b{font-size:34px;font-weight:300;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gap p{margin:0;font-size:12px;color:var(--mute);line-height:1.5}
+.gap p strong{color:var(--ink);font-weight:500}
+/* two-up */
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+@media(min-width:920px){.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.two>:first-child{padding-right:28px}.two>:last-child{padding-left:28px;border-left:1px solid var(--line)}}
+.two>*{min-width:0}
+@media(max-width:919px){.two>:last-child{border-top:1px solid var(--line);padding-top:16px;margin-top:8px}}
+.ghost{fill:none;stroke:var(--mute);stroke-width:.8;opacity:.18}
+.hl{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.area-u{fill:var(--redtint)} .area-o{fill:var(--steeltint)}
+.dot{stroke:var(--card);stroke-width:1.5;cursor:pointer}
+.fit{stroke:var(--gold);stroke-width:1.2;stroke-dasharray:4 3;fill:none}
+#tip{position:fixed;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:9px 12px;font-size:12px;line-height:1.5;z-index:20;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(0,0,0,.12);max-width:260px;font-variant-numeric:tabular-nums}
+#tip.on{opacity:1}
+#tip h4{margin:0 0 3px;font-size:12px;font-weight:500}
+/* table */
+.tw{overflow-x:auto;border-top:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:400;color:var(--mute);font-size:12px;cursor:pointer;user-select:none}
+th:first-child,td:first-child{text-align:left}
+tr.on td{background:var(--sel)}
+td input{width:96px;text-align:right;border:1px solid transparent;background:transparent;padding:3px 5px;font-variant-numeric:tabular-nums}
+td input:hover{border-color:var(--line)}
+td input:focus{border-color:var(--ink);outline:none;background:var(--card)}
+td input.ed{color:var(--gold);font-weight:500}
+.vc{font-weight:400}
+.note{color:var(--mute);font-size:12px;line-height:1.55;max-width:80ch}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px}
+.bar3{display:flex;gap:10px 22px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.bar3 .grp{display:flex;gap:8px;align-items:center}
+.chk{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--mute);cursor:pointer}.chk input{accent-color:var(--red)}
+.stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px}
+.stat>div{background:var(--bg);padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}.stat b{font-size:22px;font-weight:300;font-variant-numeric:tabular-nums}.stat span{font-size:11px;color:var(--mute)}
+.stat p{grid-column:1/-1;margin:0;background:var(--bg);padding:10px 0 2px;font-size:13px;line-height:1.5}
+.verdict{border-left:2px solid var(--red);padding:2px 0 2px 12px;margin-bottom:16px}.verdict b{display:block;font-size:20px;font-weight:300;margin-bottom:4px}.verdict p{margin:0;font-size:13px;color:var(--mute);line-height:1.5}
+.lists h4{margin:0 0 6px;font-size:12px;font-weight:400;color:var(--mute)}.lists ul{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid var(--line)}
+.lists li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer;font-variant-numeric:tabular-nums}.lists li:hover{background:var(--sel)}.lists li span{color:var(--mute)}
+.qlab{font-size:11px;fill:var(--mute);font-weight:500}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <div class="top">
+    <div class="brand"><b>Parity</b><span id="sub">Seven everyday prices, one question: what is a currency really worth?</span><span id="live" class="live"><i></i><em>Loading live feed…</em></span></div>
+    <div class="ctl">
+      <span class="lbl">Against</span>
+      <div class="seg" id="baseSeg"></div>
+      <button class="icon" id="themeBtn" aria-label="Switch light or dark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></button>
+    </div>
+  </div>
+  <div class="bar2">
+    <div class="grp"><span class="lbl">Basket</span><div class="seg" id="basketSeg"></div></div>
+    <div class="grp"><span class="lbl">Measure</span><div class="seg" id="adjSeg"></div></div>
+  </div>
+
+  <section class="sec hero">
+    <div class="left">
+      <div class="sh"><h2 id="ladTitle">Valuation ladder</h2><p id="ladSub"></p></div>
+      <div id="ladWrap"><svg id="ladder"></svg></div>
+    </div>
+    <div class="right">
+      <div class="head">
+        <div class="pick"><span class="lbl">Currency</span><select id="cur" aria-label="Currency"></select></div>
+        <h1 id="h1"></h1>
+        <div class="f" id="h1f"></div>
+      </div>
+      <div class="strip">
+        <div class="sh"><span class="lbl">One currency, seven baskets</span><div class="leg" id="stripLeg"></div></div>
+        <svg id="strip" height="96"></svg>
+      </div>
+      <div class="rate">
+        <div class="sh"><span class="lbl" id="rateLbl">Implied exchange rates</span></div>
+        <svg id="rate" height="112" tabindex="0" aria-label="Drag the spot marker to test a different exchange rate"></svg>
+        <div class="hint"><span>Spot is the live rate. Drag the marker to test another level · arrow keys nudge it</span><button class="lnk" id="resetSpot" hidden>Back to market rate</button></div>
+      </div>
+      <div class="kv" id="kv"></div>
+      <div class="gap"><b id="gapV">—</b><p id="gapT"></p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Does it work?</h2><p id="btSub">Every Big Mac reading since 2000 against what the exchange rate did next.</p></div>
+    <div class="bar3"><div class="grp"><span class="lbl">Signal</span><div class="seg" id="bmSeg"></div></div><div class="grp"><span class="lbl">Horizon</span><div class="seg" id="hzSeg"></div></div><label class="chk"><input type="checkbox" id="exHi" checked> Exclude hyperinflation cases (Argentina, Venezuela, Lebanon, Turkey)</label></div>
+    <div class="two">
+      <div><svg id="bt" height="290"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute);opacity:.5"></i>One currency at one survey</span><span><i style="background:var(--red)"></i><span id="btLeg">Selected</span></span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fitted line</span></div></div>
+      <div><div class="stat" id="btStat"></div><svg id="btb" height="170"></svg></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Minutes of income</h2><p>How long the average person works to pay for each item: GDP per person spread over a 2,080-hour working year. The tourist sees the dollar price; the resident feels the minutes.</p></div>
+    <div class="two">
+      <div><div class="sh"><span class="lbl" id="minTitle"></span></div><svg id="mins" height="250"></svg></div>
+      <div><div class="sh"><span class="lbl" id="dbTitle"></span></div><svg id="dumb" height="300"></svg><div class="leg" style="margin-top:6px"><span><i style="background:var(--mute)"></i>Tourist's price index</span><span><i style="background:var(--ink)"></i>Resident's effort index</span><span>1.0 = same as the base country</span></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Deserved or mispriced?</h2><p id="qdSub"></p></div>
+    <div class="two">
+      <div><svg id="quad" height="320"></svg></div>
+      <div class="lists"><div id="verdict" class="verdict"></div><div id="qLists"></div></div>
+    </div>
+  </section>
+
+  <section class="sec two">
+    <div>
+      <div class="sh"><h2>Burger drift since 2000</h2><p id="histSub"></p></div>
+      <svg id="hist" height="260"></svg>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--ink)"></i><span id="histLeg">Selected</span></span><span><i style="background:var(--mute);opacity:.4"></i>Every other currency</span><span><i style="background:var(--red);opacity:.4"></i>Undervalued</span><span><i style="background:var(--steel);opacity:.4"></i>Overvalued</span></div>
+    </div>
+    <div>
+      <div class="sh"><h2>Price against income</h2><p id="scatSub"></p></div>
+      <svg id="scat" height="260"></svg>
+      <div class="leg" style="margin-top:6px"><span><i style="background:var(--red)"></i>Cheaper than income predicts</span><span><i style="background:var(--steel)"></i>Dearer</span><span><i style="background:var(--gold);height:2px;vertical-align:3px"></i>Fair-value line</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sh"><h2>Prices</h2><p>Every price except the Big Mac is editable. Change one and every chart follows. Edited cells turn gold. Tags show where each price came from.</p></div>
+    <div class="tw"><table id="tbl"></table></div>
+    <div class="foot">
+      <p class="note"><b>Exchange rates</b>: ECB euro reference rates (published around 16:00 CET each business day), crossed through the euro; currencies the ECB does not publish come from ExchangeRate-API daily market rates. Refreshed every morning. <b>iPhone</b>: iPhone 17 starting price on each country's apple.com store (euro area = apple.com/de). <b>Spotify</b>: Premium Individual monthly price on each country's spotify.com page (US excludes sales tax, Argentina excludes local taxes). <b>Switch 2</b>: Nintendo's list price for the base console after the September 2026 increases; Japan is the Japanese-language, Japan-only model at ¥59,980. <b>IKEA Billy</b>: white 80×28×202 cm bookcase on each IKEA country site (regular price, not member or sale prices). <b>Latte</b>: tall caffè latte; official in Japan and Taiwan, gift-voucher face value in Korea, estimates elsewhere. <b>Taxi 5 km</b>: a 5 km daytime ride with no waiting; Tokyo computed from the regulated tariff, other cities are estimates for a metered taxi or ride-hail fare. <b>Big Mac</b>: local prices from <i>The Economist</i> July 2026 survey (github.com/TheEconomist/big-mac-data), valued at today's exchange rates; the history chart uses the survey-date rates. US prices exclude sales tax; most others include VAT, which the iPhone basket largely measures. GDP-adjusted values fit each basket's dollar price against GDP per person and compare each currency with its fitted fair price.</p>
+      <button class="lnk" id="resetAll" hidden>Reset edited prices</button>
+    </div>
+  </section>
+</div>
+<div id="tip"></div>
+
+<script>const DATA={"asof":"2026-07","countries":[{"i":"ARG","c":"ARS","n":"Argentina","ex":1472.98605,"bm":8700.0,"la":null,"ip":null,"gdp":12765},{"i":"AUS","c":"AUD","n":"Australia","ex":1.42867347667691,"bm":8.5,"la":6.1,"ip":1399,"gdp":75324},{"i":"AZE","c":"AZN","n":"Azerbaijan","ex":1.7,"bm":7.25,"la":null,"ip":null,"gdp":10679},{"i":"BHR","c":"BHD","n":"Bahrain","ex":0.37705,"bm":1.8,"la":null,"ip":null,"gdp":38126},{"i":"BRA","c":"BRL","n":"Brazil","ex":5.07935,"bm":23.9,"la":15.9,"ip":7999,"gdp":15538},{"i":"GBR","c":"GBP","n":"Britain","ex":0.74187,"bm":5.49,"la":3.75,"ip":799,"gdp":49528},{"i":"CAN","c":"CAD","n":"Canada","ex":1.40515,"bm":8.17,"la":5.45,"ip":1129,"gdp":59356},{"i":"CHL","c":"CLP","n":"Chile","ex":922.715,"bm":4990.0,"la":3900,"ip":1199990,"gdp":21029},{"i":"CHN","c":"CNY","n":"China","ex":6.7708,"bm":26.5,"la":33,"ip":5999,"gdp":23418},{"i":"COL","c":"COP","n":"Colombia","ex":3236.28,"bm":25900.0,"la":12900,"ip":null,"gdp":8393},{"i":"CRI","c":"CRC","n":"Costa Rica","ex":450.28,"bm":3150.0,"la":null,"ip":null,"gdp":19051},{"i":"CZE","c":"CZK","n":"Czech Republic","ex":21.1625,"bm":115.0,"la":105,"ip":24990,"gdp":42226},{"i":"DNK","c":"DKK","n":"Denmark","ex":6.5366,"bm":46.0,"la":50,"ip":7999,"gdp":68986},{"i":"EGY","c":"EGP","n":"Egypt","ex":50.53,"bm":145.0,"la":null,"ip":null,"gdp":7210},{"i":"EUZ","c":"EUR","n":"Euro area","ex":0.87439,"bm":6.19,"la":4.5,"ip":949,"gdp":44687},{"i":"GTM","c":"GTQ","n":"Guatemala","ex":7.6199,"bm":34.0,"la":null,"ip":null,"gdp":9116},{"i":"HND","c":"HNL","n":"Honduras","ex":26.77,"bm":139.0,"la":null,"ip":null,"gdp":4189},{"i":"HKG","c":"HKD","n":"Hong Kong","ex":7.83895,"bm":25.5,"la":42,"ip":6899,"gdp":108203},{"i":"HUN","c":"HUF","n":"Hungary","ex":313.352,"bm":1660.0,"la":1490,"ip":389990,"gdp":33882},{"i":"IND","c":"INR","n":"India","ex":96.26375,"bm":236.25,"la":290,"ip":82900,"gdp":6232},{"i":"IDN","c":"IDR","n":"Indonesia","ex":18065.0,"bm":43000.0,"la":52000,"ip":null,"gdp":12114},{"i":"ISR","c":"ILS","n":"Israel","ex":2.9993,"bm":23.0,"la":19,"ip":null,"gdp":56323},{"i":"JPN","c":"JPY","n":"Japan","ex":162.135,"bm":500.0,"la":495,"ip":129800,"gdp":66973},{"i":"JOR","c":"JOD","n":"Jordan","ex":0.709,"bm":2.5,"la":null,"ip":null,"gdp":9446},{"i":"KWT","c":"KWD","n":"Kuwait","ex":0.3095,"bm":1.4,"la":1.6,"ip":299,"gdp":42043},{"i":"LBN","c":"LBP","n":"Lebanon","ex":89550.0,"bm":480000.0,"la":null,"ip":null,"gdp":null},{"i":"MYS","c":"MYR","n":"Malaysia","ex":4.078,"bm":14.55,"la":15.5,"ip":3999,"gdp":25548},{"i":"MEX","c":"MXN","n":"Mexico","ex":17.386,"bm":109.0,"la":75,"ip":21999,"gdp":15085},{"i":"MDA","c":"MDL","n":"Moldova","ex":17.55,"bm":80.0,"la":null,"ip":null,"gdp":11543},{"i":"NZL","c":"NZD","n":"New Zealand","ex":1.71335560695622,"bm":8.8,"la":6.9,"ip":1599,"gdp":59084},{"i":"NIC","c":"NIO","n":"Nicaragua","ex":36.6243,"bm":187.0,"la":null,"ip":null,"gdp":4065},{"i":"NOR","c":"NOK","n":"Norway","ex":9.68565,"bm":78.0,"la":69,"ip":11990,"gdp":78314},{"i":"OMN","c":"OMR","n":"Oman","ex":0.38505,"bm":1.53,"la":null,"ip":null,"gdp":31256},{"i":"PAK","c":"PKR","n":"Pakistan","ex":277.925,"bm":1080.0,"la":null,"ip":null,"gdp":2729},{"i":"PER","c":"PEN","n":"Peru","ex":3.3857,"bm":16.9,"la":null,"ip":null,"gdp":12949},{"i":"PHL","c":"PHP","n":"Philippines","ex":61.685,"bm":169.0,"la":185,"ip":56990,"gdp":9038},{"i":"POL","c":"PLN","n":"Poland","ex":3.77915,"bm":23.5,"la":19.9,"ip":4199,"gdp":28239},{"i":"QAT","c":"QAR","n":"Qatar","ex":3.641,"bm":18.0,"la":20,"ip":3399,"gdp":87645},{"i":"ROU","c":"RON","n":"Romania","ex":4.58165,"bm":18.35,"la":null,"ip":null,"gdp":34386},{"i":"SAU","c":"SAR","n":"Saudi Arabia","ex":3.755,"bm":19.0,"la":21,"ip":3499,"gdp":43537},{"i":"SGP","c":"SGD","n":"Singapore","ex":1.29005,"bm":7.45,"la":7.1,"ip":1299,"gdp":108466},{"i":"ZAF","c":"ZAR","n":"South Africa","ex":16.325,"bm":56.9,"la":45,"ip":null,"gdp":13238},{"i":"KOR","c":"KRW","n":"South Korea","ex":1485.9,"bm":5700.0,"la":5000,"ip":1290000,"gdp":56232},{"i":"SWE","c":"SEK","n":"Sweden","ex":9.63495,"bm":69.0,"la":55,"ip":11495,"gdp":55474},{"i":"CHE","c":"CHF","n":"Switzerland","ex":0.80735,"bm":7.3,"la":6.9,"ip":799,"gdp":81901},{"i":"TWN","c":"TWD","n":"Taiwan","ex":32.1875,"bm":78.0,"la":130,"ip":29900,"gdp":98223},{"i":"THA","c":"THB","n":"Thailand","ex":33.62,"bm":135.0,"la":125,"ip":29900,"gdp":12206},{"i":"TUR","c":"TRY","n":"Turkey","ex":47.0275,"bm":325.0,"la":165,"ip":77999,"gdp":14053},{"i":"UKR","c":"UAH","n":"Ukraine","ex":44.6702,"bm":149.0,"la":null,"ip":null,"gdp":11311},{"i":"ARE","c":"AED","n":"United Arab Emirates","ex":3.67285,"bm":19.0,"la":20,"ip":3399,"gdp":60392},{"i":"USA","c":"USD","n":"United States","ex":1.0,"bm":6.22,"la":5.25,"ip":799,"gdp":89991},{"i":"URY","c":"UYU","n":"Uruguay","ex":40.165,"bm":359.0,"la":null,"ip":null,"gdp":17473},{"i":"VEN","c":"VES","n":"Venezuela","ex":724.8398,"bm":3267.0,"la":null,"ip":null,"gdp":null},{"i":"VNM","c":"VND","n":"Vietnam","ex":26255.5,"bm":76000.0,"la":75000,"ip":24990000,"gdp":10278}],"dates":["2000-04","2001-04","2002-04","2003-04","2004-05","2005-06","2006-01","2006-05","2007-01","2007-06","2008-06","2009-07","2010-01","2010-07","2011-07","2012-01","2012-07","2013-01","2013-07","2014-01","2014-07","2015-01","2015-07","2016-01","2016-07","2017-01","2017-07","2018-01","2018-07","2019-01","2019-07","2020-01","2020-07","2021-01","2021-07","2022-01","2022-07","2023-01","2023-07","2024-01","2024-07","2025-01","2025-07","2026-01","2026-07"],"hist":{"ARG":[2.5,2.5,0.799,1.424,1.478,1.64,1.55,2.29,2.671,2.669,3.643,3.017,1.843,3.559,4.84,4.637,4.161,3.818,3.88,3.034,2.571,3.252,3.065,2.39,3.348,3.468,4.126,3.96,2.705,2.002,2.871,2.847,3.509,3.748,3.945,4.285,4.57,5.306,5.994,3.835,6.545,6.952,5.132,5.533,5.906],"AUS":[1.542,1.515,1.613,1.863,2.273,2.497,2.442,2.439,2.723,2.949,3.363,3.372,3.978,3.837,4.944,4.937,4.68,4.9,4.62,4.474,4.814,4.319,3.922,3.744,4.305,4.275,4.528,4.706,4.515,4.352,4.26,4.451,4.578,4.985,4.793,4.509,4.626,5.111,5.02,5.074,5.061,4.87,5.216,5.695,5.95],"BRA":[1.648,1.644,1.538,1.482,1.698,2.394,2.742,2.777,3.0,3.607,4.733,4.021,4.758,4.907,6.162,5.679,4.936,5.644,5.285,5.247,5.855,5.207,4.283,3.354,4.782,5.118,5.102,5.112,4.403,4.546,4.596,4.805,3.914,3.978,4.363,4.313,4.247,4.44,4.814,4.809,4.228,4.026,4.303,4.45,4.705],"CAN":[1.939,2.135,2.121,2.207,2.328,2.625,3.008,3.142,3.09,3.683,4.076,3.351,3.974,4.001,5.001,4.633,5.022,5.394,5.26,5.013,5.251,4.64,4.536,4.144,4.605,4.51,4.656,5.257,5.067,5.085,5.156,5.182,5.077,5.288,5.314,5.323,4.561,4.574,5.356,5.555,5.516,5.429,5.467,5.543,5.814],"CHE":[3.471,3.642,3.795,4.599,4.884,5.05,4.931,5.212,5.046,5.201,6.359,5.985,6.304,6.185,8.063,6.806,6.562,7.125,6.719,7.142,6.826,7.544,6.822,6.443,6.592,6.35,6.742,6.765,6.544,6.622,6.542,6.713,6.906,7.291,7.044,6.981,6.712,7.258,7.729,8.167,8.066,7.992,8.993,9.084,9.042],"CHL":[2.451,2.097,2.137,1.955,2.184,2.532,2.984,2.944,3.092,2.971,3.134,3.19,3.18,3.342,3.998,4.051,4.158,4.346,3.936,3.69,3.722,3.347,3.269,2.936,3.532,3.641,3.844,4.291,4.051,3.888,3.827,3.416,3.478,4.087,3.938,3.882,3.662,4.747,4.646,4.456,4.54,4.548,4.651,5.42,5.408],"CHN":[1.196,1.196,1.268,1.196,1.256,1.269,1.302,1.308,1.415,1.446,1.829,1.829,1.831,1.948,2.273,2.438,2.45,2.572,2.608,2.743,2.727,2.769,2.738,2.684,2.785,2.83,2.917,3.172,3.096,3.051,3.05,3.123,3.098,3.459,3.457,3.833,3.557,3.538,3.5,3.472,3.528,3.518,3.549,3.662,3.914],"CZE":[1.391,1.436,1.655,1.957,2.129,2.299,2.601,2.671,2.423,2.505,4.558,3.64,3.714,3.425,4.072,3.448,3.341,3.722,3.491,3.473,3.456,2.919,2.834,2.983,3.055,2.906,3.281,3.808,3.399,3.81,3.728,3.756,3.801,4.122,4.082,4.105,3.972,4.511,4.85,4.611,4.632,4.562,5.134,5.495,5.434],"DNK":[3.078,2.926,2.953,4.093,4.461,4.576,4.493,4.769,4.824,5.082,5.952,5.527,5.994,4.902,5.482,5.374,4.645,5.184,4.913,5.18,5.146,5.376,5.079,4.322,4.44,4.225,4.606,4.932,4.718,4.604,4.505,4.465,4.581,4.901,4.744,4.821,null,5.409,5.651,5.692,5.656,5.487,7.005,7.143,7.037],"EUZ":[2.381,2.262,2.376,2.981,3.288,3.583,3.514,3.767,3.809,4.167,5.343,4.617,4.844,4.333,4.928,4.431,4.344,4.878,4.659,4.962,4.954,4.264,4.054,3.999,4.206,4.062,4.465,4.836,4.735,4.642,4.572,4.582,4.786,5.164,5.046,4.955,4.765,5.231,5.821,5.867,6.06,5.953,6.924,6.961,7.079],"GBR":[3.002,2.846,2.886,3.144,3.365,3.44,3.316,3.648,3.834,4.007,4.57,3.688,3.671,3.484,3.892,3.823,4.162,4.248,4.02,4.627,4.925,4.368,4.512,4.222,3.94,3.728,4.111,4.413,4.232,4.073,4.101,4.41,4.277,4.438,4.75,4.817,4.44,4.667,5.391,5.71,5.896,5.726,6.819,7.081,7.4],"HKG":[1.309,1.372,1.4,1.474,1.54,1.542,1.548,1.548,1.539,1.535,1.706,1.716,1.908,1.904,1.938,2.124,2.127,2.191,2.192,2.32,2.426,2.425,2.477,2.477,2.476,2.476,2.458,2.622,2.548,2.553,2.625,2.637,2.645,2.643,2.702,2.821,2.675,2.682,2.949,2.942,2.944,3.082,3.185,3.206,3.253],"HUN":[1.215,1.317,1.688,2.188,2.512,2.603,2.706,2.714,3.035,3.329,4.644,3.615,3.857,3.334,4.041,2.625,3.484,3.817,3.764,3.855,3.767,3.169,3.182,3.075,3.151,3.055,3.209,3.427,3.075,3.033,3.098,3.013,2.89,3.026,2.971,3.093,2.648,3.756,3.988,3.977,3.899,3.646,4.467,4.995,5.298],"IDN":[1.825,1.354,1.697,1.842,1.765,1.53,1.543,1.566,1.749,1.764,2.043,2.049,2.242,2.514,2.644,2.46,2.552,2.86,2.804,2.301,2.428,2.239,2.286,2.187,2.364,2.326,2.403,2.676,2.194,2.342,2.265,2.414,2.355,2.407,2.342,2.364,2.337,2.351,2.52,2.43,2.46,2.535,2.583,2.517,2.38],"ISR":[3.58,null,2.505,null,null,null,null,null,null,null,null,3.774,3.992,3.858,4.672,4.131,2.919,4.0,4.8,5.017,5.126,4.448,4.632,4.288,4.38,4.384,4.773,4.802,4.677,4.585,4.766,4.914,4.947,5.348,5.164,5.35,4.946,5.054,4.64,4.516,4.52,4.715,5.941,6.364,7.668],"JPN":[2.774,2.371,2.015,2.183,2.319,2.343,2.187,2.23,2.303,2.289,2.62,3.457,3.496,3.671,4.083,4.16,4.091,3.514,3.197,2.974,3.644,3.142,2.985,3.119,3.467,3.257,3.361,3.432,3.506,3.596,3.586,3.544,3.636,3.739,3.548,3.385,2.829,3.151,3.167,3.043,3.19,3.11,3.225,3.028,3.084],"KOR":[2.708,2.264,2.377,2.705,2.719,2.486,2.558,2.625,3.085,3.144,3.143,2.587,2.981,2.823,3.503,3.193,3.215,3.409,3.434,3.467,4.005,3.785,3.76,3.59,3.856,3.678,3.844,4.115,4.032,4.023,3.812,3.892,3.747,4.101,3.999,3.816,3.502,3.966,4.08,4.108,3.995,3.843,3.985,3.742,3.836],"MEX":[2.221,2.357,2.36,2.184,2.069,2.576,2.656,2.566,2.663,2.693,3.147,2.39,2.497,2.504,2.742,2.704,2.703,2.905,2.859,2.775,3.248,3.35,3.113,2.81,2.374,2.232,2.754,2.572,2.572,2.538,2.646,2.657,2.229,2.685,3.179,3.342,3.429,4.194,5.329,5.193,5.099,4.601,5.276,6.167,6.269],"MYS":[1.189,1.189,1.326,1.326,1.326,1.382,1.467,1.515,1.571,1.601,1.699,1.88,2.081,2.194,2.422,2.341,2.332,2.579,2.295,2.227,2.409,2.11,2.01,1.821,1.987,1.789,2.003,2.276,2.101,2.198,2.136,2.332,2.342,2.465,2.365,2.387,2.449,3.01,2.916,2.782,2.862,3.003,3.194,3.391,3.568],"NZL":[1.692,1.457,1.607,2.219,2.652,3.173,3.076,2.745,3.221,3.595,3.719,3.077,3.611,3.59,4.412,4.048,4.005,4.325,4.299,4.572,4.945,4.493,3.91,3.912,4.221,4.185,4.432,4.51,4.234,4.191,4.229,4.295,4.348,4.874,4.763,4.597,4.427,4.877,5.041,5.006,4.989,4.774,5.118,4.938,5.136],"POL":[1.279,1.464,1.46,1.62,1.628,1.964,2.087,2.097,2.322,2.507,3.446,2.409,2.856,2.596,3.086,2.585,2.63,2.943,2.734,2.998,2.995,2.482,2.544,2.372,2.421,2.301,2.723,2.966,2.739,2.801,2.836,2.897,2.789,3.514,3.438,3.439,3.588,4.092,4.982,4.965,5.267,5.21,5.806,6.252,6.218],"SGP":[1.882,1.823,1.813,1.854,1.93,2.168,2.201,2.268,2.341,2.592,2.92,2.882,3.189,3.078,3.654,3.752,3.496,3.644,3.687,3.597,3.796,3.525,3.44,3.27,4.014,3.892,4.065,4.385,4.278,4.278,4.261,4.38,4.252,4.433,4.312,4.363,4.24,4.469,4.858,4.957,4.972,5.17,5.408,5.782,5.775],"SWE":[2.715,2.335,2.5,3.597,3.942,4.167,4.279,4.53,4.545,4.859,6.375,4.931,5.507,6.564,7.64,5.913,5.729,6.388,6.157,6.288,5.954,4.969,5.128,5.231,5.229,5.261,5.819,6.123,5.827,5.839,5.383,5.444,5.756,6.375,6.195,5.785,5.589,5.619,5.736,5.865,5.598,5.669,7.32,7.259,7.161],"THA":[1.447,1.209,1.27,1.382,1.446,1.48,1.509,1.561,1.756,1.799,1.859,1.888,2.113,2.167,2.353,2.457,2.587,2.924,2.846,2.92,3.115,3.036,3.168,3.092,3.403,3.345,3.496,3.725,3.588,3.718,3.86,3.798,4.078,4.248,3.901,3.844,3.496,3.9,3.74,3.784,3.787,4.007,4.165,4.3,4.015],"TWN":[2.288,2.128,2.011,2.011,2.246,2.406,2.347,2.333,2.278,2.289,2.47,2.261,2.355,2.336,2.601,2.502,2.484,2.542,2.631,2.619,2.635,2.508,2.547,2.076,2.154,2.163,2.264,2.335,2.272,2.24,2.31,2.409,2.444,2.573,2.567,2.696,2.508,2.47,2.387,2.393,2.282,2.383,2.661,2.471,2.423],"USA":[2.24,2.24,2.35,2.46,2.47,2.58,2.67,2.78,2.89,3.0,3.21,3.43,3.43,3.53,3.64,3.81,3.96,4.03,4.18,4.24,4.29,4.29,4.29,4.29,4.5,4.5,4.5,4.61,4.62,4.71,4.71,4.82,4.82,4.89,4.93,5.04,5.15,5.36,5.58,5.69,5.69,5.79,6.01,6.12,6.22],"ZAF":[1.339,1.193,0.89,1.845,1.862,2.098,2.294,2.115,2.18,2.223,2.241,2.168,2.457,2.448,2.873,2.454,2.356,2.31,2.239,2.16,2.33,2.221,2.094,1.771,2.102,1.886,2.261,2.447,2.32,2.235,2.187,2.154,1.859,2.158,2.285,2.579,2.342,2.899,2.806,2.705,2.853,2.777,3.015,3.358,3.485],"PHL":[null,1.173,1.275,1.238,1.234,1.467,1.56,1.615,1.733,1.852,1.956,2.054,2.211,2.195,2.782,2.682,2.796,2.906,2.652,2.985,3.703,3.67,3.605,2.786,2.823,2.681,2.649,2.642,2.617,2.672,2.767,2.807,2.873,2.953,2.82,2.786,2.755,2.847,2.822,2.86,2.861,2.892,2.979,2.842,2.74],"NOR":[null,null,4.089,null,5.183,6.063,null,7.047,6.801,6.88,7.875,6.145,7.023,7.204,8.312,6.788,7.058,7.842,7.506,7.795,7.758,6.297,5.649,5.215,5.51,5.666,5.914,6.242,5.223,5.86,4.854,5.972,5.549,6.086,6.302,6.393,6.264,6.59,6.919,7.139,6.768,6.674,7.341,7.515,8.053],"PER":[null,null,2.478,2.283,2.576,2.762,2.757,2.913,2.979,3.0,3.345,2.661,2.806,3.537,3.653,3.714,null,3.907,3.593,3.563,3.587,3.324,3.141,2.926,3.025,3.242,3.229,3.269,3.21,3.136,3.195,3.576,3.403,3.287,3.265,3.362,3.571,3.578,4.135,4.249,4.545,4.529,4.736,5.03,4.992],"TUR":[null,null,3.02,2.343,2.58,2.922,3.068,2.725,3.228,3.659,4.318,3.645,3.832,3.891,3.773,3.543,4.516,4.777,4.342,3.758,4.423,3.964,3.874,3.406,3.533,2.749,3.006,2.827,2.284,1.997,2.445,2.209,2.04,2.007,2.336,1.863,2.676,3.988,3.528,3.966,4.681,5.316,5.594,5.904,6.911],"VEN":[null,null,2.917,2.315,1.478,2.13,2.255,2.263,1.648,3.446,null,null,null,null,6.52,6.985,7.917,9.081,7.152,7.152,6.818,2.533,0.67,0.664,3.383,5.247,4.056,null,null,null,null,null,null,null,4.433,5.062,1.763,2.719,null,4.934,4.966,4.454,4.209,4.045,4.507],"EGY":[null,null,null,1.351,1.616,1.552,1.611,1.646,1.595,1.677,2.447,2.328,2.379,2.281,2.363,2.568,2.637,2.393,2.39,2.432,2.368,2.303,2.162,2.162,2.59,1.465,1.754,1.933,1.752,2.233,2.528,2.645,2.633,2.717,2.712,2.705,2.428,1.843,2.619,2.751,2.469,2.687,2.533,2.646,2.87],"COL":[null,null,null,null,2.347,2.792,null,2.596,3.081,3.528,3.892,3.34,3.913,4.389,4.744,4.535,4.766,4.85,4.477,4.337,4.655,3.34,2.916,2.428,3.039,3.306,3.244,3.832,4.14,3.729,3.688,3.62,3.29,3.742,3.371,3.285,3.481,4.158,4.867,5.087,4.903,5.175,5.7,6.211,8.003],"CRI":[null,null,null,null,2.606,2.377,null,2.218,2.218,2.179,3.267,3.433,3.519,3.831,4.065,4.023,null,4.393,4.311,4.284,4.001,4.011,4.032,4.017,4.118,4.059,4.0,4.028,4.033,3.773,3.935,4.123,4.039,3.829,3.837,4.124,3.908,4.964,5.414,5.712,5.625,5.902,5.949,6.04,6.996],"PAK":[null,null,null,null,1.904,2.18,null,2.165,2.331,2.319,1.975,2.3,2.421,2.455,2.376,2.887,3.013,2.969,2.999,3.036,3.04,2.978,3.441,2.86,3.578,3.579,3.566,3.394,3.087,3.312,3.049,3.358,3.303,3.43,3.6,3.342,3.157,3.388,3.441,3.807,3.821,3.765,3.795,3.859,3.886],"SAU":[null,null,null,null,0.64,2.4,null,2.401,2.401,2.4,2.667,2.933,2.667,2.666,2.667,2.667,2.666,2.933,2.667,2.933,2.933,2.928,3.2,3.196,3.2,3.199,3.2,3.2,3.2,3.199,3.466,3.465,3.732,3.732,3.733,3.998,4.527,5.061,5.065,5.066,5.064,5.066,5.066,5.067,5.06],"UKR":[null,null,null,null,1.36,1.433,null,1.683,1.782,1.84,2.391,1.828,1.828,1.836,2.064,2.114,1.855,2.333,2.33,2.268,1.626,1.201,1.549,1.542,1.573,1.542,1.698,1.637,1.908,1.942,2.222,2.376,2.175,2.203,2.388,2.432,null,2.492,2.843,2.938,2.875,2.857,3.157,3.192,3.336],"URY":[null,null,null,null,1.002,1.824,null,1.767,2.299,2.589,3.185,2.633,3.323,3.744,4.878,4.627,4.527,5.446,4.98,4.911,4.919,4.626,4.132,3.744,4.078,4.352,4.529,4.899,4.471,4.306,4.663,4.782,4.327,4.801,5.114,5.427,6.084,6.85,6.858,7.04,7.072,6.91,7.788,8.759,8.938],"ARE":[null,null,null,null,null,2.451,null,2.451,2.723,2.723,2.723,2.723,2.995,2.995,3.267,3.267,3.267,3.267,3.267,3.267,3.539,3.539,3.539,3.539,3.539,3.539,3.812,3.812,3.811,3.811,4.016,4.016,4.016,4.016,4.016,4.628,4.901,4.901,4.901,4.901,4.901,4.901,5.173,5.173,5.173],"IND":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,1.892,1.618,1.585,1.667,1.501,1.536,1.747,1.887,1.833,1.901,2.411,2.488,2.757,2.819,2.514,2.554,2.669,2.652,2.527,2.589,2.546,2.546,2.389,2.533,2.541,2.588,2.616,2.618,2.631,2.514,2.454],"VNM":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.826,2.806,2.751,2.671,2.691,2.658,2.639,2.862,2.821,2.802,2.798,2.848,2.847,2.862,2.996,3.046,2.947,3.07,3.124,3.012,3.01,3.031,2.908,2.893,2.895],"AZE":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.321,2.328,2.328,2.328,2.325,2.325,2.325,2.649,2.768,2.878,3.495,3.495,3.618,3.671,3.799,3.906,4.265],"BHR":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.162,3.183,3.714,3.714,3.713,3.979,3.979,3.979,4.244,4.509,4.51,4.51,4.509,4.509,4.775,4.775,4.774],"GTM":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.339,3.235,3.255,3.244,3.25,3.205,3.357,3.381,3.364,3.442,3.685,3.711,4.002,4.015,4.043,4.305,4.462],"HND":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.543,3.492,3.513,3.529,3.524,3.61,3.664,3.616,3.616,4.049,4.143,4.133,4.114,4.123,4.266,5.06,5.192],"JOR":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.746,2.748,3.244,3.244,3.244,3.244,3.004,2.99,3.239,3.521,3.526,3.526,3.526,3.526,3.526,3.532,3.526],"KWT":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.471,3.464,3.612,3.626,3.736,3.787,4.156,4.127,4.229,6.222,4.559,4.549,4.582,4.544,4.577,4.542,4.523],"LBN":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4.302,4.313,4.313,4.293,5.952,1.771,1.682,3.256,5.078,4.474,5.029,4.804,5.137,5.36,5.36,5.36,5.36],"MDA":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.582,2.317,2.414,2.583,2.753,2.903,2.892,2.889,3.109,3.185,3.566,3.559,3.573,3.523,4.159,4.091,4.558],"NIC":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.261,3.183,3.317,3.542,3.491,3.559,3.636,3.779,3.873,4.225,4.35,4.341,4.341,4.478,4.614,4.751,5.106],"OMN":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.727,2.728,3.143,3.0,2.857,2.857,2.987,2.987,3.688,3.688,3.688,3.688,3.974,3.974,3.964,3.974,3.974],"QAT":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.296,3.296,3.57,3.57,3.57,3.57,3.57,3.57,3.57,3.844,3.846,3.845,3.845,4.12,4.669,4.669,4.944],"ROU":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.315,2.287,2.204,2.21,2.324,2.47,2.531,2.403,2.281,2.722,3.239,3.423,3.532,3.429,3.879,3.978,4.005]},"histEx":{"ARG":[1.0,1.0,3.13,2.88,2.95,2.897,3.0638,3.0565,3.08875,3.0915,3.0195,3.81125,3.7985,3.93375,4.1325,4.3135,4.56625,4.9765,5.4125,6.92125,8.16875,8.61,9.135,13.80925,14.935,15.8575,16.9675,18.9375,27.725,37.455,41.8045,60.0656,71.24065,85.3736,96.33375,105.0165,129.115,184.69875,275.275,821.44,931.9742,1050.0001,1286.00695,1445.755,1472.98605],"AUS":[1.68,1.98,1.86,1.61,1.43,1.3015,1.3308,1.33253,1.266865,1.17,1.026,1.2869,1.09355,1.133722578,0.922381589,0.972337012,0.974326497,0.959094615,1.089858863,1.128859288,1.059378145,1.227219734,1.35126005,1.415728746,1.335737661,1.356668023,1.303016483,1.253682693,1.339853956,1.401639919,1.443626389,1.449065353,1.430615165,1.299967501,1.366586949,1.419345682,1.44843568945539,1.41854032200865,1.48400979446464,1.51745068285281,1.53139356814701,1.59121648500278,1.53385995858578,1.49264870512725,1.42867347667691],"BRA":[1.79,2.19,2.34,3.07,3.18,2.4648,2.2615,2.3045,2.1335,1.913,1.5846,1.9971,1.7233,1.77495,1.5416,1.805,2.04215,1.99335,2.27065,2.36305,2.22025,2.59275,3.15235,4.0248,3.24145,3.22395,3.2343,3.2279,3.83835,3.71795,3.8073,4.1419,5.34045,5.5046,5.24865,5.31,5.39175,5.1581,4.75705,4.96975,5.65275,5.9367,5.5538,5.37035,5.07935],"CAN":[1.47,1.56,1.57,1.45,1.37,1.2494,1.1704,1.12045,1.17485,1.05345,1.00355,1.16085,1.0368,1.04235,0.94585,1.02095,1.01945,1.0029,1.05125,1.1051,1.07405,1.22855,1.2897,1.4092,1.303,1.326,1.2823,1.2459,1.31235,1.3314,1.31305,1.30655,1.3552,1.2803,1.2741,1.2718,1.28915,1.33595,1.31625,1.34465,1.38145,1.43845,1.37185,1.38925,1.40515],"CHE":[1.7,1.73,1.66,1.37,1.29,1.2475,1.2776,1.20885,1.2485,1.2112,1.02215,1.08605,1.03115,1.05085,0.80615,0.9551,0.9906,0.9123,0.9674,0.91005,0.9024,0.86165,0.9528,1.0088,0.9861,1.0236,0.96415,0.96085,0.99325,0.98165,0.99355,0.96825,0.94125,0.89155,0.92275,0.93105,0.96845,0.92315,0.86685,0.86935,0.88025,0.90085,0.80065,0.8036,0.80735],"CHL":[514.0,601.0,655.0,716.0,641.0,592.45,522.75,529.95,540.15,526.75,494.65,548.55,503.1,523.65,462.75,506.05,493.05,471.75,508.155,541.95,564.14,627.485,642.45,715.215,651.12,672.805,663.355,605.935,651.73,678.99,689.75,772.74,787.7,719.425,759.285,798.6,928.435,800.425,839.505,908.85,944.85,987.25,965.365,883.845,922.715],"CHN":[8.28,8.28,8.28,8.28,8.28,8.2764,8.0641,8.026,7.7743,7.6047,6.834,6.8327,6.8272,6.7769,6.445,6.3155,6.3885,6.2204,6.1341,6.0513,6.1983,6.2115,6.2092,6.5582,6.678,6.9266,6.7875,6.432,6.622,6.8497,6.8846,6.885,7.0035,6.4751,6.4797,6.36535,6.74735,6.78405,7.14355,7.2013,7.2276,7.24785,7.18515,6.9627,6.7708],"CZE":[39.1,39.0,34.0,28.9,26.5,24.5409,23.8375,22.1078,21.50115,21.11675,14.49795,18.66155,18.21005,19.7476,17.0219,20.36535,21.048,18.89495,20.1828,20.2838,20.3877,24.13325,24.70225,25.1442,24.54655,25.81175,22.8561,20.747,22.06475,22.31165,22.7993,22.63095,23.4134,21.5909,21.80065,21.6802,23.92,21.94565,21.6516,22.7725,23.53295,23.8918,21.23125,20.9274,21.1625],"DNK":[8.04,8.46,8.38,6.78,6.22,6.0647,6.1769,5.81825,5.75305,5.4603,4.7044,5.3375,5.16195,5.81365,5.19845,5.86135,6.1356,5.49795,5.8006,5.5014,5.5388,6.4174,6.81105,6.9405,6.75715,7.10125,6.51255,6.0827,6.3591,6.51545,6.6593,6.71935,6.54935,6.12065,6.3239,6.6373,null,6.8401,6.7593,6.85195,6.8959,7.1077,6.42405,6.44025,6.5366],"EUZ":[1.075268817,1.136363636,1.123595506,0.909090909,0.833333333,0.814929509,0.82815735,0.780365992,0.771813376,0.733756466,0.630497147,0.716897269,0.693649638,0.78015291,0.697520315,0.788239467,0.824844311,0.736946829,0.777756173,0.737218475,0.742748914,0.863073404,0.912700224,0.930232558,0.908306463,0.955246692,0.875695083,0.816826629,0.853205921,0.872486149,0.892339267,0.899159286,0.879623521,0.823011399,0.850159405,0.89206066,0.975849999999997,0.9195,0.90699,0.91865,0.92413,0.95247,0.86073,0.86192,0.87439],"GBR":[0.632911392,0.699300699,0.689655172,0.632911392,0.558659218,0.546448087,0.566925563,0.531801744,0.506034461,0.496610632,0.501039657,0.620886626,0.623752495,0.657375756,0.614137444,0.651253663,0.646266197,0.633211968,0.669142494,0.603009015,0.586785589,0.661594443,0.640450877,0.684532977,0.758840492,0.82877507,0.775885479,0.72285673,0.753863551,0.78320802,0.802181935,0.76866905,0.79255003,0.74137228,0.734672887,0.745350874,0.831079999999998,0.81205,0.77721,0.78629,0.77854,0.80164,0.74649,0.74708,0.74187],"HKG":[7.79,7.8,8.0,7.8,7.79,7.7807,7.7512,7.7533,7.79845,7.81555,7.7974,7.7505,7.75655,7.7742,7.7918,7.76735,7.75815,7.7591,7.75665,7.75785,7.75045,7.75135,7.7508,7.75235,7.7554,7.75595,7.8115,7.819,7.84825,7.83435,7.8105,7.77535,7.75095,7.75535,7.7729,7.79755,7.84995,7.8307,7.7987,7.818,7.812,7.7877,7.85,7.7974,7.83895],"HUN":[279.0,303.0,272.0,224.0,211.0,203.643,206.956,206.3444,194.4237,180.2106,144.2578,199.1577,186.6508,221.96915,188.0724,245.69425,238.2151,217.46935,228.462,223.09705,228.30615,271.39345,282.8778,292.67905,285.6397,294.6172,268.6239,252.14215,276.4302,280.26875,290.5412,298.7502,311.37795,297.42395,305.64505,317.51115,389.04615,359.4686,351.0725,352.0509,364.17615,389.43235,344.76675,332.33495,313.352],"IDN":[7945.0,10855.0,9430.0,8740.0,9120.0,9545.0,9460.0,9325.0,9090.0,9015.0,9152.0,10200.0,9320.0,9063.0,8523.0,9160.0,9482.5,9767.5,9965.0,12140.0,11505.0,12480.0,13344.5,13947.5,13112.5,13329.0,13369.5,13359.0,14360.0,14090.0,14130.0,13670.0,14435.0,14125.0,14517.5,14382.0,14977.5,14887.5,15080.0,15635.0,16260.0,16172.5,16260.0,16885.0,18065.0],"ISR":[4.05,null,4.79,null,null,null,null,null,null,null,null,3.97425,3.7325,3.8619,3.40335,3.8485,4.07625,3.72455,3.64595,3.4882,3.4138,3.93415,3.77835,3.94105,3.85875,3.855,3.5405,3.43635,3.6349,3.70785,3.5667,3.4595,3.4367,3.179,3.29205,3.17775,3.43745,3.36365,3.66365,3.76425,3.76125,3.60575,3.3662,3.14275,2.9993],"JPN":[106.0,124.0,130.0,120.0,113.0,106.715,114.305,112.105,121.585,122.315,106.855,92.565,91.54,87.18,78.365,76.92,78.22,91.065,100.105,104.245,101.53,117.765,123.935,118.645,106.725,116.665,113.06,110.725,111.25,108.44,108.765,110.04,107.275,104.295,109.935,115.225,137.865,130.1,142.08,147.86,150.46,154.355,148.82,158.545,162.135],"KOR":[1108.0,1325.0,1304.0,1220.0,1177.0,1005.5,977.45,952.4,940.15,922.5,1018.05,1314.5,1140.5,1204.45,1056.2,1158.75,1151.0,1085.475,1135.7,1067.3,1023.75,1083.3,1143.5,1197.75,1140.95,1196.45,1144.65,1069.25,1116.0,1118.6,1180.55,1156.1,1200.95,1097.35,1150.35,1205.5,1313.45,1235.45,1274.65,1338.9,1376.75,1431.2,1380.2,1469.85,1485.9],"MEX":[9.41,9.29,9.28,10.53,11.6,10.8675,10.5425,11.3031,10.8894,10.76755,10.1685,13.8104,12.81375,12.782,11.67075,13.6844,13.687,12.7384,12.94115,13.33275,12.93255,14.6275,15.73975,17.43675,18.535,21.9505,17.79075,18.6635,19.0515,19.30875,18.89525,18.8205,22.436,20.11475,20.13525,20.649,20.4125,18.838,16.7025,17.1385,18.6305,20.647,18.764,17.6755,17.386],"MYS":[3.8,3.8,3.8,3.8,3.8,3.8,3.7488,3.6295,3.502,3.4345,3.238,3.602,3.3875,3.2135,2.973,3.13955,3.1735,3.083,3.1805,3.3235,3.1675,3.6155,3.8065,4.3925,4.027,4.4715,4.2935,3.954,4.0225,4.1175,4.1425,4.0745,4.2655,4.052,4.2245,4.1855,4.45,4.2855,4.509,4.7265,4.5945,4.3785,4.242,4.0545,4.078],"NZL":[2.01,2.47,2.24,1.78,1.64,1.4023,1.4467,1.62101,1.42796,1.2797,1.3177,1.59235,1.35685,1.39275766,1.156069364,1.26000126,1.273560876,1.202428906,1.279344975,1.203007519,1.152737752,1.313283866,1.509092281,1.508068165,1.421363087,1.43358899,1.376273053,1.374664925,1.464343242,1.479289941,1.513431706,1.513546239,1.51779616,1.395089286,1.448750453,1.52264941,1.60372063186593,1.53787004998078,1.60681288663935,1.63813580145794,1.68364340432696,1.75947919415853,1.6803898504453,1.7415534656914,1.71335560695622],"POL":[4.3,4.03,4.04,3.89,3.87,3.3096,3.1151,3.09915,2.97175,2.75185,2.03145,3.15525,2.83565,3.1969,2.7968,3.52045,3.46035,3.092,3.3655,3.0684,3.0714,3.7066,3.7736,4.0477,3.96565,4.17215,3.7086,3.40575,3.68695,3.74845,3.80775,3.7966,3.94345,3.7226,3.90685,4.094,4.64845,4.3373,3.9946,4.00785,3.96845,4.01115,3.66865,3.63085,3.77915],"SGP":[1.7,1.81,1.82,1.78,1.71,1.6607,1.6353,1.5873,1.53795,1.52375,1.35275,1.4645,1.39555,1.3742,1.20705,1.2928,1.2585,1.23485,1.2747,1.27885,1.238,1.33315,1.3664,1.43725,1.3577,1.43875,1.3777,1.32255,1.35585,1.3559,1.3613,1.34715,1.3876,1.3308,1.36825,1.35215,1.3914,1.32015,1.3278,1.3415,1.3376,1.3444,1.28505,1.28845,1.29005],"SWE":[8.84,10.28,10.4,8.34,7.61,7.4402,7.7119,7.28455,7.04125,6.79165,5.96085,7.90915,7.0821,7.37355,6.3352,6.9338,6.9777,6.3492,6.7583,6.47315,6.836,8.19145,8.52265,8.60185,8.59485,9.12455,8.41565,8.0188,8.7526,8.90625,9.47505,9.4591,9.1384,8.29525,8.7165,9.3341,10.19785,10.2154,10.5075,10.44965,10.7176,10.93675,9.70005,9.2299,9.63495],"THA":[38.0,45.5,43.3,42.7,40.8,40.53,39.755,38.445,35.3,34.455,33.36,34.165,33.135,32.305,29.75,31.75,31.7,29.755,31.275,32.875,31.78,32.605,34.0875,36.22,34.965,35.573,34.0365,31.95,33.17,32.0075,30.8275,30.2775,31.385,30.13,32.81,33.295,36.6125,32.8225,34.22875,35.6775,35.645,33.6925,32.41,31.395,33.62],"TWN":[30.6,32.9,34.8,34.8,33.4,31.175,31.9495,32.141,32.9255,32.7705,30.3625,33.1755,31.8425,32.1055,28.834,29.9795,30.1955,29.502,30.0285,30.161,29.982,31.493,31.02,33.2315,32.029,31.905,30.4775,29.553,30.3725,30.803,31.172,29.8845,29.4565,27.98,28.0475,27.814,29.9075,30.369,31.4265,31.3475,32.87,32.728,29.311,31.5675,32.1875],"USA":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0],"ZAF":[6.72,8.13,10.9,7.56,6.66,6.6482,6.0803,6.597,7.10975,6.971,7.56325,8.2805,7.3045,7.5365,6.76885,8.1304,8.4683,9.047,10.04725,10.87765,10.5145,11.47875,12.41455,15.81375,14.27375,13.9525,13.27,12.25815,13.3619,13.8675,14.175,14.391,16.6725,15.5225,14.6625,15.47,17.03625,17.21,17.78375,19.18625,18.19125,18.6913,17.8775,16.34875,16.325],"PHL":[null,50.3,51.0,52.5,55.9,54.55,52.58,52.625,49.05,45.8975,44.485,48.385,45.92,46.47,42.41,44.005,42.2,40.6,43.44,45.23,43.205,44.41,45.2125,47.0225,47.115,49.615,50.5765,50.725,53.487,52.3925,51.3175,50.58,49.426,48.0925,50.35,50.975,56.265,54.435,54.925,56.3,58.3755,58.435,56.725,59.475,61.685],"NOR":[null,null,8.56,null,6.8491,6.4326,null,6.1023,6.1023,5.8139,5.07915,6.50925,5.69555,6.24625,5.41405,6.0399,6.09205,5.4831,6.1281,6.15745,6.1873,7.6225,8.14255,8.97465,8.49355,8.64835,8.2852,7.8501,8.0415,8.5329,8.65275,8.87515,9.37105,8.5439,9.0444,8.91605,9.89765,9.86415,10.1165,10.5057,10.9345,11.2368,10.21645,10.11245,9.68565],"PER":[null,null,3.43,3.46,3.49,3.2546,3.446,3.261,3.1895,3.167,2.84,3.0274,2.8705,2.8275,2.7375,2.6925,null,2.5595,2.783,2.8065,2.788,3.008,3.1835,3.418,3.30585,3.3929,3.2515,3.212,3.2715,3.3485,3.2868,3.3276,3.4973,3.6207,3.9511,3.83735,3.89285,3.8847,3.60375,3.7418,3.7181,3.73135,3.56805,3.3601,3.3857],"TUR":[null,null,1324500.0,1600500.0,1531000.0,1.369,1.3365,1.5415,1.40975,1.2981,1.19275,1.55005,1.47455,1.5293,1.72285,1.86295,1.8269,1.76875,1.95745,2.26155,2.09125,2.33345,2.6457,3.0096,3.04305,3.91115,3.57605,3.8026,4.70625,5.3834,5.722,5.88025,6.8595,7.4705,8.55725,13.4155,17.565,18.8055,26.92675,30.25475,33.1104,35.74025,40.22,43.1945,47.0275],"VEN":[null,null,857.0,1598.0,2977.0,2629.62,2615.92,2519.58,4125.278,2147.3,null,null,null,null,4.29465,4.29465,4.29465,4.29465,6.2921,6.2921,11.0,52.1021,197.0,198.6986,641.4001,676.6047,2700.0,null,null,null,null,null,null,null,3613989.071,4.5435,5.6732,20.7081,null,36.1007,36.56705,56.5814,115.6998,338.72555,724.8398],"EGY":[null,null,null,5.92,6.19,5.8,5.74,5.77075,5.7,5.69025,5.3125,5.58475,5.465,5.699,5.962,6.037,6.0665,6.68575,7.00915,6.961,7.15005,7.35005,7.83005,7.83005,8.87995,18.77,17.885,17.7,17.905,17.91,16.615,15.88,15.95,15.64,15.67,15.71,18.945,29.845,30.925,30.9,48.6,50.25,49.35,47.24,50.53],"COL":[null,null,null,null,2769.83,2327.7,null,2503.6,2239.325,1956.0,1798.65,2095.6,2095.6,1868.45,1770.5,1852.15,1804.475,1773.175,1921.0,1982.795,1847.65,2364.98,2708.9,3253.9,2929.0,2994.625,3052.16,2844.12,2874.07,3191.5,3227.0,3287.625,3617.01,3460.5,3842.11,3941.995,4295.1,4545.55,3882.915,3911.86,4058.99,4232.22,4017.86,3686.725,3236.28],"CRI":[null,null,null,null,433.55,475.3,null,509.535,509.535,518.625,551.02,582.57,582.57,522.115,504.305,509.54,null,500.83,498.675,501.92,537.3,536.09,533.3,535.25,546.39,554.33,572.495,568.53,567.8,606.975,581.935,569.965,581.825,613.77,617.74,642.585,678.105,564.07,544.875,516.455,524.47,506.625,502.605,495.0,450.28],"PAK":[null,null,null,null,57.76,59.62,null,60.055,60.055,60.37,70.9,82.6,82.6,85.525,86.345,90.05,94.605,97.665,100.035,105.415,98.68,100.735,101.7,104.885,104.82,104.775,105.15,110.505,121.49,138.88,157.45,154.875,166.5,160.35,161.1,176.52,221.75,230.2,286.25,279.75,278.75,278.85,284.6,279.85,277.925],"SAU":[null,null,null,null,3.7502,3.7501,null,3.749,3.749,3.75045,3.74955,3.7504,3.7502,3.75045,3.7502,3.7502,3.75025,3.7502,3.7502,3.7504,3.75035,3.7569,3.75055,3.7543,3.7505,3.75065,3.75015,3.7503,3.7504,3.75115,3.75035,3.7518,3.75105,3.7518,3.7507,3.7519,3.755,3.7545,3.7516,3.7506,3.7519,3.7508,3.7505,3.7501,3.755],"UKR":[null,null,null,null,5.3315,5.06,null,5.05,5.05,5.0275,4.6,7.66,7.66,7.899,7.994,8.0405,8.0855,8.144,8.155,8.379,11.685,15.822,21.95,23.35,24.8,27.235,25.915,28.715,26.199,27.8,25.6475,23.99,27.13,28.14,27.22,28.3673,null,36.917,36.93145,37.4443,41.05,42.0,41.815,43.55,44.6702],"URY":[null,null,null,null,29.735,24.125,null,23.925,23.925,23.945,19.15,23.17,23.17,21.1,18.45,19.45,21.87,19.28,21.085,21.38,22.97,24.425,27.345,30.185,30.165,28.725,28.705,28.58,31.31,32.51,35.1695,37.435,43.675,42.495,44.0,44.0355,41.91,39.125,37.765,39.065,40.3,43.27,40.445,38.705,40.165],"ARE":[null,null,null,null,null,3.6725,null,3.6726,3.6726,3.67285,3.67285,3.673,3.673,3.67285,3.67305,3.673,3.67295,3.67305,3.673,3.673,3.67305,3.67305,3.67295,3.6731,3.6731,3.673,3.673,3.673,3.67315,3.67315,3.67315,3.67315,3.67295,3.67315,3.67315,3.67305,3.67305,3.673,3.67305,3.67295,3.673,3.6729,3.67305,3.673,3.67285],"IND":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,44.4,51.905,56.165,53.395,59.98,61.845,60.08875,61.615,63.43,66.8025,67.2,68.3275,64.5575,63.86125,68.825,69.685,68.5544,70.87815,75.1975,73.39,74.615,74.6225,79.9513,81.715,82.2488,83.06625,83.72875,86.34125,85.8175,90.295,96.26375],"VNM":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,21230.0,21380.0,21810.0,22467.5,22300.0,22572.0,22732.5,22711.5,23039.5,23199.0,23231.0,23176.0,23180.0,23064.0,23028.5,22650.0,23417.0,23450.0,23687.5,24565.0,25247.5,25078.0,26137.5,26269.0,26255.5],"AZE":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1.70175,1.6965,1.6965,1.6965,1.699,1.699,1.699,1.699,1.69825,1.7025,1.7025,1.7025,1.7,1.7,1.70065,1.7025,1.7],"BHR":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0.37955,0.377,0.377,0.377,0.37705,0.377,0.377,0.377,0.377,0.377,0.37695,0.37695,0.377,0.377,0.377,0.377,0.37705],"GTM":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,7.4871,7.7283,7.6802,7.7063,7.693,7.8009,7.7448,7.6898,7.7279,7.8438,7.8689,7.8149,7.7458,7.7215,7.6677,7.6657,7.6199],"HND":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,23.9926,24.3391,24.4834,24.6548,24.6907,24.103,23.744,24.61415,24.615,24.7,24.62,24.68,24.79555,25.465,26.25475,26.48,26.77],"JOR":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0.71005,0.7096,0.709,0.709,0.709,0.709,0.709,0.709,0.71015,0.71005,0.70895,0.709,0.709,0.709,0.709,0.70785,0.709],"KWT":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0.3025,0.3031,0.3045,0.3034,0.3078,0.3037,0.3008,0.3029,0.3074,0.30535,0.3071,0.30775,0.30555,0.3081,0.30585,0.30825,0.3095],"LBN":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1511.0,1507.0,1507.0,1514.0,1512.0,8750.0,22000.0,21500.0,25600.0,38000.0,85500.0,89500.0,89550.0,89550.0,89559.7,89550.0,89550.0],"MDA":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,16.6526,17.263,17.8142,17.42,17.075,17.225,17.98,18.0,19.298,18.8411,17.665,17.7,17.63,18.45,16.83,17.11,17.55],"NIC":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,31.5872,32.3607,33.1621,33.8763,34.3752,34.8453,35.2063,35.455,35.89,36.45,36.55,36.6243,36.6243,36.6243,36.6243,36.6243,36.6243],"OMN":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0.385,0.3849,0.385,0.38505,0.385,0.385,0.38505,0.385,0.385,0.385,0.38505,0.385,0.385,0.385,0.385,0.385,0.38505],"QAT":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.641,3.64125,3.64175,3.641,3.641,3.641,3.641,3.641,3.64175,3.64175,3.64,3.641,3.641,3.641,3.641,3.641,3.641],"ROU":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3.97325,4.06695,4.2192,4.2982,4.26005,4.0089,4.1877,4.4119,4.82175,4.51885,4.4761,4.57225,4.60025,4.73835,4.36975,4.38705,4.58165]},"ca":{"ARG":-1.1,"AUS":-2.7,"AZE":4.6,"BHR":4.8,"BRA":-2.9,"CAN":-0.9,"CHL":-1.2,"CHN":3.8,"COL":-2.4,"CRI":-0.7,"CZE":0.6,"DNK":12.2,"EGY":-3.8,"GTM":2.9,"HKG":13.3,"HND":2.4,"HUN":1.7,"IDN":-0.1,"IND":-0.4,"ISR":1.4,"ARE":14.5,"CHE":7.0,"GBR":-2.4,"JOR":-5.3,"KOR":6.6,"KWT":22.7,"LBN":-28.1,"MDA":-19.6,"MEX":-0.4,"MYS":1.7,"NIC":4.2,"NOR":14.0,"NZL":-3.6,"OMN":2.9,"PAK":-0.1,"PER":3.6,"PHL":-3.3,"POL":-0.9,"QAT":14.8,"ROU":-7.9,"SAU":-2.6,"SGP":16.7,"SWE":6.1,"THA":2.8,"TUR":-0.8,"UKR":-8.0,"URY":-0.4,"USA":-3.6,"VNM":6.3,"ZAF":-0.4,"JPN":4.9,"EUZ":2.5,"TWN":14.0},"caEst":["EUZ","TWN"]};
+</script>
+<script>const SNAP0={"updated":"2026-10-04T11:20:00Z","fx":{"USD":1.0,"EUR":0.890869,"JPY":157.674833,"CZK":21.799555,"DKK":6.657996,"GBP":0.757532,"HUF":328.890869,"PLN":3.899777,"RON":4.765078,"SEK":10.057906,"CHF":0.826637,"NOK":9.649443,"TRY":49.144766,"AUD":1.441069,"BRL":5.221381,"CAD":1.423964,"CNY":6.704588,"HKD":7.847127,"IDR":17950.396437,"ILS":3.065301,"INR":96.324722,"KRW":1348.276169,"MXN":18.33461,"MYR":4.084543,"NZD":1.781915,"PHP":62.596882,"SGD":1.279822,"THB":33.594655,"ZAR":16.733987,"TWD":31.859608,"VND":25953.963716,"AED":3.6725,"SAR":3.75,"CLP":982.005858,"COP":3311.925714,"ARS":1523.0868,"EGP":52.28469,"PKR":276.817029,"PEN":3.442651,"UYU":40.293339,"KWD":0.308774,"QAR":3.64,"OMR":0.384497,"BHD":0.376,"JOD":0.709,"AZN":1.699497,"CRC":456.70663,"GTQ":7.637735,"HNL":26.845764,"NIO":36.795866,"MDL":17.784162,"UAH":44.954615,"LBP":89500,"VES":871.3689},"fxSrc":{"USD":"ECB","EUR":"ECB","JPY":"ECB","CZK":"ECB","DKK":"ECB","GBP":"ECB","HUF":"ECB","PLN":"ECB","RON":"ECB","SEK":"ECB","CHF":"ECB","NOK":"ECB","TRY":"ECB","AUD":"ECB","BRL":"ECB","CAD":"ECB","CNY":"ECB","HKD":"ECB","IDR":"ECB","ILS":"ECB","INR":"ECB","KRW":"ECB","MXN":"ECB","MYR":"ECB","NZD":"ECB","PHP":"ECB","SGD":"ECB","THB":"ECB","ZAR":"ECB","TWD":"ExchangeRate-API","VND":"ExchangeRate-API","AED":"ExchangeRate-API","SAR":"ExchangeRate-API","CLP":"ExchangeRate-API","COP":"ExchangeRate-API","ARS":"ExchangeRate-API","EGP":"ExchangeRate-API","PKR":"ExchangeRate-API","PEN":"ExchangeRate-API","UYU":"ExchangeRate-API","KWD":"ExchangeRate-API","QAR":"ExchangeRate-API","OMR":"ExchangeRate-API","BHD":"ExchangeRate-API","JOD":"ExchangeRate-API","AZN":"ExchangeRate-API","CRC":"ExchangeRate-API","GTQ":"ExchangeRate-API","HNL":"ExchangeRate-API","NIO":"ExchangeRate-API","MDL":"ExchangeRate-API","UAH":"ExchangeRate-API","LBP":"ExchangeRate-API","VES":"ExchangeRate-API"},"fxAsof":{"ECB":"2026-10-02","ExchangeRate-API":"2026-10-03"},"ip":{"USA":{"p":899,"s":"apple.com"},"JPN":{"p":159800,"s":"apple.com"},"GBR":{"p":899,"s":"apple.com"},"EUZ":{"p":1099,"s":"apple.com"},"CHN":{"p":6799,"s":"apple.com"},"IND":{"p":99900,"s":"apple.com"},"CAN":{"p":1299,"s":"apple.com"},"AUS":{"p":1549,"s":"apple.com"},"KOR":{"p":1450000,"s":"apple.com"},"SGP":{"p":1449,"s":"apple.com"},"HKG":{"p":7799,"s":"apple.com"},"TWN":{"p":32900,"s":"apple.com"},"CHE":{"p":899,"s":"apple.com"},"SWE":{"p":12495,"s":"apple.com"},"BRA":{"p":8299,"s":"apple.com"},"MEX":{"p":21999,"s":"apple.com"},"THA":{"p":34900,"s":"apple.com"},"MYS":{"p":4299,"s":"apple.com"},"TUR":{"p":99999,"s":"apple.com"},"ARE":{"p":3799,"s":"apple.com"},"SAU":{"p":4299,"s":"apple.com"},"NOR":{"p":12490,"s":"apple.com"},"DNK":{"p":8499,"s":"apple.com"},"POL":{"p":4499,"s":"apple.com"},"NZL":{"p":1899,"s":"apple.com"},"PHL":{"p":69990,"s":"apple.com"},"VNM":{"p":28999000,"s":"apple.com"},"CHL":{"p":1099990,"s":"apple.com"},"CZE":{"p":25990,"s":"apple.com"},"HUN":{"p":419990,"s":"apple.com"}},"ipAsof":"2026-10-04","ipModel":"iPhone 17 (256GB), starting price","la":{"USA":{"p":5.25,"s":"est"},"EUZ":{"p":4.5,"s":"est"},"GBR":{"p":3.75,"s":"est"},"CHN":{"p":33,"s":"est"},"IND":{"p":290,"s":"est"},"CAN":{"p":5.45,"s":"est"},"AUS":{"p":6.1,"s":"est"},"SGP":{"p":7.1,"s":"est"},"HKG":{"p":42,"s":"est"},"CHE":{"p":6.9,"s":"est"},"SWE":{"p":55,"s":"est"},"BRA":{"p":15.9,"s":"est"},"MEX":{"p":75,"s":"est"},"THA":{"p":125,"s":"est"},"MYS":{"p":15.5,"s":"est"},"TUR":{"p":165,"s":"est"},"ARE":{"p":20,"s":"est"},"SAU":{"p":21,"s":"est"},"NOR":{"p":69,"s":"est"},"DNK":{"p":50,"s":"est"},"POL":{"p":19.9,"s":"est"},"NZL":{"p":6.9,"s":"est"},"PHL":{"p":185,"s":"est"},"VNM":{"p":75000,"s":"est"},"IDN":{"p":52000,"s":"est"},"CHL":{"p":3900,"s":"est"},"COL":{"p":12900,"s":"est"},"ZAF":{"p":45,"s":"est"},"CZE":{"p":105,"s":"est"},"HUN":{"p":1490,"s":"est"},"ISR":{"p":19,"s":"est"},"QAT":{"p":20,"s":"est"},"KWT":{"p":1.6,"s":"est"},"JPN":{"p":500,"s":"starbucks.co.jp"},"TWN":{"p":125,"s":"starbucks.com.tw"},"KOR":{"p":5200,"s":"voucher"}},"laAsof":"2026-10-04","sf":{"USA":{"p":12.99,"s":"spotify.com"},"JPN":{"p":1080,"s":"spotify.com"},"GBR":{"p":12.99,"s":"spotify.com"},"EUZ":{"p":12.99,"s":"spotify.com"},"IND":{"p":139,"s":"spotify.com"},"CAN":{"p":13.99,"s":"spotify.com"},"AUS":{"p":15.99,"s":"spotify.com"},"KOR":{"p":11990,"s":"spotify.com"},"SGP":{"p":11.98,"s":"spotify.com"},"HKG":{"p":78,"s":"spotify.com"},"TWN":{"p":168,"s":"spotify.com"},"CHE":{"p":15.95,"s":"spotify.com"},"SWE":{"p":129,"s":"spotify.com"},"BRA":{"p":23.9,"s":"spotify.com"},"MEX":{"p":139,"s":"spotify.com"},"THA":{"p":149,"s":"spotify.com"},"MYS":{"p":17.5,"s":"spotify.com"},"TUR":{"p":115,"s":"spotify.com"},"ARE":{"p":23.99,"s":"spotify.com"},"SAU":{"p":23.99,"s":"spotify.com"},"NOR":{"p":139,"s":"spotify.com"},"DNK":{"p":119,"s":"spotify.com"},"POL":{"p":26.99,"s":"spotify.com"},"NZL":{"p":20.99,"s":"spotify.com"},"PHL":{"p":169,"s":"spotify.com"},"VNM":{"p":65000,"s":"spotify.com"},"CHL":{"p":4950,"s":"spotify.com"},"CZE":{"p":185,"s":"spotify.com"},"HUN":{"p":2190,"s":"spotify.com"},"IDN":{"p":59900,"s":"spotify.com"},"ZAF":{"p":69.99,"s":"spotify.com"},"COL":{"p":18500,"s":"spotify.com"},"ISR":{"p":23.9,"s":"spotify.com"},"ARG":{"p":4499,"s":"spotify.com"}},"sw":{"USA":{"p":499.99,"s":"msrp"},"CAN":{"p":679.99,"s":"msrp"},"EUZ":{"p":499.99,"s":"msrp"},"GBR":{"p":419.99,"s":"msrp"},"JPN":{"p":59980,"s":"nintendo.com"},"AUS":{"p":769.95,"s":"msrp"},"NZL":{"p":969.95,"s":"msrp"},"KOR":{"p":758000,"s":"msrp"},"TWN":{"p":15880,"s":"msrp"},"HKG":{"p":3700,"s":"msrp"},"SGP":{"p":799,"s":"msrp"},"MYS":{"p":2558,"s":"msrp"},"MEX":{"p":13999,"s":"msrp"}},"bi":{"USA":{"p":79,"s":"ikea.com"},"GBR":{"p":55,"s":"ikea.com"},"EUZ":{"p":49.99,"s":"ikea.com"},"CAN":{"p":90,"s":"ikea.com"},"JPN":{"p":8999,"s":"ikea.com"},"KOR":{"p":89900,"s":"ikea.com"},"AUS":{"p":129,"s":"ikea.com"},"SGP":{"p":89,"s":"ikea.com"},"IND":{"p":8990,"s":"ikea.com"},"MYS":{"p":249,"s":"ikea.com"},"THA":{"p":1990,"s":"ikea.com"},"CHN":{"p":399,"s":"ikea.com"},"SWE":{"p":699,"s":"ikea.com"},"CHE":{"p":59.95,"s":"ikea.com"},"NOR":{"p":895,"s":"ikea.com"},"CZE":{"p":1190,"s":"ikea.com"}},"tx":{"USA":{"p":18,"s":"est"},"JPN":{"p":2100,"s":"tariff"},"GBR":{"p":17,"s":"est"},"EUZ":{"p":16,"s":"est"},"CHN":{"p":21,"s":"est"},"IND":{"p":180,"s":"est"},"CAN":{"p":17,"s":"est"},"AUS":{"p":22,"s":"est"},"KOR":{"p":7400,"s":"est"},"SGP":{"p":14,"s":"est"},"HKG":{"p":61,"s":"est"},"TWN":{"p":180,"s":"est"},"CHE":{"p":38,"s":"est"},"SWE":{"p":230,"s":"est"},"BRA":{"p":25,"s":"est"},"MEX":{"p":90,"s":"est"},"THA":{"p":65,"s":"est"},"MYS":{"p":15,"s":"est"},"TUR":{"p":250,"s":"est"},"ARE":{"p":30,"s":"est"},"SAU":{"p":30,"s":"est"},"NOR":{"p":330,"s":"est"},"DNK":{"p":190,"s":"est"},"POL":{"p":40,"s":"est"},"NZL":{"p":25,"s":"est"},"PHL":{"p":250,"s":"est"},"VNM":{"p":80000,"s":"est"},"IDN":{"p":40000,"s":"est"},"CHL":{"p":6000,"s":"est"},"CZE":{"p":250,"s":"est"},"HUN":{"p":3300,"s":"est"},"ZAF":{"p":90,"s":"est"},"COL":{"p":15000,"s":"est"},"ISR":{"p":50,"s":"est"},"ARG":{"p":8000,"s":"est"}}};</script>
+<script>
+const $=s=>document.querySelector(s), NS='http://www.w3.org/2000/svg';
+const C=DATA.countries, byI=Object.fromEntries(C.map(c=>[c.i,c]));
+const ORIG=Object.fromEntries(C.map(c=>[c.i,{}]));
+const BASES=[['USA','USD'],['EUZ','EUR'],['GBR','GBP'],['JPN','JPY'],['CHN','CNY'],['CHE','CHF']];
+const BK={bm:{n:'Big Mac',col:'--bm',g:'mix',np:'a Big Mac'},
+ la:{n:'Latte',col:'--la',g:'svc',np:'a tall Starbucks latte'},sf:{n:'Spotify',col:'--sf',g:'svc',np:'a month of Spotify Premium'},tx:{n:'Taxi 5 km',col:'--tx',g:'svc',np:'a 5 km taxi ride'},
+ ip:{n:'iPhone',col:'--ip',g:'gd',np:'an iPhone 17'},sw:{n:'Switch 2',col:'--sw',g:'gd',np:'a Nintendo Switch 2'},bi:{n:'Billy',col:'--bi',g:'gd',np:'an IKEA Billy bookcase'},
+ cx:{n:'Composite',col:'--red',np:'the basket average'}};
+const KEYS=['bm','la','sf','tx','ip','sw','bi'],FEED=KEYS.slice(1);
+let S={base:'USA',basket:'bm',adj:false,sel:'JPN',spot:{}};
+try{const s=JSON.parse(localStorage.getItem('parity')||'null');if(s)Object.assign(S,{base:s.base||S.base,basket:s.basket||S.basket,adj:!!s.adj,sel:s.sel||S.sel});}catch(e){}
+if(!byI[S.sel])S.sel='JPN';
+const save=()=>{try{localStorage.setItem('parity',JSON.stringify({base:S.base,basket:S.basket,adj:S.adj,sel:S.sel}))}catch(e){}};
+let curName;try{const dn=new Intl.DisplayNames(['en'],{type:'currency'});curName=c=>dn.of(c)}catch(e){curName=c=>c}
+const cname=c=>c.i==='EUZ'?'euro':(curName(c.c)||c.c).replace(/^(US|British|Japanese|Chinese|Swiss)\s/,m=>m);
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const pct=(v,d=0)=>v==null||!isFinite(v)?'—':(v>0?'+':v<0?'−':'')+Math.abs(v*100).toFixed(d)+'%';
+const fmt=(v)=>{if(v==null)return'—';const a=Math.abs(v);const d=a>=1000?0:a>=100?1:a>=10?2:a>=1?3:4;return v.toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:(a>=1000||Number.isInteger(v))?0:Math.min(d,2)})};
+let LIVE=SNAP0;const EDIT={};
+const lx=c=>LIVE.fx[c.c]??c.ex;
+const ex=c=>(c.i===S.sel&&S.spot[S.base+'|'+c.i]!=null)?S.spot[S.base+'|'+c.i]*lx(byI[S.base]):lx(c);
+function applySnap(s){LIVE=s;C.forEach(c=>{FEED.forEach(b=>{const r=s[b]&&s[b][c.i];ORIG[c.i][b]=r?r.p:null;if(!EDIT[c.i+b])c[b]=ORIG[c.i][b]})})}
+const srcTag=(c,b)=>{const r=LIVE[b]&&LIVE[b][c.i];if(!r||EDIT[c.i+b])return'';const off=r.s!=='est';const lab=r.s==='est'?'est':r.s==='voucher'?'voucher':r.s==='tariff'?'tariff':r.s==='msrp'?'MSRP':'official';return `<span class="src ${off?'off':''}" title="${r.s==='est'?'Estimate — no official price feed':r.s==='voucher'?'Face value of Starbucks gift voucher':r.s==='tariff'?'Computed from the regulated taxi tariff':r.s==='msrp'?'Nintendo announced price (Sept 2026)':'From '+r.s}">${lab}</span>`};
+function liveStatus(fromDb){const s=LIVE;const u=new Date(s.updated);const age=(Date.now()-u)/36e5;const el=$('#live');el.className='live '+(age<36?'on':'stale');
+  const nE=Object.values(s.fxSrc).filter(v=>v==='ECB').length,nM=Object.values(s.fxSrc).length-nE;
+  el.querySelector('em').textContent=`FX ${nE} ECB (${s.fxAsof.ECB}) + ${nM} market · prices checked ${s.ipAsof} · updated ${u.toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${fromDb?'':' · offline copy'}`;
+  el.title=fromDb?'Live feed from the page database, refreshed daily':'Showing the copy built into the page; the live feed is not reachable in this view'}
+const dp=(c,b)=>c[b]==null?null:c[b]/ex(c);
+
+/* GDP fit per basket: dollar price = a + b·GDP per person (OLS over countries with both) */
+function fit(b){const pts=C.filter(c=>c.gdp&&c[b]!=null).map(c=>[c.gdp,dp(c,b)]);const n=pts.length;if(n<4)return null;
+  const mx=pts.reduce((s,p)=>s+p[0],0)/n,my=pts.reduce((s,p)=>s+p[1],0)/n;let sxy=0,sxx=0;pts.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2});
+  const k=sxy/sxx,a=my-k*mx;return {a,k,f:g=>a+k*g}}
+function val(c,b,F){const base=byI[S.base];if(b==='cx'){const vs=KEYS.map(x=>val(c,x,F)).filter(v=>v!=null);return vs.length?vs.reduce((a,v)=>a+v,0)/vs.length:null}
+  const p=dp(c,b),pb=dp(base,b);if(p==null||pb==null)return null;
+  if(!S.adj)return p/pb-1;const f=F[b];if(!f||!c.gdp||!base.gdp)return null;return (p/f.f(c.gdp))/(pb/f.f(base.gdp))-1}
+const fits=()=>Object.fromEntries(KEYS.map(k=>[k,fit(k)]));
+
+/* controls */
+function seg(el,items,get,set){el.innerHTML='';items.forEach(([k,lab,sw])=>{const b=document.createElement('button');b.innerHTML=(sw?`<i style="background:var(${sw})"></i>`:'')+lab;b.onclick=()=>{set(k);render()};b.dataset.k=k;el.appendChild(b)});const up=()=>el.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==String(get())));el._up=up}
+seg($('#baseSeg'),BASES.map(([i,c])=>[i,c]),()=>S.base,k=>{S.base=k;if(S.sel===k)S.sel=k==='USA'?'JPN':'USA'});
+seg($('#basketSeg'),Object.entries(BK).map(([k,v])=>[k,v.n,v.col]),()=>S.basket,k=>S.basket=k);
+seg($('#adjSeg'),[['false','Raw'],['true','GDP-adjusted']],()=>S.adj,k=>S.adj=k==='true');
+$('#cur').innerHTML=C.map(c=>`<option value="${c.i}">${c.n} · ${c.c}</option>`).join('');
+$('#cur').onchange=e=>{S.sel=e.target.value;render()};
+{let t='light';try{t=localStorage.getItem('parity-theme')||'light'}catch(e){}document.documentElement.dataset.theme=t}
+$('#themeBtn').onclick=()=>{const r=document.documentElement;const t=r.dataset.theme==='dark'?'light':'dark';r.dataset.theme=t;try{localStorage.setItem('parity-theme',t)}catch(e){}render(true)};
+$('#resetSpot').onclick=()=>{delete S.spot[S.base+'|'+S.sel];render()};
+$('#resetAll').onclick=()=>{C.forEach(c=>FEED.forEach(b=>c[b]=ORIG[c.i][b]));for(const k in EDIT)delete EDIT[k];render()};
+
+/* tooltip */
+const tip=$('#tip');
+function showTip(e,html){tip.innerHTML=html;tip.classList.add('on');const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+14,y=e.clientY+14;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;tip.style.left=x+'px';tip.style.top=y+'px'}
+const hideTip=()=>tip.classList.remove('on');
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+const ease=t=>1-Math.pow(1-t,3);
+
+/* ===== Ladder (animated diverging bars) ===== */
+const LAD={rows:{},anim:null};
+function niceMax(m){return Math.max(.4,Math.ceil(m/.2)*.2)}
+function drawLadder(F,instant){
+  const svg=$('#ladder'),W=svg.clientWidth||520,RH=15,top=22;
+  const list=C.map(c=>({c,v:c.i===S.base?0:val(c,S.basket,F)})).filter(d=>d.v!=null).sort((a,b)=>a.v-b.v);
+  const H=top+list.length*RH+8;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const lw=Math.min(118,W*.3),vw=46,x0=lw+8,x1=W-vw;const mx=niceMax(Math.max(...list.map(d=>Math.abs(d.v))));
+  const X=v=>x0+(x1-x0)*(v+mx)/(2*mx);
+  if(!svg._axis){svg._axis=el('g',{},svg);svg._rows=el('g',{},svg)}
+  const ax=svg._axis;ax.innerHTML='';
+  for(let t=-mx;t<=mx+1e-9;t+=mx>1?.4:.2){const x=X(t);el('line',{x1:x,x2:x,y1:top-6,y2:H-4,class:Math.abs(t)<1e-9?'zero':'grd'},ax);const tx=el('text',{x,y:12,'text-anchor':'middle',class:'t tn'},ax);tx.textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  const seen=new Set();
+  list.forEach((d,i)=>{const id=d.c.i;seen.add(id);let r=LAD.rows[id];
+    if(!r){const g=el('g',{class:'row'},svg._rows);const bg=el('rect',{class:'rbg',x:0,width:W,height:RH},g);const bar=el('rect',{height:RH-5,y:2.5},g);const nm=el('text',{class:'nm',x:lw,y:RH-4,'text-anchor':'end'},g);const vt=el('text',{class:'vt',y:RH-4},g);
+      r=LAD.rows[id]={g,bg,bar,nm,vt,y:top+i*RH,v:0};
+      g.onclick=()=>{S.sel=id;render()};
+      g.onmousemove=e=>{const c=byI[id],vv=r.tv;showTip(e,`<h4>${c.n} · ${c.c}</h4>${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation <b class="${vv<0?'u':'o'}">${pct(vv)}</b><br>vs ${byI[S.base].c}${S.basket!=='cx'?`<br>Local price ${fmt(c[S.basket])} ${c.c} = $${fmt(dp(c,S.basket))}`:''}`)};g.onmouseleave=hideTip}
+    r.g.style.display='';r.bg.setAttribute('width',W);r.nm.textContent=d.c.n;r.ty=top+i*RH;r.tv=d.v;r.g.classList.toggle('on',id===S.sel);r.g.classList.toggle('base',id===S.base);
+    if(r.fresh===undefined){r.y=r.ty;r.fresh=false}});
+  for(const id in LAD.rows)if(!seen.has(id)){LAD.rows[id].g.style.display='none';LAD.rows[id].v=0}
+  const from={};for(const id in LAD.rows)from[id]={y:LAD.rows[id].y,v:LAD.rows[id].v};
+  cancelAnimationFrame(LAD.anim);const t0=performance.now(),dur=instant||matchMedia('(prefers-reduced-motion:reduce)').matches?0:650;
+  const step=now=>{const k=dur?ease(Math.min(1,(now-t0)/dur)):1;
+    for(const id of seen){const r=LAD.rows[id],f=from[id];r.y=f.y+(r.ty-f.y)*k;r.v=f.v+(r.tv-f.v)*k;
+      r.g.setAttribute('transform',`translate(0,${r.y})`);const xa=X(0),xb=X(Math.max(-mx,Math.min(mx,r.v)));
+      r.bar.setAttribute('x',Math.min(xa,xb));r.bar.setAttribute('width',Math.max(id===S.base?0:1,Math.abs(xb-xa)));r.bar.setAttribute('class',r.tv<0?'under':'over');
+      r.vt.setAttribute('x',W);r.vt.setAttribute('text-anchor','end');r.vt.textContent=id===S.base?'base':pct(r.v)}
+    if(k<1)LAD.anim=requestAnimationFrame(step)};
+  LAD.anim=requestAnimationFrame(step);
+  $('#ladTitle').textContent=`${BK[S.basket].n} valuation against the ${byI[S.base].c}`;
+  $('#ladSub').textContent=`${list.length} currencies, cheapest first · ${S.adj?'adjusted for GDP per person':'raw local-price comparison'} · click a row`;
+}
+
+/* ===== Strip: one currency, every basket ===== */
+$('#stripLeg').innerHTML=KEYS.map(k=>`<span><i style="background:var(${BK[k].col})"></i>${BK[k].n}</span>`).join('')+'<span><i class="d" style="background:var(--red)"></i>Composite</span>';
+const STRIP={pos:{}};
+function drawStrip(F){
+  const svg=$('#strip'),W=svg.clientWidth||460,H=96;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const c=byI[S.sel];const vals=[...KEYS,'cx'].map(b=>[b,val(c,b,F)]);
+  const m=niceMax(Math.max(.4,...vals.filter(v=>v[1]!=null).map(v=>Math.abs(v[1]))));
+  const p=14,X=v=>p+(W-2*p)*(v+m)/(2*m),y=46;
+  svg.innerHTML='';
+  el('rect',{x:p,y:y-3,width:X(0)-p,height:6,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:y-3,width:W-p-X(0),height:6,fill:'var(--steeltint)'},svg);
+  [-m,-m/2,0,m/2,m].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:y-9,y2:y+9,stroke:t?'var(--line)':'var(--ink)'},svg);const tx=el('text',{x:X(t),y:y+26,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?pct(t):'fair'});
+  const ul=el('text',{x:p,y:y+42,class:'t'},svg);ul.textContent='← cheap';const ol=el('text',{x:W-p,y:y+42,class:'t','text-anchor':'end'},svg);ol.textContent='dear →';
+  const placed=[];
+  vals.forEach(([b,v],i)=>{if(v==null)return;const x=X(v);let ly=b==='cx'?y-16:y-16-((i)%3)*0;
+    const prev=STRIP.pos[b]??x;const g=el('g',{class:'mk'},svg);
+    if(b==='cx')el('rect',{x:-6,y:-6,width:12,height:12,transform:'rotate(45)',fill:'var(--red)',stroke:'var(--card)','stroke-width':2},g);
+    else el('circle',{r:7,fill:`var(${BK[b].col})`,stroke:'var(--card)','stroke-width':2},g);
+    // label stacking
+    let row=0;while(placed.some(q=>q.row===row&&Math.abs(q.x-x)<62))row++;placed.push({x,row});
+    const lx=Math.max(p+20,Math.min(W-p-20,x));
+    const tx=el('text',{x:lx-x,y:-14-row*13,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},g);tx.textContent=`${b==='cx'?'Mix':BK[b].n} ${pct(v)}`;
+    if(row)el('line',{x1:0,x2:lx-x,y1:-8,y2:-11-row*13+4,stroke:`var(${BK[b].col})`,'stroke-width':.8,opacity:.6},g);
+    g.setAttribute('transform',`translate(${prev},${y})`);STRIP.pos[b]=x;
+    const t0=performance.now();const go=now=>{const k=ease(Math.min(1,(now-t0)/550));g.setAttribute('transform',`translate(${prev+(x-prev)*k},${y})`);if(k<1)requestAnimationFrame(go)};requestAnimationFrame(go)});
+  const top=Math.max(0,...placed.map(q=>q.row));svg.setAttribute('height',H+top*13);svg.setAttribute('viewBox',`0 ${-top*13} ${W} ${H+top*13}`);
+}
+
+/* ===== Rate axis: implied rates per basket, draggable spot ===== */
+function drawRate(F){
+  const svg=$('#rate'),W=svg.clientWidth||460,H=112;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const c=byI[S.sel],base=byI[S.base];const key=S.base+'|'+S.sel;
+  const mkt=c.ex/base.ex,spot=ex(c)/base.ex;const inv=mkt<1;const q=v=>inv?1/v:v;
+  const pair=inv?`${c.c}/${base.c}`:`${base.c}/${c.c}`;
+  $('#rateLbl').textContent=`Implied ${pair} — ${inv?`${base.c} per 1 ${c.c}`:`${c.c} per 1 ${base.c}`}`;
+  const imp=KEYS.map(b=>[b,c[b]!=null&&base[b]!=null?c[b]/base[b]:null]).filter(x=>x[1]!=null);
+  const all=[...imp.map(x=>q(x[1])),q(mkt),q(spot)];let lo=Math.min(...all)/1.18,hi=Math.max(...all)*1.18;
+  if(!svg._dom||svg._key!==key+S.basket)svg._dom=[lo,hi];else{lo=Math.min(lo,svg._dom[0]);hi=Math.max(hi,svg._dom[1]);svg._dom=[lo,hi]}svg._key=key+S.basket;
+  const p=16,L=Math.log,X=v=>p+(W-2*p)*(L(v)-L(lo))/(L(hi)-L(lo)),Xi=x=>Math.exp(L(lo)+(x-p)/(W-2*p)*(L(hi)-L(lo)));
+  const y=62;
+  el('line',{x1:p,x2:W-p,y1:y,y2:y,stroke:'var(--line)','stroke-width':6,'stroke-linecap':'butt'},svg);
+  // ticks
+  const span=L(hi)-L(lo);const tk=[];const m10=Math.pow(10,Math.floor(Math.log10(lo)));[1,1.5,2,2.5,3,4,5,6,7,8,10].forEach(s=>{for(let e=m10;e<=hi*10;e*=10){const v=s*e;if(v>=lo&&v<=hi)tk.push(v)}});
+  const tks=[...new Set(tk)].sort((a,b)=>a-b);let last=-99;tks.forEach(v=>{const x=X(v);if(x-last<44)return;last=x;el('line',{x1:x,x2:x,y1:y+5,y2:y+9,stroke:'var(--mute)'},svg);const t=el('text',{x,y:y+22,'text-anchor':'middle',class:'t tn'},svg);t.textContent=fmt(v)});
+  // spot shading between market and spot
+  if(Math.abs(spot/mkt-1)>1e-6){el('rect',{x:Math.min(X(q(mkt)),X(q(spot))),y:y-3,width:Math.abs(X(q(mkt))-X(q(spot))),height:6,fill:'var(--gold)',opacity:.5},svg);
+    el('line',{x1:X(q(mkt)),x2:X(q(mkt)),y1:y-12,y2:y+12,stroke:'var(--mute)','stroke-dasharray':'2 2'},svg)}
+  // implied markers above
+  const pl=[];imp.forEach(([b,v])=>{const x=X(q(v));let row=0;while(pl.some(z=>z.r===row&&Math.abs(z.x-x)<70))row++;pl.push({x,r:row});
+    el('line',{x1:x,x2:x,y1:y-4,y2:y-14-row*14,stroke:`var(${BK[b].col})`,'stroke-width':1},svg);el('circle',{cx:x,cy:y,r:5,fill:`var(${BK[b].col})`,stroke:'var(--card)','stroke-width':1.5},svg);
+    const t=el('text',{x:Math.max(p+24,Math.min(W-p-24,x)),y:y-18-row*14,'text-anchor':'middle',class:'t tn',style:`fill:var(${BK[b].col});font-weight:500`},svg);t.textContent=`${BK[b].n} ${fmt(q(v))}`});
+  {const top=Math.max(0,...pl.map(z=>z.r));const ex2=Math.max(0,top-1)*14;svg.setAttribute('height',112+ex2);svg.setAttribute('viewBox',`0 ${-ex2} ${W} ${112+ex2}`)}
+  // spot handle
+  const sx=X(q(spot));const g=el('g',{style:'cursor:ew-resize'},svg);
+  el('rect',{x:sx-1,y:y-12,width:2,height:28,fill:'var(--red)'},g);
+  const pw=78;el('rect',{x:Math.max(0,Math.min(W-pw,sx-pw/2)),y:y+28,width:pw,height:20,fill:'var(--red)'},g);
+  const st=el('text',{x:Math.max(pw/2,Math.min(W-pw/2,sx)),y:y+42,'text-anchor':'middle',style:'fill:#fff;font-size:11px;font-weight:500',class:'tn'},g);st.textContent=`Spot ${fmt(q(spot))}`;
+  // drag
+  const setFromX=cx=>{const r=svg.getBoundingClientRect();const x=(cx-r.left)*W/r.width;let v=Xi(Math.max(p,Math.min(W-p,x)));const rr=inv?1/v:v;S.spot[key]=rr;render(false,true)};
+  svg.onpointerdown=e=>{svg.setPointerCapture(e.pointerId);setFromX(e.clientX);svg.onpointermove=ev=>setFromX(ev.clientX)};
+  svg.onpointerup=svg.onpointercancel=()=>{svg.onpointermove=null};
+  svg.onkeydown=e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();const f=(e.key==='ArrowRight')!==inv?1.01:1/1.01;S.spot[key]=spot*f;render(false,true)};
+  $('#resetSpot').hidden=S.spot[key]==null;
+}
+
+/* ===== Headline + key numbers ===== */
+function drawHead(F){
+  const c=byI[S.sel],base=byI[S.base];const v=val(c,S.basket,F);
+  $('#cur').value=S.sel;
+  const nm=cname(c),bn=cname(base);const moved=S.spot[S.base+'|'+S.sel]!=null;
+  if(c.i===S.base){$('#h1').innerHTML=`The ${nm} is the base currency`;$('#h1f').textContent='Pick another currency or change the base.';}
+  else if(v==null){$('#h1').innerHTML=`No ${BK[S.basket].n.toLowerCase()} price for the ${nm}`;$('#h1f').textContent=S.adj?'GDP per person is missing for this country, so it cannot be adjusted.':'Add a local price in the table below.';}
+  else{$('#h1').innerHTML=`The ${nm} is <b class="${v<0?'u':'o'}">${Math.abs(v*100).toFixed(0)}% ${v<0?'undervalued':'overvalued'}</b> against the ${bn}`;
+    const b=S.basket==='cx'?'bm':S.basket;
+    $('#h1f').innerHTML=S.basket==='cx'?`Average of the ${KEYS.filter(k=>val(c,k,F)!=null).length} baskets priced here${S.adj?', each adjusted for GDP per person':''}${moved?' · at your test rate':''}.`:
+      (c[b]!=null?`${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)} costs ${fmt(c[b])} ${c.c} in ${c.n} and ${fmt(base[b])} ${base.c} in ${base.n}. ${S.adj?'Compared with what GDP per person predicts for each.':`That implies ${fmt(c[b]/base[b])} ${c.c} per ${base.c}, against ${moved?'your test rate of':'a market rate of'} ${fmt(ex(c)/base.ex)}.`}`:'');}
+  const items=[...KEYS,'cx'].map(b=>[b,val(c,b,F)]);
+  $('#kv').innerHTML=items.map(([b,v])=>`<div><span><i style="background:var(${BK[b].col})${b==='cx'?';transform:rotate(45deg) scale(.85)':''}"></i>${BK[b].n}</span><b class="${v==null?'':v<0?'u':'o'}">${pct(v)}</b><span>${b==='cx'?'mean of baskets':c[b]!=null?fmt(c[b])+' '+c.c:'no price'}</span></div>`).join('');
+  // tradables gap: services vs traded goods
+  const grp=g=>{const ks=KEYS.filter(k=>BK[k].g===g);const vs=ks.map(k=>[k,val(c,k,F)]).filter(x=>x[1]!=null);return {ks:vs.map(x=>x[0]),v:vs.length?vs.reduce((a,x)=>a+x[1],0)/vs.length:null}};
+  const sv=grp('svc'),gd=grp('gd');const nmz=a=>a.map(k=>BK[k].n).join(', ');
+  if(sv.v!=null&&gd.v!=null&&c.i!==S.base){const g=sv.v-gd.v;$('#gapV').textContent=pct(g);
+    $('#gapT').innerHTML=`<strong>Tradables gap.</strong> Local services (${nmz(sv.ks)}) read <b class="${sv.v<0?'u':'o'}">${pct(sv.v)}</b>; traded goods (${nmz(gd.ks)}) read <b class="${gd.v<0?'u':'o'}">${pct(gd.v)}</b>. ${g<0?`The ${nm}'s cheapness sits in wages and rent rather than in goods priced off global lists — the Balassa–Samuelson pattern, which says it is not a real mispricing that trade would close.`:`Local services carry a premium that traded goods do not, typical of rich high-wage economies; the goods side is the better guide to the tradable exchange rate.`}`}
+  else{$('#gapV').textContent='—';$('#gapT').innerHTML='<strong>Tradables gap.</strong> Needs at least one service price (latte, Spotify, taxi) and one traded-good price (iPhone, Switch 2, Billy) for this currency and the base.'}
+}
+
+/* ===== History (Big Mac only, raw) ===== */
+function drawHist(){
+  const svg=$('#hist'),W=svg.clientWidth||520,H=260;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const D=DATA.dates,hb=DATA.hist[S.base];const ser={};for(const k in DATA.hist){if(k===S.base)continue;ser[k]=DATA.hist[k].map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null)}
+  const pl=34,pr=10,pt=10,pb=24;const X=i=>pl+(W-pl-pr)*i/(D.length-1);
+  const sv=ser[S.sel]||[];const mx=Math.max(.6,...sv.filter(v=>v!=null).map(Math.abs));const m=niceMax(mx);
+  const Y=v=>pt+(H-pt-pb)*(m-Math.max(-m,Math.min(m,v)))/(2*m);
+  for(let t=-m;t<=m+1e-9;t+=m>1?.4:.2){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:Math.abs(t)<1e-9?'var(--ink)':'var(--line)'},svg);const tx=el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg);tx.textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  D.forEach((d,i)=>{if(d.endsWith('-07')&&(+d.slice(0,4))%5===0||i===0){const t=el('text',{x:X(i),y:H-6,'text-anchor':'middle',class:'t tn'},svg);t.textContent=d.slice(0,4)}});
+  const path=a=>{let s='',pen=false;a.forEach((v,i)=>{if(v==null){pen=false;return}s+=(pen?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1);pen=true});return s};
+  for(const k in ser)if(k!==S.sel)el('path',{d:path(ser[k]),class:'ghost'},svg);
+  if(S.sel!==S.base){
+    // shaded area split at zero
+    const clip=(sign)=>{let s='';let seg=[];const flush=()=>{if(seg.length>1){s+='M'+X(seg[0][0])+','+Y(0);seg.forEach(([i,v])=>s+='L'+X(i)+','+Y(sign<0?Math.min(0,v):Math.max(0,v)));s+='L'+X(seg[seg.length-1][0])+','+Y(0)+'Z'}seg=[]};sv.forEach((v,i)=>{if(v==null)flush();else seg.push([i,v])});flush();return s};
+    el('path',{d:clip(-1),class:'area-u'},svg);el('path',{d:clip(1),class:'area-o'},svg);
+    const hp=el('path',{d:path(sv),class:'hl'},svg);
+    const len=hp.getTotalLength?hp.getTotalLength():0;if(len&&!matchMedia('(prefers-reduced-motion:reduce)').matches){hp.style.strokeDasharray=len;hp.style.strokeDashoffset=len;hp.getBoundingClientRect();hp.style.transition='stroke-dashoffset 900ms cubic-bezier(.2,.7,.2,1)';hp.style.strokeDashoffset=0}
+    let li=sv.length-1;while(li>0&&sv[li]==null)li--;if(sv[li]!=null){el('circle',{cx:X(li),cy:Y(sv[li]),r:4,fill:'var(--ink)',stroke:'var(--card)','stroke-width':2},svg)}
+  }
+  const cross=el('g',{style:'pointer-events:none',opacity:0},svg);const cl=el('line',{y1:pt,y2:H-pb,stroke:'var(--ink)','stroke-dasharray':'2 3',opacity:.5},cross);const cd=el('circle',{r:4,fill:'var(--red)',stroke:'var(--card)','stroke-width':2},cross);
+  const hit=el('rect',{x:pl,y:pt,width:W-pl-pr,height:H-pt-pb,fill:'transparent',style:'cursor:crosshair'},svg);
+  hit.onpointermove=e=>{const r=svg.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(D.length-1,Math.round((x-pl)/(W-pl-pr)*(D.length-1))));const v=sv[i];
+    cross.setAttribute('opacity',1);cl.setAttribute('x1',X(i));cl.setAttribute('x2',X(i));if(v!=null){cd.setAttribute('cx',X(i));cd.setAttribute('cy',Y(v));cd.style.display=''}else cd.style.display='none';
+    const vals=Object.entries(ser).map(([k,a])=>[k,a[i]]).filter(x=>x[1]!=null).sort((a,b)=>a[1]-b[1]);const rk=vals.findIndex(x=>x[0]===S.sel);
+    const c=byI[S.sel];showTip(e,`<h4>${D[i]==null?'':new Date(D[i]+'-01').toLocaleString('en-GB',{month:'short',year:'numeric'})}</h4>${c.n}: <b class="${v<0?'u':'o'}">${pct(v)}</b> vs ${byI[S.base].c}${rk>=0?`<br>${rk+1} of ${vals.length} from cheapest`:''}${DATA.hist[S.sel][i]!=null?`<br>Big Mac $${fmt(DATA.hist[S.sel][i])}`:''}`)};
+  hit.onpointerleave=()=>{cross.setAttribute('opacity',0);hideTip()};
+  $('#histSub').textContent=`Raw Big Mac valuation of the ${cname(byI[S.sel])} against the ${byI[S.base].c}, ${D[0].slice(0,4)}–2026. Hover to read any survey.`;
+  $('#histLeg').textContent=byI[S.sel].n;
+}
+
+/* ===== Scatter: dollar price vs GDP per person ===== */
+function drawScat(F){
+  const svg=$('#scat'),W=svg.clientWidth||520,H=260;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const b=S.basket==='cx'?'bm':S.basket;const f=F[b];const base=byI[S.base];
+  const pts=C.filter(c=>c.gdp&&c[b]!=null).map(c=>({c,x:c.gdp/1000,y:dp(c,b)/dp(base,b)*dp(base,b)}));
+  const pl=44,pr=10,pt=12,pb=28;const xm=Math.max(...pts.map(p=>p.x))*1.05,ys=pts.map(p=>p.y);let y0=Math.min(...ys)*.85,y1=Math.max(...ys)*1.08;
+  const X=v=>pl+(W-pl-pr)*v/xm,Y=v=>pt+(H-pt-pb)*(1-(v-y0)/(y1-y0));
+  const ystep=(y1-y0)>400?200:(y1-y0)>200?100:(y1-y0)>40?20:(y1-y0)>10?2:1;
+  for(let t=Math.ceil(y0/ystep)*ystep;t<=y1;t+=ystep){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:'var(--line)'},svg);const tx=el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg);tx.textContent='$'+fmt(t)}
+  for(let t=0;t<=xm;t+=20){const tx=el('text',{x:X(t),y:H-10,'text-anchor':'middle',class:'t tn'},svg);tx.textContent=t?'$'+t+'k':'0'}
+  const ax=el('text',{x:W-pr,y:H-10+0,'text-anchor':'end',class:'t'},svg);
+  if(f){const a=Math.max(0,(y0-f.a)/f.k/1000);el('line',{x1:X(a),y1:Y(f.f(a*1000)),x2:X(xm),y2:Y(f.f(xm*1000)),class:'fit'},svg)}
+  pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const fair=f?f.f(p.c.gdp):p.y;const cheap=p.y<fair;const on=p.c.i===S.sel,isb=p.c.i===S.base;
+    const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:isb?'var(--mute)':cheap?'var(--red)':'var(--steel)',opacity:on||isb?1:.75},svg);
+    if(on){el('line',{x1:X(p.x),x2:X(p.x),y1:Y(p.y),y2:Y(fair),stroke:'var(--ink)','stroke-dasharray':'2 2'},svg);const t=el('text',{x:X(p.x)+(X(p.x)>W-90?-10:10),y:Y(p.y)+4,'text-anchor':X(p.x)>W-90?'end':'start',style:'font-size:12px;font-weight:500;fill:var(--ink)'},svg);t.textContent=p.c.n;svg.appendChild(ci)}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[b].n} $${fmt(p.y)}<br>GDP per person $${fmt(p.c.gdp)}<br>Fair price on the line $${fmt(fair)}<br><b class="${cheap?'u':'o'}">${pct(p.y/fair-1)}</b> vs income-implied`);ci.onmouseleave=hideTip});
+  el('text',{x:pl,y:pt-2,class:'t'},svg).textContent='';
+  $('#scatSub').textContent=`${BK[b].n} price in US dollars against GDP per person. Richer places pay more; distance from the line is the GDP-adjusted reading.${S.basket==='cx'?' (Composite shows the burger.)':''}`;
+}
+
+/* ===== Table ===== */
+let SORT={k:'v',d:1};
+function drawTable(F){
+  const base=byI[S.base];
+  const rows=C.map(c=>{const r={c,cx:val(c,'cx',F),spot:ex(c)/base.ex};KEYS.forEach(k=>r[k]=val(c,k,F));return r});
+  const key=SORT.k==='v'?S.basket:SORT.k;rows.sort((a,b)=>key==='n'?a.c.n.localeCompare(b.c.n)*SORT.d:((a[key]??99)-(b[key]??99))*SORT.d);
+  const vc=v=>`<td class="vc ${v==null?'':v<0?'u':'o'}">${pct(v)}</td>`;
+  const inp=(c,b)=>`<input data-i="${c.i}" data-b="${b}" inputmode="decimal" aria-label="${BK[b].n} price in ${c.n}" value="${c[b]??''}" placeholder="—" class="${EDIT[c.i+b]?'ed':''}">`;
+  $('#tbl').innerHTML=`<thead><tr><th></th><th></th><th></th><th colspan="${KEYS.length}" style="text-align:center;border-bottom:1px solid var(--line)">Local price</th><th colspan="${KEYS.length+1}" style="text-align:center;border-bottom:1px solid var(--line)">Valuation vs ${base.c}</th></tr><tr><th data-s="n">Country</th><th>Ccy</th><th data-s="spot">Spot per ${base.c}</th>${KEYS.map(k=>`<th>${BK[k].n}</th>`).join('')}${KEYS.map(k=>`<th data-s="${k}">${BK[k].n}</th>`).join('')}<th data-s="cx">Composite</th></tr></thead><tbody>${
+    rows.map(r=>`<tr class="${r.c.i===S.sel?'on':''}" data-i="${r.c.i}"><td>${r.c.n}</td><td>${r.c.c}</td><td title="${LIVE.fxSrc[r.c.c]||'Economist July survey'}">${fmt(r.spot)}${LIVE.fxSrc[r.c.c]?'':'<span class="src">Jul</span>'}</td><td>${fmt(r.c.bm)}</td>${FEED.map(k=>`<td>${inp(r.c,k)}${srcTag(r.c,k)}</td>`).join('')}${KEYS.map(k=>vc(r[k])).join('')}${vc(r.cx)}</tr>`).join('')}</tbody>`;
+  $('#tbl').querySelectorAll('th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;SORT={k,d:SORT.k===k?-SORT.d:1};drawTable(F)});
+  $('#tbl').querySelectorAll('tbody tr').forEach(tr=>tr.onclick=e=>{if(e.target.tagName==='INPUT')return;S.sel=tr.dataset.i;render()});
+  $('#tbl').querySelectorAll('input').forEach(inp=>inp.onchange=()=>{const c=byI[inp.dataset.i];const v=parseFloat(inp.value.replace(/,/g,''));c[inp.dataset.b]=isFinite(v)&&v>0?v:null;EDIT[c.i+inp.dataset.b]=c[inp.dataset.b]!==ORIG[c.i][inp.dataset.b];render()});
+  $('#resetAll').hidden=!Object.values(EDIT).some(Boolean);
+}
+
+
+/* ===== Back-test: Big Mac gap vs subsequent FX move ===== */
+let HZ=5,BM='own';const HYPER=['ARG','VEN','LBN','TUR'];
+seg($('#bmSeg'),[['raw','Raw gap'],['own','Gap vs own average'],['rt','Vs average to date']],()=>BM,k=>BM=k);
+seg($('#hzSeg'),[[1,'1 year'],[3,'3 years'],[5,'5 years']],()=>HZ,k=>HZ=+k);
+$('#exHi').onchange=()=>render();
+const mIdx=d=>+d.slice(0,4)*12+(+d.slice(5,7));
+function backtest(){const D=DATA.dates,M=D.map(mIdx),b=S.base,hb=DATA.hist[b],eb=DATA.histEx[b];const pts=[];const ex=$('#exHi').checked;
+  for(const k in DATA.hist){if(k===b||(ex&&HYPER.includes(k)))continue;const hp=DATA.hist[k],he=DATA.histEx[k];const vs=hp.map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null);const all=vs.filter(v=>v!=null);const avg=all.reduce((a,v)=>a+v,0)/all.length;
+    for(let i=0;i<D.length;i++){if(vs[i]==null)continue;let adj=0;if(BM==='own')adj=avg;if(BM==='rt'){const past=vs.slice(0,i+1).filter(v=>v!=null);if(past.length<6)continue;adj=past.reduce((a,v)=>a+v,0)/past.length}let j=-1,bd=99;for(let q=i+1;q<D.length;q++){const dd=Math.abs(M[q]-M[i]-12*HZ);if(dd<bd){bd=dd;j=q}}
+      if(j<0||bd>4||he[j]==null||eb[j]==null)continue;const v=vs[i]-adj;const y=(he[i]/he[j])*(eb[j]/eb[i])-1;if(!isFinite(y))continue;pts.push({k,i,v,y})}}
+  const n=pts.length;if(n<5)return{pts,n};const mx=pts.reduce((s,p)=>s+p.v,0)/n,my=pts.reduce((s,p)=>s+p.y,0)/n;let sxy=0,sxx=0,syy=0;pts.forEach(p=>{sxy+=(p.v-mx)*(p.y-my);sxx+=(p.v-mx)**2;syy+=(p.y-my)**2});
+  const k=sxy/sxx,a=my-k*mx,r=sxy/Math.sqrt(sxx*syy);const hit=pts.filter(p=>Math.abs(p.v)>.1).reduce((s,p)=>s+(p.v*p.y<0?1:0),0)/Math.max(1,pts.filter(p=>Math.abs(p.v)>.1).length);
+  return{pts,n,a,k,r,hit}}
+function drawBT(F){const R=backtest();const svg=$('#bt'),W=svg.clientWidth||520,H=290;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+  const pl=44,pr=10,pt=10,pb=30;const xv=[-.8,.8],yv=[-.6,1];const X=v=>pl+(W-pl-pr)*(Math.max(xv[0],Math.min(xv[1],v))-xv[0])/(xv[1]-xv[0]),Y=v=>pt+(H-pt-pb)*(1-(Math.max(yv[0],Math.min(yv[1],v))-yv[0])/(yv[1]-yv[0]));
+  [-.4,0,.4,.8].forEach(t=>{el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=t?pct(t):'0'});
+  [-.8,-.4,0,.4,.8].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=t?pct(t):'0'});
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent=BM==='raw'?'Big Mac valuation at the time →':'Big Mac gap vs the currency\'s own average →';
+  el('text',{x:pl+4,y:pt+10,class:'t'},svg).textContent=`↑ currency's move over the next ${HZ} year${HZ>1?'s':''}`;
+  el('rect',{x:pl,y:pt,width:X(0)-pl,height:Y(0)-pt,fill:'var(--redtint)'},svg);el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--steeltint)'},svg);
+  el('text',{x:pl+6,y:Y(0)-6,class:'qlab'},svg).textContent='cheap, then rose';el('text',{x:W-pr-6,y:Y(0)+14,'text-anchor':'end',class:'qlab'},svg).textContent='dear, then fell';
+  const g=el('g',{},svg);R.pts.filter(p=>p.k!==S.sel).forEach(p=>el('circle',{cx:X(p.v),cy:Y(p.y),r:2.2,fill:'var(--mute)',opacity:.35},g));
+  if(R.n>=5){el('line',{x1:X(xv[0]),y1:Y(R.a+R.k*xv[0]),x2:X(xv[1]),y2:Y(R.a+R.k*xv[1]),class:'fit','stroke-width':2},svg)}
+  const sp=R.pts.filter(p=>p.k===S.sel);sp.forEach(p=>{const c=el('circle',{cx:X(p.v),cy:Y(p.y),r:4.5,fill:'var(--red)',stroke:'var(--card)','stroke-width':1.5,style:'cursor:pointer'},svg);
+    c.onmousemove=e=>showTip(e,`<h4>${byI[p.k].n} · ${DATA.dates[p.i]}</h4>Signal <b class="${p.v<0?'u':'o'}">${pct(p.v)}</b><br>Next ${HZ}y vs ${byI[S.base].c}: <b>${pct(p.y)}</b>`);c.onmouseleave=hideTip});
+  $('#btLeg').textContent=byI[S.sel].n;
+  // stats
+  const c=byI[S.sel];const raw=val(c,'bm',F);let now=raw,avgS=null;{const hs=DATA.hist[c.i],hb=DATA.hist[S.base];if(hs&&BM!=='raw'){const a=hs.map((p,i)=>p!=null&&hb[i]!=null?p/hb[i]-1:null).filter(v=>v!=null);if(a.length){avgS=a.reduce((s,v)=>s+v,0)/a.length;now=raw==null?null:raw-avgS}}}const imp=R.n>=5&&now!=null?R.a+R.k*now:null;const spotNow=ex(c)/ex(byI[S.base]);
+  $('#btStat').innerHTML=R.n<5?'<p>Not enough history for this base.</p>':`<div><span>Gap closed per ${HZ}y</span><b>${Math.round(-R.k*100)}%</b><span>slope of the line</span></div><div><span>Right direction</span><b>${Math.round(R.hit*100)}%</b><span>of ${R.pts.filter(p=>Math.abs(p.v)>.1).length} gaps over 10%</span></div><div><span>Fit (r)</span><b>${R.r.toFixed(2)}</b><span>${R.n} readings</span></div>
+    <p>${c.i===S.base?'Pick a currency other than the base.':now==null?'No Big Mac price for this currency.':`${BM==='raw'?`At <b class="${now<0?'u':'o'}">${pct(now)}</b> today`:`Today's ${pct(raw)} against a long-run average of ${pct(avgS)} leaves the ${cname(c)} <b class="${now<0?'u':'o'}">${Math.abs(now*100).toFixed(0)}% ${now<0?'below':'above'}</b> its own norm`}, and history points to a <b class="${imp>0?'o':'u'}">${pct(imp)}</b> move in the ${cname(c)} against the ${byI[S.base].c} over ${HZ} year${HZ>1?'s':''} — ${(()=>{const f=spotNow/(1+imp);return `a spot near <b>${fmt(spotNow>=1?f:1/f)}</b> ${spotNow>=1?c.c+' per '+byI[S.base].c:byI[S.base].c+' per '+c.c} (now ${fmt(spotNow>=1?spotNow:1/spotNow)})`})()}. A tendency, not a forecast: the fit explains ${Math.round(R.r*R.r*100)}% of the variation.`} <span style="color:var(--mute)">${BM==='raw'?'The raw gap barely predicts anything: poorer countries stay cheap for decades, so being cheap is not a signal on its own.':BM==='own'?'Measured against each currency\'s own average, gaps do close. The average uses the full history, so this flatters the result slightly; switch to "Vs average to date" for what an investor could have known at the time.':'Using only the history available at each date, the signal is weaker: what a real-time investor would have had.'}</span></p>`;
+  // buckets
+  const B=[[-9,-.4,'below −40%'],[-.4,-.2,'−40 to −20%'],[-.2,0,'−20 to 0%'],[0,.2,'0 to +20%'],[.2,9,'above +20%']].map(([lo,hi,l])=>{const s=R.pts.filter(p=>p.v>=lo&&p.v<hi);const ys=s.map(p=>p.y).sort((a,b)=>a-b);return{l,n:s.length,m:ys.length?ys[Math.floor(ys.length/2)]:null,on:now!=null&&now>=lo&&now<hi}});
+  const s2=$('#btb'),W2=s2.clientWidth||460,H2=170;s2.setAttribute('viewBox',`0 0 ${W2} ${H2}`);s2.innerHTML='';const lw=92,mm=Math.max(.2,...B.map(b=>Math.abs(b.m||0)))*1.15;const X2=v=>lw+ (W2-lw-50)*(v+mm)/(2*mm);
+  el('text',{x:0,y:10,class:'t'},s2).textContent=`Median move over the next ${HZ}y, by starting ${BM==='raw'?'valuation':'gap vs own average'}`;
+  B.forEach((b,i)=>{const y=22+i*29;if(b.on)el('rect',{x:0,y:y-2,width:W2,height:26,fill:'var(--sel)'},s2);el('text',{x:0,y:y+15,class:'nm',style:b.on?'font-weight:500':''},s2).textContent=b.l;
+    el('line',{x1:X2(0),x2:X2(0),y1:y-2,y2:y+24,stroke:'var(--ink)'},s2);if(b.m!=null){const x0=X2(0),x1=X2(b.m);el('rect',{x:Math.min(x0,x1),y:y+4,width:Math.max(1,Math.abs(x1-x0)),height:14,fill:b.m>0?'var(--steel)':'var(--red)'},s2);
+    el('text',{x:Math.max(x0,x1)+5,y:y+15,class:'vt'},s2).textContent=`${pct(b.m)} · n=${b.n}`}});
+  $('#btSub').textContent=`Every Big Mac reading since 2000 against what the exchange rate did over the following ${HZ} year${HZ>1?'s':''}, all against the ${byI[S.base].c}. Survey-date prices and rates.`;
+}
+
+/* ===== Minutes of income ===== */
+const minutes=(c,b)=>{const d=dp(c,b);return d==null||!c.gdp?null:d/(c.gdp/124800)};
+const hm=m=>m==null?'—':m>=120?`${(m/60).toFixed(m>=600?0:1)} h`:`${Math.round(m)} min`;
+function drawMins(){const c=byI[S.sel],base=byI[S.base];const svg=$('#mins'),W=svg.clientWidth||460;svg.innerHTML='';
+  $('#minTitle').textContent=`${c.n} vs ${base.n}: time worked to buy each item`;
+  const rows=KEYS.map(k=>({k,a:minutes(c,k),b:minutes(base,k)})).filter(r=>r.a!=null||r.b!=null);const RH=32,H=rows.length*RH+18;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  if(!c.gdp){el('text',{x:0,y:20,class:'t'},svg).textContent='No GDP per person for this country.';return}
+  const lw=74;rows.forEach((r,i)=>{const y=8+i*RH;const mx=Math.max(r.a||0,r.b||0)||1;const L=v=>(W-lw-70)*v/mx;
+    el('text',{x:0,y:y+15,class:'nm'},svg).textContent=BK[r.k].n;
+    if(r.a!=null){el('rect',{x:lw,y:y+3,width:Math.max(1,L(r.a)),height:10,fill:`var(${BK[r.k].col})`},svg);el('text',{x:lw+L(r.a)+5,y:y+12,class:'vt',style:'fill:var(--ink)'},svg).textContent=`${hm(r.a)} ${c.c===base.c?'':'· '+c.n}`}
+    if(r.b!=null&&c.i!==base.i){el('rect',{x:lw,y:y+15,width:Math.max(1,L(r.b)),height:6,fill:'var(--mute)',opacity:.45},svg);el('text',{x:lw+L(r.b)+5,y:y+22,class:'vt'},svg).textContent=`${hm(r.b)} · ${base.n}`}});
+}
+function drawDumb(){const b=S.basket==='cx'?'bm':S.basket,base=byI[S.base];const svg=$('#dumb'),W=svg.clientWidth||460;svg.innerHTML='';
+  $('#dbTitle').textContent=`${BK[b].n}: tourist's view vs resident's view, relative to ${base.n}`;
+  const mb=minutes(base,b),pb=dp(base,b);if(mb==null){svg.setAttribute('height',30);el('text',{x:0,y:20,class:'t'},svg).textContent='No price or GDP for the base.';return}
+  const rows=C.filter(c=>c.i!==base.i&&minutes(c,b)!=null).map(c=>({c,p:dp(c,b)/pb,e:minutes(c,b)/mb})).sort((a,b)=>b.e-a.e);
+  const RH=15,top=22,H=top+rows.length*RH+6;svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const lw=104,lo=Math.log(.2),hi=Math.log(Math.max(5,...rows.map(r=>r.e))*1.1);const X=v=>lw+(W-lw-8)*(Math.log(v)-lo)/(hi-lo);
+  [.25,.5,1,2,4,8].filter(t=>Math.log(t)<=hi).forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:top-4,y2:H-4,stroke:t===1?'var(--ink)':'var(--line)'},svg);el('text',{x:X(t),y:12,'text-anchor':'middle',class:'t tn'},svg).textContent=t+'×'});
+  rows.forEach((r,i)=>{const y=top+i*RH+RH/2;const on=r.c.i===S.sel;const g=el('g',{class:'row'+(on?' on':''),style:'cursor:pointer'},svg);
+    el('rect',{class:'rbg',x:0,y:y-RH/2,width:W,height:RH},g);el('text',{class:'nm',x:lw-8,y:y+4,'text-anchor':'end',style:'font-size:11px'},g).textContent=r.c.n;
+    el('line',{x1:X(r.p),x2:X(r.e),y1:y,y2:y,stroke:'var(--mute)','stroke-width':1.5,opacity:.6},g);el('circle',{cx:X(r.p),cy:y,r:3.2,fill:'var(--card)',stroke:'var(--mute)','stroke-width':1.5},g);el('circle',{cx:X(r.e),cy:y,r:3.6,fill:on?'var(--red)':'var(--ink)'},g);
+    g.onclick=()=>{S.sel=r.c.i;render()};g.onmousemove=e=>showTip(e,`<h4>${r.c.n}</h4>${BK[b].np[0].toUpperCase()+BK[b].np.slice(1)}<br>Tourist pays ${r.p.toFixed(2)}× the ${base.n} price<br>Resident works ${r.e.toFixed(2)}× as long (${hm(minutes(r.c,b))} vs ${hm(mb)})`);g.onmouseleave=hideTip});
+}
+
+/* ===== Deserved or mispriced: valuation vs current account ===== */
+function drawQuad(F){const svg=$('#quad'),W=svg.clientWidth||520,H=320;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';const base=byI[S.base];
+  const pts=C.filter(c=>c.i!==base.i&&DATA.ca[c.i]!=null).map(c=>({c,x:DATA.ca[c.i],y:val(c,S.basket,F)})).filter(p=>p.y!=null);
+  const pl=40,pr=10,pt=10,pb=30;const xm=[-10,18],ym=Math.max(.6,niceMax(Math.max(...pts.map(p=>Math.abs(p.y)))));
+  const X=v=>pl+(W-pl-pr)*(Math.max(xm[0],Math.min(xm[1],v))-xm[0])/(xm[1]-xm[0]),Y=v=>pt+(H-pt-pb)*(ym-Math.max(-ym,Math.min(ym,v)))/(2*ym);
+  el('rect',{x:X(0),y:Y(0),width:W-pr-X(0),height:H-pb-Y(0),fill:'var(--redtint)'},svg);
+  [-10,-5,0,5,10,15].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:pt,y2:H-pb,stroke:t?'var(--line)':'var(--ink)'},svg);el('text',{x:X(t),y:H-pb+14,'text-anchor':'middle',class:'t tn'},svg).textContent=(t>0?'+':'')+t+'%'});
+  for(let t=-ym;t<=ym+1e-9;t+=ym>1?.4:.2){el('line',{x1:pl,x2:W-pr,y1:Y(t),y2:Y(t),stroke:Math.abs(t)<1e-9?'var(--ink)':'var(--line)'},svg);el('text',{x:pl-5,y:Y(t)+3,'text-anchor':'end',class:'t tn'},svg).textContent=Math.abs(t)<1e-9?'0':pct(t)}
+  el('text',{x:W-pr,y:H-4,'text-anchor':'end',class:'t'},svg).textContent='current-account balance, % of GDP →';
+  const ql=[[X(xm[0])+6,Y(ym)+14,'start','Dear with a deficit: vulnerable'],[W-pr-6,Y(ym)+14,'end','Dear but earned'],[X(xm[0])+6,H-pb-8,'start','Cheap for a reason'],[W-pr-6,H-pb-8,'end','Cheap with a surplus: mispriced']];
+  ql.forEach(([x,y,a,t],i)=>el('text',{x,y,'text-anchor':a,class:'qlab',style:i===3?'fill:var(--red)':''},svg).textContent=t);
+  pts.sort((a,b)=>(a.c.i===S.sel)-(b.c.i===S.sel)).forEach(p=>{const on=p.c.i===S.sel;const ci=el('circle',{cx:X(p.x),cy:Y(p.y),r:on?7:4.5,class:'dot',fill:on?'var(--red)':p.y<0?'var(--red)':'var(--steel)',opacity:on?1:.55,stroke:on?'var(--ink)':'var(--card)'},svg);
+    if(on||Math.abs(p.y)>.45||Math.abs(p.x)>12){el('text',{x:X(p.x)+7,y:Y(p.y)-6,class:'t',style:on?'fill:var(--ink);font-weight:500;font-size:12px':''},svg).textContent=p.c.n}
+    ci.onclick=()=>{S.sel=p.c.i;render()};ci.onmousemove=e=>showTip(e,`<h4>${p.c.n}</h4>${BK[S.basket].n} valuation <b class="${p.y<0?'u':'o'}">${pct(p.y)}</b><br>Current account ${p.x>0?'+':''}${p.x}% of GDP${DATA.caEst.includes(p.c.i)?' (estimate)':''}`);ci.onmouseleave=hideTip});
+  $('#qdSub').textContent=`${BK[S.basket].n} ${S.adj?'GDP-adjusted ':''}valuation against the ${base.c} (vertical) and the external balance (horizontal). A cheap currency that also earns a surplus has flows on its side; a cheap one with a deficit is cheap for a reason. Current accounts: World Bank, latest year (mostly 2025).`;
+  // verdict + lists
+  const c=byI[S.sel],v=val(c,S.basket,F),ca=DATA.ca[c.i];let vt='',vp='';
+  if(c.i===base.i){vt='Base currency';vp='Pick another currency.'}else if(v==null||ca==null){vt='Not enough data';vp='This currency needs a price for the basket and a current-account figure.'}
+  else{const cheap=v<-.1,dear=v>.1,surp=ca>0;
+    vt=cheap&&surp?'Cheap with a surplus — looks genuinely mispriced':cheap?'Cheap, but with a deficit — cheap for a reason':dear&&surp?'Dear, but earned by a surplus':dear?'Dear with a deficit — vulnerable':'Close to fair value';
+    vp=`The ${cname(c)} reads ${pct(v)} on the ${BK[S.basket].n} basket and the country runs a current account of ${ca>0?'+':''}${ca}% of GDP. ${cheap&&surp?'Export earnings keep bringing money in, so the pull back toward fair value has a real source.':cheap?'The country needs foreign capital each year, which keeps the currency soft; cheapness is the price of that funding.':dear&&surp?'Steady inflows support the premium; it can persist.':dear?'A premium financed by foreign borrowing is exposed if capital turns away.':'No strong signal either way.'}`}
+  $('#verdict').innerHTML=`<b>${vt}</b><p>${vp}</p>`;
+  const li=a=>a.map(p=>`<li data-i="${p.c.i}"><b style="font-weight:400">${p.c.n}</b><span>${pct(p.y)} · CA ${p.x>0?'+':'−'}${Math.abs(p.x)}%</span></li>`).join('');
+  const mis=pts.filter(p=>p.y<-.1&&p.x>0).sort((a,b)=>(a.y*a.x)-(b.y*b.x)).slice(0,6),rea=pts.filter(p=>p.y<-.1&&p.x<0).sort((a,b)=>a.y-b.y).slice(0,6);
+  $('#qLists').innerHTML=`<h4>Most mispriced: cheap and in surplus</h4><ul>${li(mis)||'<li>None</li>'}</ul><h4>Cheap for a reason: deficit</h4><ul>${li(rea)||'<li>None</li>'}</ul>`;
+  $('#qLists').querySelectorAll('li[data-i]').forEach(l=>l.onclick=()=>{S.sel=l.dataset.i;render()});
+}
+
+function render(instant,fromDrag){
+  ['#baseSeg','#basketSeg','#adjSeg','#hzSeg','#bmSeg'].forEach(s=>$(s)._up());
+  const F=fits();
+  drawLadder(F,instant||fromDrag);drawHead(F);drawRate(F);
+  if(!fromDrag){drawStrip(F);drawHist();drawScat(F);drawTable(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}else{drawStrip(F);drawScat(F);drawBT(F);drawMins();drawDumb();drawQuad(F)}
+  save();
+}
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>render(true),120)});
+matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>render(true));
+applySnap(SNAP0);liveStatus(false);render(true);
+(async()=>{try{const db=await claude.use('db');if(!db)return;db.doc('feed/latest').onSnapshot(s=>{if(!s.exists)return;applySnap(s.data());liveStatus(true);render(true)},()=>{})}catch(e){}})();
+</script>
