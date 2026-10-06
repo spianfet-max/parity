@@ -10,9 +10,11 @@ What everyday prices say a currency is worth. A Big Mac index extended to seven 
 - Does it work? Back-test of Big Mac gaps against subsequent 1/3/5-year FX moves (raw, vs own average, vs average to date)
 - Minutes of income: tourist's price vs resident's effort
 - Deserved or mispriced: valuation vs current-account balance
+- Second opinion: inflation. Relative PPP since 2005 from OECD CPI (via the Keel service on OpenBB) next to the raw Big Mac gap, with a verdict on whether the two agree
 - Big Mac history since 2000, price vs GDP per person, editable price table
 
 **Data**
+- CPI: OECD consumer prices through Keel (`api_ppp`). Inside claude.ai the page calls the Keel connector (the published artifact needs the `mcp` capability for server `Keel`, tool `api_ppp`); opened as a plain file it calls the Keel API at the address saved under `keel-url` (default `https://keel-api.onrender.com`). Without either, the section shows an empty state.
 - FX: ECB euro reference rates; other currencies from ExchangeRate-API. Refreshed daily into the artifact's database.
 - Prices: apple.com, spotify.com, ikea.com, nintendo.com, Starbucks Japan/Taiwan menus; taxi and most latte prices are estimates (tagged in the table).
 - Big Mac: The Economist, github.com/TheEconomist/big-mac-data (July 2026).
