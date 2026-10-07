@@ -601,7 +601,7 @@ function drawQuad(F){const svg=$('#quad'),W=svg.clientWidth||520,H=320;svg.setAt
 let PPP=null,PPPERR=null;
 async function loadPPP(){
   try{const m=window.claude&&claude.use?await claude.use('mcp'):null;
-    if(m){const r=await m.callTool('Keel','api_ppp',{base_year:2005},{cache:{staleTime:300000,gcTime:86400000}});let d=r.payload;if(typeof d==='string')d=JSON.parse(d);if(d&&d.result&&!d.rows)d=d.result;if(d&&d.rows){PPP=d;PPPERR=null;drawPPP();return}}
+    if(m){const r=await m.callTool('keel','api_ppp',{base_year:2005},{cache:{staleTime:300000,gcTime:86400000}});let d=r.payload;if(typeof d==='string')d=JSON.parse(d);if(d&&d.result&&!d.rows)d=d.result;if(d&&d.rows){PPP=d;PPPERR=null;drawPPP();return}}
   }catch(e){PPPERR=e&&e.code||'error'}
   if(!window.claude||!window.claude.use){try{let u='https://keel-api-tqpz.onrender.com';try{u=localStorage.getItem('keel-url')||u}catch(e){}
     const r=await fetch(u.replace(/\/+$/,'')+'/api/ppp?base_year=2005');if(r.ok){PPP=await r.json();PPPERR=null}else PPPERR='http'}catch(e){PPPERR=PPPERR||'offline'}}
